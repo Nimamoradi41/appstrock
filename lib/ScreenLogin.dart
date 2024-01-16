@@ -26,7 +26,6 @@ class ScreenLogin extends StatelessWidget {
                 children: [
                   SizedBox(height: wid*0.2,),
                   SvgPicture.asset('assets/Svg/loginui.svg',width: wid*0.3,height: wid*0.3,),
-
                     Padding(
                     padding: const EdgeInsets.only(right: 16,top: 16),
                     child: Align(

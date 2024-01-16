@@ -117,9 +117,9 @@ class ScreenEms extends StatelessWidget {
                   top: wid*0.43,
                   right: 16,
                   left: 16,
-                  bottom: 16,
                   child: Container(
                     width: wid*0.8,
+                    height:wid*0.85 ,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
@@ -134,13 +134,83 @@ class ScreenEms extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextApp2('اطلاعات بیمار', 18, ColorTitleText, true),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  labelText: 'نام و نام خانوادگی',
 
+                                  disabledBorder:OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8)
+                                  ),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8)
+                                  ),
+
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  labelText: 'کد ملی',
+                                  disabledBorder:OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8)
+                                  ),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8)
+                                  ),
+
+                                ),
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Container(
+                            width: wid,
+                            margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+                            child: ElevatedButton(onPressed: (){},
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(Colorbutton),
+                                    padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8.0),
+
+                                        )
+                                    )
+                                ),
+                                child:Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text('اعلان کد',
+                                    style: TextStyle(color:Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),),
+                                )),
+                          ),
+                          SizedBox(height: 8,)
                         ],
                       ),
                     ),
                   ),
                 ),
+                Positioned(
+                    bottom: 8,
+                    right: 8,
+                    left: 8,
+                    child: TextApp('نسخه  1.0.0', 12, Colors.black54, true))
 
 
               ],

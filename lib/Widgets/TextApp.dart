@@ -41,15 +41,11 @@ class TextApp2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(Title,
-      textAlign: TextAlign.center,
+      textAlign: TextAlign.right,
       style: TextStyle(
           color: Mcolor,
           shadows: [
-            Shadow(
-                blurRadius: 20,
-                color: Colors.black12.withOpacity(0.9),
-                offset: Offset(0,8)
-            )
+
           ],
           fontSize: Fontsize,
           fontWeight: Isbold==true?

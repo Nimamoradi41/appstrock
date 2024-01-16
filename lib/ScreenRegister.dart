@@ -21,6 +21,17 @@ class _ScreenRegisterState extends State<ScreenRegister> {
 
   String dropdownValue = 'Dog';
 
+  String dropdownvalue = 'فوریت های پزشکی';
+
+  // List of items in our dropdown menu
+  var items = [
+    'فوریت های پزشکی',
+    'تریاژ',
+    'پزیرش',
+    'رزیدنت',
+    'دکتر متخصص',
+  ];
+
   @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
@@ -47,24 +58,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                         alignment: Alignment.centerRight,
                         child: TextApp('ثبت نام', 24, ColorTitleText, true)),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: 'نام و نام خانوادگی',
-                          disabledBorder:OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8)
-                          ),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8)
-                          ),
 
-                        ),
-                      ),
-                    ),
-                  ),
 
                   Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -84,25 +78,8 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: DropdownButtonFormField<String>(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                      value: dropdownValue,
-                      borderRadius: BorderRadius.circular(1),
 
-                      items:menuItems,
-                      // Step 5.
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                      },
-                    ),
-                  ),
-                  // DropdownButton(items: items, onChanged: onChanged)
+
                   SizedBox(height: 8,),
 
                   Padding(
@@ -123,6 +100,46 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                       ),
                     ),
                   ),
+                  Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: DropdownButtonFormField(
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius:   BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                            ),
+                            // Initial Value
+                            // Down Arrow Icon
+
+
+                            // Array list of items
+
+                            // After selecting the desired option,it will
+                            // change button value to selected value
+
+                          ),
+                          items: items.map((String items) {
+                            return DropdownMenuItem(
+                              value: items,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                      items,),
+                                ],
+                              ),
+                            );
+                          }).toList()
+                          , onChanged: (String? value) {
+                          setState(() {
+                            dropdownvalue = value!;
+                          });
+                        },
+                        ),
+                      )),
                   Spacer(),
 
                   Container(

@@ -146,7 +146,7 @@ class _ScreenEmsState extends State<ScreenEms> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: FlutterSwitch(
                                         value: status,
-
+                                        activeColor: Color(0xff38b000),
                                         onToggle: (val) {
                                           setState(() {
                                             status = val;
@@ -230,12 +230,11 @@ class _ScreenEmsState extends State<ScreenEms> {
                                   margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
                                   child: ElevatedButton(onPressed: (){},
                                       style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all(Colorbutton),
+                                          backgroundColor: MaterialStateProperty.all(ColorApp),
                                           padding: MaterialStateProperty.all(EdgeInsets.all(8)),
                                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                               RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(8.0),
-
                                               )
                                           )
                                       ),

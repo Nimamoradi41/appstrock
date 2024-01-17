@@ -1,15 +1,24 @@
 
 import 'package:appstrock/Widgets/TextApp.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 
 import '../../Constants.dart';
 
-class ScreenEms extends StatelessWidget {
+class ScreenEms extends StatefulWidget {
 
 
   @override
+  State<ScreenEms> createState() => _ScreenEmsState();
+}
+
+class _ScreenEmsState extends State<ScreenEms> {
+
+  bool status=false;
+  @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
+    double hei=MediaQuery.of(context).size.height;
     wid=wid>600?600:wid;
     return SafeArea(
       child: Scaffold(
@@ -67,145 +76,195 @@ class ScreenEms extends StatelessWidget {
                   right: 16,
                   left: 16,
                   child: Container(
-                    width: wid*0.8,
-                    height: wid*0.25,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                           spreadRadius: 1,
-                          blurRadius: 4
-                        )
-                      ]
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Expanded(child: Row(
-                          children: [
-                            Expanded(
-                                flex: 8,
-                                child: TextApp2('نیما مرادی',16,ColorTextbody,true)),
-                            Expanded(
-                                flex: 3,
-                                child: TextApp2(' : نام ونام خانوادگی',14,ColorTextsubject,false)),
-                          ],
+                    width: wid*0.85,
 
-                          )),
-                          SizedBox(height: 4,),
+                    child: Column(
+                      children: [
 
-                          Expanded(child: Row(
-                            children: [
-                              Expanded(
-                                  flex: 8,
-                                  child: TextApp2('1742778887',14,ColorTextbody,true)),
-                              Expanded(
-                                  flex: 2,
-                                  child: TextApp2(' : کد ملی',16,ColorTextsubject,false)),
-                            ],
 
-                          )),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: wid*0.43,
-                  right: 16,
-                  left: 16,
-                  child: Container(
-                    width: wid*0.8,
-                    height:wid*0.85 ,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black26,
-                              spreadRadius: 1,
-                              blurRadius: 4
-                          )
-                        ]
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Padding(
+                        Container(
+
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black26,
+                                    spreadRadius: 1,
+                                    blurRadius: 4
+                                )
+                              ]
+                          ),
+                          child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: TextApp2('اطلاعات بیمار', 18, ColorTitleText, true),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'نام و نام خانوادگی',
+                            child: Column(
+                              children: [
+                                Row(children: [
+                                    Expanded(
+                                      flex: 4,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          TextApp2(' : کدملی',14,ColorTextsubject,false),
+                                          TextApp2('174875455445',16,ColorTextbody,true),
 
-                                  disabledBorder:OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8)
-                                  ),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8)
-                                  ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: 8,),
+                                    Container(
+                                      width: 1,
+                                      color: Colors.black38,
+                                      height: 20,
+                                    ),
+                                    SizedBox(width: 8,),
 
+
+                                    Expanded(
+                                      flex: 6,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          TextApp2(' : نام ونام خانوادگی',14,ColorTextsubject,false),
+                                          TextApp2('نیما مرادی',16,ColorTextbody,true),
+
+                                        ],
+                                      ),
+                                    ),
+                                  ],),
+                                SizedBox(height: 4,),
+                                Container(
+                                  width: wid,
+                                  margin: EdgeInsets.all(8),
+                                  color: Colors.black12,
+                                  height: 1,
                                 ),
-                              ),
+                                Row(
+                                  children: [
+                                    SizedBox(width: 8,),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: FlutterSwitch(
+                                        value: status,
+
+                                        onToggle: (val) {
+                                          setState(() {
+                                            status = val;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Expanded(child: TextApp2('وضعیت شیفت',16,ColorTextsubject,false)),
+                                    SizedBox(width: 4 ,)
+                                  ],
+
+                                )
+                              ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'کد ملی',
-                                  disabledBorder:OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8)
-                                  ),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8)
-                                  ),
+                        ),
 
+
+                        SizedBox(height: 24,),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black26,
+                                    spreadRadius: 1,
+                                    blurRadius: 4
+                                )
+                              ]
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextApp2('اطلاعات بیمار', 18, ColorTitleText, true),
                                 ),
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        labelText: 'نام و نام خانوادگی',
+
+                                        disabledBorder:OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(8)
+                                        ),
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(8)
+                                        ),
+
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        labelText: 'کد ملی',
+                                        disabledBorder:OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(8)
+                                        ),
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(8)
+                                        ),
+
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                Container(
+                                  width: wid,
+                                  margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+                                  child: ElevatedButton(onPressed: (){},
+                                      style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all(Colorbutton),
+                                          padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8.0),
+
+                                              )
+                                          )
+                                      ),
+                                      child:Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text('اعلان کد',
+                                          style: TextStyle(color:Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),),
+                                      )),
+                                ),
+                                SizedBox(height: 8,)
+                              ],
                             ),
                           ),
-                          Spacer(),
-                          Container(
-                            width: wid,
-                            margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
-                            child: ElevatedButton(onPressed: (){},
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(Colorbutton),
-                                    padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8.0),
+                        ),
 
-                                        )
-                                    )
-                                ),
-                                child:Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text('اعلان کد',
-                                    style: TextStyle(color:Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),),
-                                )),
-                          ),
-                          SizedBox(height: 8,)
-                        ],
-                      ),
+
+
+
+
+
+
+                      ],
                     ),
                   ),
                 ),
+
+
                 Positioned(
                     bottom: 8,
                     right: 8,

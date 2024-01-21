@@ -1,25 +1,26 @@
-
-import 'package:appstrock/Widgets/TextApp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
 import '../../Constants.dart';
+import '../../Widgets/TextApp.dart';
 
-class ScreenEms extends StatefulWidget {
+class Screen_Teriazh extends StatefulWidget {
 
 
   @override
-  State<ScreenEms> createState() => _ScreenEmsState();
+  State<Screen_Teriazh> createState() => _Screen_TeriazhState();
 }
 
-class _ScreenEmsState extends State<ScreenEms> {
-
+class _Screen_TeriazhState extends State<Screen_Teriazh> {
   bool status=false;
+
   var items = [
     'مرد',
     'زن',
   ];
+
   String dropdownvalue = 'مرد';
+
   @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
@@ -40,39 +41,39 @@ class _ScreenEmsState extends State<ScreenEms> {
                   color: ColorApp,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(width: 16,),
-                    Expanded(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: const [
-                          RotatedBox(
-                            quarterTurns: 90,
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
-                            ),
-                          ),
-                          Expanded(child:
-                          Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Text(
-                                'فوریت های پزشکی',
-                              textAlign: TextAlign.end,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16
+                    children: [
+                      SizedBox(width: 16,),
+                      Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: const [
+                            RotatedBox(
+                              quarterTurns: 90,
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
                               ),
-                            )
+                            ),
+                            Expanded(child:
+                            Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text(
+                                  'تریاژ',
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16
+                                  ),
+                                )
 
-                            // TextApp('فوریت های پزشکی', 16, Colors.white, true),
-                          )),
-                        ],
-                      ),
-                    )
-                  ],
+                              // TextApp('فوریت های پزشکی', 16, Colors.white, true),
+                            )),
+                          ],
+                        ),
+                      )
+                    ],
 
                   ),
                 ),
@@ -105,38 +106,38 @@ class _ScreenEmsState extends State<ScreenEms> {
                             child: Column(
                               children: [
                                 Row(children: [
-                                    Expanded(
-                                      flex: 4,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          TextApp2(' : کدملی',14,ColorTextsubject,false),
-                                          TextApp2('174875455445',16,ColorTextbody,true),
+                                  Expanded(
+                                    flex: 4,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        TextApp2(' : کدملی',14,ColorTextsubject,false),
+                                        TextApp2('174875455445',16,ColorTextbody,true),
 
-                                        ],
-                                      ),
+                                      ],
                                     ),
-                                    SizedBox(width: 8,),
-                                    Container(
-                                      width: 1,
-                                      color: Colors.black38,
-                                      height: 20,
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Container(
+                                    width: 1,
+                                    color: Colors.black38,
+                                    height: 20,
+                                  ),
+                                  SizedBox(width: 8,),
+
+
+                                  Expanded(
+                                    flex: 6,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        TextApp2(' : نام ونام خانوادگی',14,ColorTextsubject,false),
+                                        TextApp2('نیما مرادی',16,ColorTextbody,true),
+
+                                      ],
                                     ),
-                                    SizedBox(width: 8,),
-
-
-                                    Expanded(
-                                      flex: 6,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          TextApp2(' : نام ونام خانوادگی',14,ColorTextsubject,false),
-                                          TextApp2('نیما مرادی',16,ColorTextbody,true),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ],),
+                                  ),
+                                ],),
                                 SizedBox(height: 4,),
                                 Container(
                                   width: wid,
@@ -342,3 +343,4 @@ class _ScreenEmsState extends State<ScreenEms> {
     );
   }
 }
+

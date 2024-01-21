@@ -1,4 +1,6 @@
 import 'package:appstrock/ScreenRegister.dart';
+import 'package:appstrock/Screens/Reception/screen_reception.dart';
+import 'package:appstrock/Screens/Teriazh/screen_teriazh.dart';
 import 'package:flutter/material.dart';
 
 import 'ScreenLogin.dart';
@@ -10,8 +12,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,7 +21,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       // home: ScreenLogin(),
       // home: ScreenRegister(),
-      home: ScreenEms(),
+      // home: ScreenEms(),
+      // home: Screen_Teriazh(),
+      home: ScreenReception(),
     );
   }
 }

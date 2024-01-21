@@ -140,6 +140,25 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                         },
                         ),
                       )),
+                  SizedBox(height: 8,),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: 'شماره تلفن',
+                          disabledBorder:OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8)
+                          ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8)
+                          ),
+
+                        ),
+                      ),
+                    ),
+                  ),
                   Spacer(),
 
                   Container(

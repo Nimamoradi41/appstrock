@@ -332,7 +332,7 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                     bottom: 8,
                     right: 8,
                     left: 8,
-                    child: TextApp('نسخه  1.0.0', 12, Colors.black54, true))
+                    child: TextApp(VersionApp, 12, Colors.black54, true))
 
 
               ],

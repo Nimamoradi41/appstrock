@@ -73,7 +73,6 @@ class _ScreenEmsState extends State<ScreenEms> {
                       ),
                     )
                   ],
-
                   ),
                 ),
                 Positioned(
@@ -325,13 +324,11 @@ class _ScreenEmsState extends State<ScreenEms> {
                     ),
                   ),
                 ),
-
-
                 Positioned(
                     bottom: 8,
                     right: 8,
                     left: 8,
-                    child: TextApp('نسخه  1.0.0', 12, Colors.black54, true))
+                    child: TextApp(VersionApp, 12, Colors.black54, true))
 
 
               ],

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:signalr_client/hub_connection.dart';
-import 'package:signalr_client/hub_connection_builder.dart';
+import 'package:http/http.dart'as http;
+import 'package:signalr_netcore/hub_connection.dart';
+import 'package:signalr_netcore/hub_connection_builder.dart';
+import 'Screens/Modelsuggestionssvsv.dart';
+import 'modetest.dart';
 
 
 class scr extends StatefulWidget {
@@ -11,7 +14,7 @@ class scr extends StatefulWidget {
 }
 
 class _scrState extends State<scr> {
-  final serverurl="http://172.10.10.186:9595/SignalRTest/mytesthub";
+  final serverurl="http://172.10.10.186:9595/UserApi/userHub";
   // final serverurl="http://172.10.10.186:9595/SignalRTest";
 
   late HubConnection connection;
@@ -20,11 +23,18 @@ class _scrState extends State<scr> {
 
   late Offset position;
 
+
+  List<Modelsuggestionssvsv> list=[];
   void initC()
   {
+
     connection=HubConnectionBuilder().withUrl(serverurl).build();
-    connection.onclose((error) {print('Close Connection');});
-    connection.on('ReceiveNewPosition', _handle);
+    connection.on('ReceiveUserUpdate', (arguments) {
+
+      Run();
+
+    });
+    Run();
   }
 
 
@@ -36,56 +46,51 @@ class _scrState extends State<scr> {
   }
 
 
-  void _handle(List<Object> arg)
+  Future Run()async{
+    var request = http.Request('GET', Uri.parse('http://172.10.10.186:9595/UserApi/Values'));
+
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var  Data=modelsuggestionssvsvFromJson(await response.stream.bytesToString());
+      list=Data;
+      setState(() {
+
+      });
+
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+  }
+  void _handle(Object arg)
   {
     print('PPPPP');
-    print(arg.toString());
-    setState(() {
-      double? ss=arg[0] as double?;
-      double? ss2=arg[0] as double?;
-      position=Offset(ss!,ss2!);
-    });
+    Run();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            left: position.dx,
-            top: position.dy,
-            child: Draggable(
-              feedback: Container(
-                width: width,
-                color: Colors.red,
-                height: height,
-                child:Center(child: Text('Move Me',style: TextStyle(color: Colors.white),),),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: ListView.builder(
+          itemCount: list.length,
+          itemBuilder: (ctx,item){
+            return Container(
+              width: double.infinity,
+              height: 150,
+              child: Column(
+                children: [
+                  Text(list[item].id.toString()),
+                  Text(list[item].name.toString()),
+                ],
               ),
-              onDraggableCanceled: (val,offset) async{
-                if(connection.state==HubConnectionState.Connected)
-                  {
-                    await connection.invoke('ReceiveNewPosition',args: <Object>[
-                      offset.dx,
-                      offset.dy,
-                    ]);
-
-                    print('AAAAAAAAAAAAAA');
-                    setState(() {
-                      position=offset;
-                    });
-                  }
-              },
-              child: Container(
-                width: width,
-                color: Colors.blueAccent,
-                height: height,
-                child:Center(child: Text('Move Me',style: TextStyle(color: Colors.white),),),
-              ),
-            ),
-          )
-
-        ],
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: ()async{

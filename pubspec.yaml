@@ -34,12 +34,12 @@ dependencies:
   flutter_svg: any
   flutter_switch: ^0.3.2
   loading_animation_widget: ^1.2.0+4
-  signalr_client:  any
   flutter_styled_toast: any
   http: any
   flutter_otp_text_field: ^1.1.1
   timer_count_down: ^2.2.0
   provider: any
+  signalr_netcore: ^1.3.6
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -207,13 +207,10 @@ class ScreenDetailPatient extends StatelessWidget {
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),
                 ),
-
-
                 Positioned(
                     bottom: 4,
                     right: 8,

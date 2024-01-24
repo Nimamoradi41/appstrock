@@ -1,4 +1,4 @@
-import 'dart:js';
+// import 'dart:js';
 
 import 'package:appstrock/Screens/Autentication/ScreenRigester.dart';
 import 'package:appstrock/Screens/Reception/screen_reception.dart';
@@ -7,8 +7,7 @@ import 'package:appstrock/Screens/Teriazh/screen_teriazh.dart';
 import 'package:appstrock/scr.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:signalr_client/hub_connection.dart';
-import 'package:signalr_client/hub_connection_builder.dart';
+
 
 import 'Screens/Autentication/ScreenCodeOtp.dart';
 import 'Screens/Autentication/ScreenLogin.dart';
@@ -50,12 +49,12 @@ class _MyAppState extends State<MyApp> {
       // home: ScreenLogin(),
       // home: ScreenRigester(),
       // home: ScreenCodeOtp(),
-      // home: scr(),
+      home: scr(),
       // home: ScreenEms(),
       // home: Screen_Teriazh(),
       // home: ScreenReception(),
       // home: ScreenResident(),
-      home: ScreenDetailPatient(),
+      // home: ScreenDetailPatient(),
       // home: ScreenSickCarrier(),
     );
   }

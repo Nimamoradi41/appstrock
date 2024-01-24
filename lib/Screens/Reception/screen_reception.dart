@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:provider/provider.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
 import '../../Widgets/TextApp.dart';
+import 'Model/ModelPatient.dart';
+import 'ProviderReception/ProviderReception.dart';
 
-class ScreenReception extends StatefulWidget {
 
-  @override
-  State<ScreenReception> createState() => _ScreenReceptionState();
-}
 
-class _ScreenReceptionState extends State<ScreenReception> {
+class ScreenReception extends StatelessWidget {
+
+
   bool status=false;
 
-  Future<void> _showAlertDialog() async {
+  Future<void> _showAlertDialog(BuildContext context) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -104,45 +105,45 @@ class _ScreenReceptionState extends State<ScreenReception> {
                                 child: TextApp('جنسیت',14,ColorTitleText,false),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: DropdownButtonFormField(
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius:   BorderRadius.all(
-                                          Radius.circular(8.0),
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: DropdownButtonFormField(
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius:   BorderRadius.all(
+                                            Radius.circular(8.0),
+                                          ),
                                         ),
+                                        // Initial Value
+                                        // Down Arrow Icon
+
+
+                                        // Array list of items
+
+                                        // After selecting the desired option,it will
+                                        // change button value to selected value
+
                                       ),
-                                      // Initial Value
-                                      // Down Arrow Icon
-
-
-                                      // Array list of items
-
-                                      // After selecting the desired option,it will
-                                      // change button value to selected value
-
+                                      items: items.map((String items) {
+                                        return DropdownMenuItem(
+                                          value: items,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                items,),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList()
+                                      , onChanged: (String? value) {
+                                      // setState(() {
+                                      //   dropdownvalue = value!;
+                                      // });
+                                    },
                                     ),
-                                    items: items.map((String items) {
-                                      return DropdownMenuItem(
-                                        value: items,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              items,),
-                                          ],
-                                        ),
-                                      );
-                                    }).toList()
-                                    , onChanged: (String? value) {
-                                    setState(() {
-                                      dropdownvalue = value!;
-                                    });
-                                  },
-                                  ),
-                                )),
+                                  )),
                             ],
                           ))
                         ],
@@ -210,16 +211,17 @@ class _ScreenReceptionState extends State<ScreenReception> {
       },
     );
   }
-
-
+  List<ModelPatient> ItemsP=[];
   var items = [
     'مرد',
     'زن',
   ];
 
   String dropdownvalue = 'مرد';
+  late var Notifi=ProviderReception();
   @override
   Widget build(BuildContext context) {
+    Notifi=Provider.of<ProviderReception>(context);
     double wid=MediaQuery.of(context).size.width;
     double hei=MediaQuery.of(context).size.height;
     wid=wid>600?600:wid;
@@ -333,13 +335,19 @@ class _ScreenReceptionState extends State<ScreenReception> {
                                     SizedBox(width: 8,),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: FlutterSwitch(
-                                        value: status,
-                                        activeColor: Color(0xff38b000),
-                                        onToggle: (val) {
-                                          setState(() {
-                                            status = val;
-                                          });
+                                      child: Consumer<ProviderReception>(
+                                        builder: (context,newstate,child){
+                                          status=newstate.status;
+                                          return FlutterSwitch(
+                                            value: status,
+                                            activeColor: Color(0xff38b000),
+                                            onToggle: (val) {
+                                              Notifi.setstatus(!status);
+                                              // setState(() {
+                                              //   status = val;
+                                              // });
+                                            },
+                                          );
                                         },
                                       ),
                                     ),
@@ -358,16 +366,22 @@ class _ScreenReceptionState extends State<ScreenReception> {
 
                         Container(
                           height:  hei*0.68,
-                          child: ListView.builder(
-                            itemCount: 6,
-                            itemBuilder: (ctx,item){
-                              return InkWell(
-                                onTap: (){
-                                  _showAlertDialog();
+                          child: Consumer<ProviderReception>(
+                            builder: (context,newstate,child){
+                              ItemsP=newstate.ListItemsPatient;
+                              return ListView.builder(
+                                itemCount: ItemsP.length,
+                                itemBuilder: (ctx,item){
+                                  return InkWell(
+                                    onTap: (){
+                                      _showAlertDialog(context);
+                                    },
+                                    child: ItemPatient(wid: wid, ItemsP: ItemsP[item],),
+                                  );
                                 },
-                                child: ItemPatient(wid: wid),
                               );
                             },
+
                           ),
                         ),
 
@@ -387,8 +401,6 @@ class _ScreenReceptionState extends State<ScreenReception> {
                     right: 8,
                     left: 8,
                     child: TextApp(VersionApp, 12, Colors.black54, true))
-
-
               ],
             ),
           ),
@@ -396,6 +408,10 @@ class _ScreenReceptionState extends State<ScreenReception> {
       ),
     );
   }
+
 }
+
+
+
 
 

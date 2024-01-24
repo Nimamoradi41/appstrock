@@ -12,6 +12,8 @@ const Color BackGroundApp=Color(0xffDFE1E5);
 const Color ColorApp=Color(0xff7B73E7);
 const Color ColorTextsubject=Color(0xff989898);
 const Color ColorTextbody=Color(0xff3F3F3F);
+const Color BtnColorgreen=Color(0xff008000);
+const Color BtnColorred=Color(0xffef233c);
 
 
 

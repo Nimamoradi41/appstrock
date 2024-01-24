@@ -1,3 +1,4 @@
+import 'package:appstrock/Screens/Reception/ProviderReception/ProviderReception.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -7,13 +8,12 @@ import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
 import '../../Widgets/TextApp.dart';
 import '../Reception/Model/ModelPatient.dart';
-import 'ProviderSickCarrier/ProviderSickCarrier.dart';
 
 
 
 
 
-class ScreenSickCarrier extends StatelessWidget {
+class ScreenResident extends StatelessWidget {
 
 
   bool status=false;
@@ -23,12 +23,11 @@ class ScreenSickCarrier extends StatelessWidget {
     'مرد',
     'زن',
   ];
-
   String dropdownvalue = 'مرد';
-  late var Notifi=ProviderSickCarrier();
+  late var Notifi=ProviderReception();
   @override
   Widget build(BuildContext context) {
-    Notifi=Provider.of<ProviderSickCarrier>(context);
+    Notifi=Provider.of<ProviderReception>(context);
     double wid=MediaQuery.of(context).size.width;
     double hei=MediaQuery.of(context).size.height;
     wid=wid>600?600:wid;
@@ -65,7 +64,7 @@ class ScreenSickCarrier extends StatelessWidget {
                             Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Text(
-                                  'بیماربر',
+                                  'رزیدنت',
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                       color: Colors.white,
@@ -142,7 +141,7 @@ class ScreenSickCarrier extends StatelessWidget {
                                     SizedBox(width: 8,),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Consumer<ProviderSickCarrier>(
+                                      child: Consumer<ProviderReception>(
                                         builder: (context,newstate,child){
                                           status=newstate.status;
                                           return FlutterSwitch(
@@ -173,7 +172,7 @@ class ScreenSickCarrier extends StatelessWidget {
 
                         Container(
                           height:  hei*0.68,
-                          child: Consumer<ProviderSickCarrier>(
+                          child: Consumer<ProviderReception>(
                             builder: (context,newstate,child){
                               ItemsP=newstate.ListItemsPatient;
                               return ListView.builder(

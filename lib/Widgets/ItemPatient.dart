@@ -1,3 +1,4 @@
+import 'package:appstrock/Screens/Reception/Model/ModelPatient.dart';
 import 'package:flutter/material.dart';
 
 import '../Constants.dart';
@@ -8,9 +9,11 @@ class ItemPatient extends StatelessWidget {
   const ItemPatient({
     super.key,
     required this.wid,
+    required this.ItemsP,
   });
 
   final double wid;
+  final ModelPatient ItemsP;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +48,7 @@ class ItemPatient extends StatelessWidget {
                       children: [
                         TextApp('سن', 10, ColorTitleText, false),
                         SizedBox(height: 4,),
-                        TextApp('نامشخص', 12, ColorTextbody, true),
+                        TextApp(ItemsP.Age.toString(), 12, ColorTextbody, true),
                       ],
                     ),
                     SizedBox(width: 12,),
@@ -59,7 +62,7 @@ class ItemPatient extends StatelessWidget {
                       children: [
                         TextApp('جنسیت', 10, ColorTitleText, false),
                         SizedBox(height: 4,),
-                        TextApp('مرد', 12, ColorTextbody, true),
+                        TextApp(ItemsP.Gender ? 'مرد':'زن', 12, ColorTextbody, true),
                       ],
                     ),
                     SizedBox(width: 8,),
@@ -70,9 +73,9 @@ class ItemPatient extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    TextApp('نیما مرادی', 14, ColorTextbody, true),
+                    TextApp( ItemsP.Name, 14, ColorTextbody, true),
                     SizedBox(height: 4,),
-                    TextApp(' کد ملی : نامشخص', 12, ColorTitleText, true),
+                    TextApp(' کد ملی : '+ItemsP.NationalCode.toString(), 12, ColorTitleText, true),
                   ],
                 )
               ],

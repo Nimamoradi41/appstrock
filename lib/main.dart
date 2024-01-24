@@ -1,18 +1,35 @@
+import 'dart:js';
+
 import 'package:appstrock/Screens/Autentication/ScreenRigester.dart';
 import 'package:appstrock/Screens/Reception/screen_reception.dart';
+import 'package:appstrock/Screens/Resident/screen_resident.dart';
 import 'package:appstrock/Screens/Teriazh/screen_teriazh.dart';
 import 'package:appstrock/scr.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:signalr_client/hub_connection.dart';
 import 'package:signalr_client/hub_connection_builder.dart';
 
 import 'Screens/Autentication/ScreenCodeOtp.dart';
 import 'Screens/Autentication/ScreenLogin.dart';
 import 'Screens/Ems/screen_ems.dart';
+import 'Screens/Reception/ProviderReception/ProviderReception.dart';
+
+import 'Screens/Resident/ProviderResident/ProviderResident.dart';
+import 'Screens/Resident/ProviderResident/ProviderResidentDetaile.dart';
+import 'Screens/Resident/ScreenDetailPatient.dart';
+import 'Screens/sickcarrier/ProviderSickCarrier/ProviderSickCarrier.dart';
 import 'Screens/sickcarrier/screen_sickcarrier.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(  MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ProviderReception()),
+        ChangeNotifierProvider(create: (context) => ProviderSickCarrier()),
+        ChangeNotifierProvider(create: (context) => ProviderResident()),
+        ChangeNotifierProvider(create: (context) => ProviderResidentDetaile()),
+      ],
+      child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -32,11 +49,13 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       // home: ScreenLogin(),
       // home: ScreenRigester(),
-      home: ScreenCodeOtp(),
+      // home: ScreenCodeOtp(),
       // home: scr(),
       // home: ScreenEms(),
       // home: Screen_Teriazh(),
       // home: ScreenReception(),
+      // home: ScreenResident(),
+      home: ScreenDetailPatient(),
       // home: ScreenSickCarrier(),
     );
   }

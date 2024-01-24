@@ -134,9 +134,7 @@ class ScreenCodeOtp extends StatelessWidget {
                     Container(
                       width: wid*0.9,
                       child: ElevatedButton(onPressed: (){
-
                       RunCode(CodeInput   , context);
-
                       },
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(ColorApp),

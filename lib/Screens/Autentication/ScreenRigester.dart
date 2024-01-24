@@ -1,36 +1,39 @@
 
+import 'package:appstrock/Screens/Autentication/ApiServiceAutentication.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/TextApp.dart';
 
-class ScreenRegister extends StatefulWidget {
+class ScreenRigester extends StatefulWidget {
 
 
   @override
-  State<ScreenRegister> createState() => _ScreenRegisterState();
+  State<ScreenRigester> createState() => _ScreenRigesterState();
 }
 
-class _ScreenRegisterState extends State<ScreenRegister> {
-  List<DropdownMenuItem<String>> menuItems = [
-    DropdownMenuItem(child: Text("فوریت های پزشکی"),value: "1"),
-    DropdownMenuItem(child: Text("تریاژ"),value: "2"),
-    DropdownMenuItem(child: Text("پذیرش"),value: "3"),
-    DropdownMenuItem(child: Text("رزیدنت"),value: "4"),
-  ];
+class _ScreenRigesterState extends State<ScreenRigester> {
 
-  String dropdownValue = 'Dog';
 
+
+
+  int CounterStatus=1;
   String dropdownvalue = 'فوریت های پزشکی';
 
-  // List of items in our dropdown menu
+
+
+
   var items = [
     'فوریت های پزشکی',
     'تریاژ',
     'پزیرش',
     'رزیدنت',
+    'بیماربر',
+    'آزمایشگاه',
+    'استروک',
     'دکتر متخصص',
   ];
 
@@ -38,10 +41,71 @@ class _ScreenRegisterState extends State<ScreenRegister> {
 
   bool IsLoading=false;
   Future RunRegister(BuildContext context)async{
+
+    if(textControllerName.text.isEmpty)
+      {
+        showToast("نام و نام خانوادگی را وارد کنید",
+            position: StyledToastPosition.top,
+            context:context);
+        return;
+      }
+
+    if(textControllerNationalCode.text.isEmpty)
+    {
+      showToast("کدملی را وارد کنید",
+          position: StyledToastPosition.top,
+          context:context);
+      return;
+    }
+
+    if(textControllerNationalCode.text.length!=10)
+    {
+      showToast("کدملی اشتباه است",
+          position: StyledToastPosition.top,
+          context:context);
+      return;
+    }
+
+
+    if(textControllerPhoneNumber.text.isEmpty)
+    {
+      showToast("شماره تلفن را وارد کنید",
+          position: StyledToastPosition.top,
+          context:context);
+      return;
+    }
+
+    if(!textControllerPhoneNumber.text.startsWith('0'))
+    {
+      showToast("شماره تلفن اشتباه است",
+          position: StyledToastPosition.top,
+          context:context);
+      return;
+    }
+
+    if(textControllerPhoneNumber.text.length<11)
+    {
+      showToast("شماره تلفن اشتباه است",
+          position: StyledToastPosition.top,
+          context:context);
+      return;
+    }
+
+
+    int TypUser= await GetTypeUser(dropdownvalue);
     ShowLoadingApp(context);
     await Future.delayed(Duration(seconds: 3));
-    Navigator.pop(context);
+    var Data=ApiServiceAutentication.Rigester(textControllerName.text, TypUser.toString(), textControllerNationalCode.text, textControllerPhoneNumber.text, context);
+
+
+
+
   }
+
+
+  var textControllerName=TextEditingController();
+  var textControllerNationalCode=TextEditingController();
+  var textControllerPhoneNumber=TextEditingController();
   @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
@@ -78,6 +142,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                               textDirection: TextDirection.rtl,
                               child: TextField(
                                 maxLines: 1,
+                                controller: textControllerName,
                                 keyboardType: TextInputType.text,
                                 decoration: InputDecoration(
                                   labelText: 'نام و نام خانوادگی',
@@ -102,6 +167,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                               child: TextField(
                                 maxLines: 1,
                                 maxLength: 10,
+                                controller: textControllerNationalCode,
                                 keyboardType: TextInputType.phone,
                                 decoration: InputDecoration(
                                   labelText: 'کد ملی',
@@ -154,6 +220,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                               child: TextField(
                                 maxLines: 1,
                                 maxLength: 11,
+                                controller: textControllerPhoneNumber,
                                 keyboardType: TextInputType.phone,
                                 decoration: InputDecoration(
                                   labelText: 'شماره تلفن',

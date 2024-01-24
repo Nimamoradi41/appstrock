@@ -53,6 +53,46 @@ Future<void> ShowLoadingApp(BuildContext context) async {
 // Loading in All App
 
 
+
+Future<int> GetTypeUser(String Type)async{
+  if(Type=='فوریت های پزشکی')
+  {
+    return 1;
+  }
+  if(Type=='تریاژ')
+  {
+    return 2;
+  }
+  if(Type=='پزیرش')
+  {
+    return 3;
+  }
+  if(Type=='رزیدنت')
+  {
+    return 4;
+  }
+  if(Type=='بیماربر')
+  {
+    return 5;
+  }
+  if(Type=='آزمایشگاه')
+  {
+    return 6;
+  }
+  if(Type=='آزمایشگاه')
+  {
+    return 7;
+  }
+  if(Type=='استروک')
+  {
+    return 8;
+  }
+  return 9;
+}
+
+
+
+
 // Login And Rigester Border
 OutlineInputBorder outlinedBorderBlack=OutlineInputBorder(
   borderSide: const BorderSide(color: Colors.black26, width: 2),

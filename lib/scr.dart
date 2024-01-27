@@ -104,8 +104,6 @@ class _scrState extends State<scr> {
           // connection.state==HubConnectionState.Disconnected ?
           //     await connection.start()  :
           //     await connection.stop();
-
-
         },
         tooltip: 'Start/Stop',
         child: connection.state==HubConnectionState.Disconnected ?  Icon(Icons.play_arrow):Icon(Icons.stop),

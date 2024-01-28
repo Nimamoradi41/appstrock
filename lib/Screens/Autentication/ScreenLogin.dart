@@ -1,20 +1,20 @@
+import 'package:appstrock/Screens/Teriazh/screen_teriazh.dart';
 import 'package:appstrock/Widgets/TextApp.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../Constants.dart';
+import '../Ems/screen_ems.dart';
+import '../Reception/screen_reception.dart';
+import 'ApiServiceAutentication.dart';
 
 class ScreenLogin extends StatelessWidget {
 
 
-  List<DropdownMenuItem<String>> menuItems = [
-    DropdownMenuItem(child: Text("فوریت های پزشکی"),value: "1"),
-    DropdownMenuItem(child: Text("تریاژ"),value: "2"),
-    DropdownMenuItem(child: Text("پذیرش"),value: "3"),
-    DropdownMenuItem(child: Text("رزیدنت"),value: "4"),
-  ];
 
-  String dropdownValue = 'Dog';
+
+
 
   String dropdownvalue = 'فوریت های پزشکی';
 
@@ -23,18 +23,77 @@ class ScreenLogin extends StatelessWidget {
     'فوریت های پزشکی',
     'تریاژ',
     'پزیرش',
-    'رزیدنت',
-    'دکتر متخصص',
+    // 'رزیدنت',
+    // 'دکتر متخصص',
   ];
+
+
 
 
 
   bool IsLoading=false;
   Future RunLogin(BuildContext context)async{
+    if(textControllerName.text.isEmpty)
+    {
+      showToast("نام و نام خانوادگی را وارد کنید",
+          position: StyledToastPosition.top,
+          context:context);
+      return;
+    }
+
+    if(textControllerNationalCode.text.isEmpty)
+    {
+      showToast("کدملی را وارد کنید",
+          position: StyledToastPosition.top,
+          context:context);
+      return;
+    }
+
+    if(textControllerNationalCode.text.length!=10)
+    {
+      showToast("کدملی اشتباه است",
+          position: StyledToastPosition.top,
+          context:context);
+      return;
+    }
+
+
+
     ShowLoadingApp(context);
-    await Future.delayed(Duration(seconds: 3));
-    Navigator.pop(context);
+    var Data=await ApiServiceAutentication.Login(textControllerName.text,textControllerNationalCode.text, context);
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        if(Data.data.departmentId==1)
+        {
+          // ignore: use_build_context_synchronously
+          GoNextPage(context,ScreenEms(false,context,Data.data.name,Data.data.nationalCode));
+        }
+
+        if(Data.data.departmentId==2)
+        {
+          // ignore: use_build_context_synchronously
+          GoNextPage(context,Screen_Teriazh());
+        }
+
+        if(Data.data.departmentId==3)
+        {
+          // ignore: use_build_context_synchronously
+          GoNextPage(context,ScreenReception(false,context,Data.data.name,Data.data.nationalCode));
+        }
+
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context,Data.message);
+      }
+    }
   }
+
+
+  var textControllerName=TextEditingController();
+  var textControllerNationalCode=TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
@@ -72,6 +131,7 @@ class ScreenLogin extends StatelessWidget {
                                 child: TextField(
                                   maxLines: 1,
                                   keyboardType: TextInputType.text,
+                                  controller: textControllerName,
                                   decoration: InputDecoration(
                                     labelText: 'نام و نام خانوادگی',
                                     labelStyle: TextStyle(
@@ -96,13 +156,13 @@ class ScreenLogin extends StatelessWidget {
                                   maxLines: 1,
                                   maxLength: 10,
                                   keyboardType: TextInputType.phone,
+                                  controller: textControllerNationalCode,
                                   decoration: InputDecoration(
                                     labelText: 'کد ملی',
                                     labelStyle: TextStyle(
                                         color: ColorApp
                                     ),
                                     counterText: "",
-
                                     enabledBorder: outlinedBorderBlack,
                                     focusedBorder: outlinedBorderPurple,
 

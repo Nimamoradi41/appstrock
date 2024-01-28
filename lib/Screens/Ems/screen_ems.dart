@@ -1,26 +1,90 @@
 
+import 'package:appstrock/Screens/Ems/ApiServiceEms.dart';
 import 'package:appstrock/Widgets/TextApp.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
-
+import 'package:jalali_date/jalali_date.dart';
 import '../../Constants.dart';
+import '../Reception/screen_reception.dart';
 import 'ProviderEms/ProviderEms.dart';
 
  class ScreenEms extends StatelessWidget {
-
-
    bool status=false;
+
    var items = [
      'مرد',
      'زن',
    ];
-   String dropdownvalue = 'مرد';
 
+
+
+   String  Name='';
+   String Code='';
+
+   ScreenEms(bool IsRigester,BuildContext context,String NewName,String CodeNew){
+     if(IsRigester)
+       {
+         ShowSuccesMsg(context, 'ثبت نام با موفقیت انجام شد');
+         //Set an animation
+       }
+
+     Name=NewName;
+     Code=CodeNew;
+
+   }
 
    late var Notifi=ProviderEms();
 
 
+   Future RunAddP(BuildContext context)async{
+     if(TextConName.text.isEmpty)
+     {
+       showToast("نام و نام خانوادگی را وارد کنید",
+           position: StyledToastPosition.top,
+           context:context);
+       return;
+     }
+
+     final date = PersianDate.now();
+     String formattedDate =
+         '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+     // چاپ تاریخ جلالی با فرمت مورد نظر
+     print('تاریخ جلالی فعلی: $formattedDate');
+     var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
+         TextConAge.text.toString(),Notifi.dropdownvalue=='مرد'?2:1,context);
+
+
+     ShowLoadingApp(context);
+     if(Data!=null)
+     {
+       if(Data.success)
+       {
+         // Ok Shode
+         TextConAge.clear();
+         TextConCode.clear();
+         TextConName.clear();
+         TextConGender.clear();
+         Notifi.Refrsh();
+         ShowSuccesMsg(context,'بیمار با موفقیت ثبت شد');
+       }else{
+         ShowErrorMsg(context, Data.message);
+       }
+     }
+
+
+
+
+
+
+   }
+
+
+   var TextConName=TextEditingController();
+   var TextConCode=TextEditingController();
+   var TextConAge=TextEditingController();
+   var TextConGender=TextEditingController();
 
    @override
    Widget build(BuildContext context) {
@@ -49,12 +113,17 @@ import 'ProviderEms/ProviderEms.dart';
                          child: Row(
                            crossAxisAlignment: CrossAxisAlignment.start,
                            mainAxisAlignment: MainAxisAlignment.end,
-                           children: const [
-                             RotatedBox(
-                               quarterTurns: 90,
-                               child: Padding(
-                                 padding: EdgeInsets.all(16.0),
-                                 child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
+                           children:   [
+                             InkWell(
+                               onTap: (){
+                                 GoNextPage(context,ScreenReception(false,context,'NIma','459595'));
+                               },
+                               child: RotatedBox(
+                                 quarterTurns: 90,
+                                 child: Padding(
+                                   padding: EdgeInsets.all(16.0),
+                                   child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
+                                 ),
                                ),
                              ),
                              Expanded(child:
@@ -113,7 +182,7 @@ import 'ProviderEms/ProviderEms.dart';
                                        crossAxisAlignment: CrossAxisAlignment.end,
                                        children: [
                                          TextApp2(' : کدملی',14,ColorTextsubject,false),
-                                         TextApp2('174875455445',16,ColorTextbody,true),
+                                         TextApp2(Code,16,ColorTextbody,true),
 
                                        ],
                                      ),
@@ -133,7 +202,7 @@ import 'ProviderEms/ProviderEms.dart';
                                        crossAxisAlignment: CrossAxisAlignment.end,
                                        children: [
                                          TextApp2(' : نام ونام خانوادگی',14,ColorTextsubject,false),
-                                         TextApp2('نیما مرادی',16,ColorTextbody,true),
+                                         TextApp2(Name,16,ColorTextbody,true),
 
                                        ],
                                      ),
@@ -191,130 +260,132 @@ import 'ProviderEms/ProviderEms.dart';
                            ),
                            child: Padding(
                              padding: const EdgeInsets.all(8.0),
-                             child: Column(
-                               crossAxisAlignment: CrossAxisAlignment.end,
-                               children: [
-                                 Padding(
-                                   padding: const EdgeInsets.all(8.0),
-                                   child: TextApp2('اطلاعات بیمار', 18, ColorTitleText, true),
-                                 ),
-                                 Padding(
-                                   padding: const EdgeInsets.all(16.0),
-                                   child: Directionality(
-                                     textDirection: TextDirection.rtl,
-                                     child: TextField(
-                                       decoration: InputDecoration(
-                                         labelText: 'نام و نام خانوادگی',
-                                         disabledBorder:OutlineInputBorder(
-                                             borderRadius: BorderRadius.circular(8)
-                                         ),
-                                         border: OutlineInputBorder(
-                                             borderRadius: BorderRadius.circular(8)
-                                         ),
-
-                                       ),
+                             child: Consumer<ProviderEms>(
+                               builder: (ctx,newstate,child){
+                                 return Column(
+                                   crossAxisAlignment: CrossAxisAlignment.end,
+                                   children: [
+                                     Padding(
+                                       padding: const EdgeInsets.all(8.0),
+                                       child: TextApp2('اطلاعات بیمار', 18, ColorTitleText, true),
                                      ),
-                                   ),
-                                 ),
-                                 Padding(
-                                   padding: const EdgeInsets.all(16.0),
-                                   child: Directionality(
-                                     textDirection: TextDirection.rtl,
-                                     child: TextField(
-                                       decoration: InputDecoration(
-                                         labelText: 'کد ملی',
-                                         disabledBorder:OutlineInputBorder(
-                                             borderRadius: BorderRadius.circular(8)
-                                         ),
-                                         border: OutlineInputBorder(
-                                             borderRadius: BorderRadius.circular(8)
-                                         ),
-
-                                       ),
-                                     ),
-                                   ),
-                                 ),
-                                 Padding(
-                                   padding: const EdgeInsets.all(16.0),
-                                   child: Directionality(
-                                     textDirection: TextDirection.rtl,
-                                     child: TextField(
-                                       decoration: InputDecoration(
-                                         labelText: 'سن',
-                                         disabledBorder:OutlineInputBorder(
-                                             borderRadius: BorderRadius.circular(8)
-                                         ),
-                                         border: OutlineInputBorder(
-                                             borderRadius: BorderRadius.circular(8)
-                                         ),
-
-                                       ),
-                                     ),
-                                   ),
-                                 ),
-                                 Padding(
-                                     padding: const EdgeInsets.all(16.0),
-                                     child: Directionality(
-                                       textDirection: TextDirection.rtl,
-                                       child: DropdownButtonFormField(
-                                         value: dropdownvalue,
-                                         decoration: const InputDecoration(
-                                           border: OutlineInputBorder(
-                                             borderRadius:   BorderRadius.all(
-                                               Radius.circular(8.0),
+                                     Padding(
+                                       padding: const EdgeInsets.all(16.0),
+                                       child: Directionality(
+                                         textDirection: TextDirection.rtl,
+                                         child: TextField(
+                                           controller: TextConName,
+                                           decoration: InputDecoration(
+                                             labelText: 'نام و نام خانوادگی',
+                                             disabledBorder:OutlineInputBorder(
+                                                 borderRadius: BorderRadius.circular(8)
                                              ),
+                                             border: OutlineInputBorder(
+                                                 borderRadius: BorderRadius.circular(8)
+                                             ),
+
                                            ),
-                                           // Initial Value
-                                           // Down Arrow Icon
-                                           // Array list of items
-
-                                           // After selecting the desired option,it will
-                                           // change button value to selected value
-
                                          ),
-                                         items: items.map((String items) {
-                                           return DropdownMenuItem(
-                                             value: items,
-                                             child: Row(
-                                               mainAxisAlignment: MainAxisAlignment.end,
-                                               children: [
-                                                 Text(
-                                                   items,),
-                                               ],
+                                       ),
+                                     ),
+                                     Padding(
+                                       padding: const EdgeInsets.all(16.0),
+                                       child: Directionality(
+                                         textDirection: TextDirection.rtl,
+                                         child: TextField(
+                                           controller: TextConCode,
+                                           decoration: InputDecoration(
+                                             labelText: 'کد ملی',
+
+                                             disabledBorder:OutlineInputBorder(
+                                                 borderRadius: BorderRadius.circular(8)
                                              ),
-                                           );
-                                         }).toList()
-                                         , onChanged: (String? value) {
-                                         dropdownvalue = value!;
+                                             border: OutlineInputBorder(
+                                                 borderRadius: BorderRadius.circular(8)
+                                             ),
+
+                                           ),
+                                         ),
+                                       ),
+                                     ),
+                                     Padding(
+                                       padding: const EdgeInsets.all(16.0),
+                                       child: Directionality(
+                                         textDirection: TextDirection.rtl,
+                                         child: TextField(
+                                           controller: TextConAge,
+                                           decoration: InputDecoration(
+                                             labelText: 'سن',
+                                             disabledBorder:OutlineInputBorder(
+                                                 borderRadius: BorderRadius.circular(8)
+                                             ),
+                                             border: OutlineInputBorder(
+                                                 borderRadius: BorderRadius.circular(8)
+                                             ),
+
+                                           ),
+                                         ),
+                                       ),
+                                     ),
+                                     Padding(
+                                         padding: const EdgeInsets.all(16.0),
+                                         child: Directionality(
+                                           textDirection: TextDirection.rtl,
+                                           child: DropdownButtonFormField(
+                                             value: Notifi.dropdownvalue,
+                                             decoration: const InputDecoration(
+                                               border: OutlineInputBorder(
+                                                 borderRadius:   BorderRadius.all(
+                                                   Radius.circular(8.0),
+                                                 ),
+                                               ),
+                                             ),
+                                             items: items.map((String items) {
+                                               return DropdownMenuItem(
+                                                 value: items,
+                                                 child: Row(
+                                                   mainAxisAlignment: MainAxisAlignment.end,
+                                                   children: [
+                                                     Text(
+                                                       items,),
+                                                   ],
+                                                 ),
+                                               );
+                                             }).toList(),
+                                             onChanged: (value) {
+                                             Notifi.setdropdownvalue(value.toString());
+                                           },
+                                           ),
+                                         )),
+
+                                     Container(
+                                       width: wid,
+                                       margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+                                       child: ElevatedButton(onPressed: (){
+                                         RunAddP(context);
                                        },
-                                       ),
-                                     )),
-
-                                 Container(
-                                   width: wid,
-                                   margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
-                                   child: ElevatedButton(onPressed: (){
-
-                                   },
-                                       style: ButtonStyle(
-                                           backgroundColor: MaterialStateProperty.all(ColorApp),
-                                           padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                               RoundedRectangleBorder(
-                                                 borderRadius: BorderRadius.circular(8.0),
+                                           style: ButtonStyle(
+                                               backgroundColor: MaterialStateProperty.all(ColorApp),
+                                               padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                   RoundedRectangleBorder(
+                                                     borderRadius: BorderRadius.circular(8.0),
+                                                   )
                                                )
-                                           )
-                                       ),
-                                       child:Padding(
-                                         padding: const EdgeInsets.all(10.0),
-                                         child: Text('اعلان کد',
-                                           style: TextStyle(color:Colors.white,
-                                               fontSize: 16,
-                                               fontWeight: FontWeight.bold),),
-                                       )),
-                                 ),
-                                 SizedBox(height: 8,)
-                               ],
+                                           ),
+                                           child:Padding(
+                                             padding: const EdgeInsets.all(10.0),
+                                             child: Text('اعلان کد',
+                                               style: TextStyle(color:Colors.white,
+                                                   fontSize: 16,
+                                                   fontWeight: FontWeight.bold),),
+                                           )),
+                                     ),
+                                     SizedBox(height: 8,)
+                                   ],
+                                 );
+                               },
+
                              ),
                            ),
                          ),

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Widgets/TextApp.dart';
 
@@ -16,6 +18,10 @@ const Color BtnColorgreen=Color(0xff008000);
 const Color BtnColorred=Color(0xffef233c);
 
 
+
+void GoNextPage(BuildContext context,dynamic Screen) {
+  Navigator.of(context).push(MaterialPageRoute(builder: (context) => Screen));
+}
 
 
 
@@ -34,7 +40,7 @@ BoxDecoration MainDecoration=BoxDecoration(
 
 // Loading in All App
 Future<void> ShowLoadingApp(BuildContext context) async {
-  return showDialog<void>(
+      showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
@@ -53,6 +59,46 @@ Future<void> ShowLoadingApp(BuildContext context) async {
   );
 }
 // Loading in All App
+
+
+// todo ShowErrors
+void ShowErrorMsg(BuildContext context,String Msg)
+{
+  showToast(Msg,
+      backgroundColor: Colors.redAccent,
+      textStyle: TextStyle(color: Colors.white),
+      position: StyledToastPosition.top,
+      animation: StyledToastAnimation.slideFromLeft,
+      context:context);
+}
+// todo ShowErrors
+
+
+
+// todo ShowSucces
+void ShowSuccesMsg(BuildContext context,String Msg)
+{
+  showToast(Msg,
+      backgroundColor: Colors.green,
+      textStyle: TextStyle(color: Colors.white),
+      position: StyledToastPosition.top,
+      animation: StyledToastAnimation.slideFromLeft,
+      context:context);
+}
+// todo ShowSucces
+
+
+
+  // todo Login Or Rigester User
+ Future LoginInApp(String Name,String Code,int TypeUser,bool Login)async {
+   SharedPreferences prefs = await SharedPreferences.getInstance();
+   await prefs.setString('Name',Name);
+   await prefs.setString('Code',Code);
+   await prefs.setBool('Login',Login);
+   await prefs.setInt('TypeUser',TypeUser);
+ }
+ // todo  Login Or Rigester User
+
 
 
 

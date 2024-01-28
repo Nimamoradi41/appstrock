@@ -14,7 +14,7 @@ class scr extends StatefulWidget {
 }
 
 class _scrState extends State<scr> {
-  final serverurl="http://172.10.10.186:9595/UserApi/userHub";
+  final serverurl="https://fmirzavand.ir/patientHub";
   // final serverurl="http://172.10.10.186:9595/SignalRTest";
 
   late HubConnection connection;
@@ -29,7 +29,7 @@ class _scrState extends State<scr> {
   {
 
     connection=HubConnectionBuilder().withUrl(serverurl).build();
-    connection.on('ReceiveUserUpdate', (arguments) {
+    connection.on('ReceivePatientUpdate', (arguments) {
 
       Run();
 

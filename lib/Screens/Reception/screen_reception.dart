@@ -1,6 +1,11 @@
+import 'package:appstrock/Screens/Reception/ApiServiceReception.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:jalali_date/jalali_date.dart';
 import 'package:provider/provider.dart';
+import 'package:signalr_netcore/hub_connection.dart';
+import 'package:signalr_netcore/hub_connection_builder.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
@@ -13,6 +18,36 @@ import 'ProviderReception/ProviderReception.dart';
 class ScreenReception extends StatelessWidget {
 
 
+
+
+  String  Name='';
+  String Code='';
+  late HubConnection connection;
+  ScreenReception(bool IsRigester,BuildContext context,String NewName,String CodeNew){
+    if(IsRigester)
+    {
+      ShowSuccesMsg(context, 'ثبت نام با موفقیت انجام شد');
+      //Set an animation
+    }
+
+    Notifi=Provider.of<ProviderReception>(context,listen: false);
+
+    Name=NewName;
+    Code=CodeNew;
+
+    try{
+      connection=HubConnectionBuilder().withUrl('https://fmirzavand.ir/patientHub').build();
+      connection.on('ReceivePatientUpdate', (arguments) {
+        RunListP(context,false);
+      });
+      connection.start();
+    }catch (E)
+    {
+      print(E.toString());
+    }
+
+    // RunListP(context, true);
+  }
   bool status=false;
 
   Future<void> _showAlertDialog(BuildContext context) async {
@@ -219,9 +254,47 @@ class ScreenReception extends StatelessWidget {
 
   String dropdownvalue = 'مرد';
   late var Notifi=ProviderReception();
+
+
+  Future RunListP(BuildContext context,bool refresh) async
+  {
+    final date = PersianDate.now();
+    String formattedDate =
+        '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+    // چاپ تاریخ جلالی با فرمت مورد نظر
+    print('تاریخ جلالی فعلی: $formattedDate');
+
+
+
+
+
+
+
+
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceReception.ListPatient(formattedDate,context,refresh);
+
+
+
+
+
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        Notifi.setItems(Data.data);
+      }else{
+        showToast(Data.message,
+            position: StyledToastPosition.top,
+            context:context);
+      }
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    Notifi=Provider.of<ProviderReception>(context);
     double wid=MediaQuery.of(context).size.width;
     double hei=MediaQuery.of(context).size.height;
     wid=wid>600?600:wid;
@@ -297,8 +370,7 @@ class ScreenReception extends StatelessWidget {
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         TextApp2(' : کدملی',14,ColorTextsubject,false),
-                                        TextApp2('174875455445',16,ColorTextbody,true),
-
+                                        TextApp2(Code,16,ColorTextbody,true),
                                       ],
                                     ),
                                   ),
@@ -317,7 +389,7 @@ class ScreenReception extends StatelessWidget {
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         TextApp2(' : نام ونام خانوادگی',14,ColorTextsubject,false),
-                                        TextApp2('نیما مرادی',16,ColorTextbody,true),
+                                        TextApp2(Name,16,ColorTextbody,true),
 
                                       ],
                                     ),
@@ -360,10 +432,7 @@ class ScreenReception extends StatelessWidget {
                             ),
                           ),
                         ),
-
-
                         SizedBox(height: 24,),
-
                         Container(
                           height:  hei*0.68,
                           child: Consumer<ProviderReception>(
@@ -384,11 +453,6 @@ class ScreenReception extends StatelessWidget {
 
                           ),
                         ),
-
-
-
-
-
 
                       ],
                     ),

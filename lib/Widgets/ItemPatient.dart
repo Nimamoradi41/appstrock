@@ -48,7 +48,7 @@ class ItemPatient extends StatelessWidget {
                       children: [
                         TextApp('سن', 10, ColorTitleText, false),
                         SizedBox(height: 4,),
-                        TextApp(ItemsP.Age.toString(), 12, ColorTextbody, true),
+                        TextApp(ItemsP.age.toString().isEmpty?'نامشخص':ItemsP.age.toString(), 12, ColorTextbody, true),
                       ],
                     ),
                     SizedBox(width: 12,),
@@ -62,7 +62,7 @@ class ItemPatient extends StatelessWidget {
                       children: [
                         TextApp('جنسیت', 10, ColorTitleText, false),
                         SizedBox(height: 4,),
-                        TextApp(ItemsP.Gender ? 'مرد':'زن', 12, ColorTextbody, true),
+                        TextApp(ItemsP.gender.toString().isEmpty?'نامشخص':ItemsP.gender.toString() , 12, ColorTextbody, true),
                       ],
                     ),
                     SizedBox(width: 8,),
@@ -73,9 +73,9 @@ class ItemPatient extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    TextApp( ItemsP.Name, 14, ColorTextbody, true),
+                    TextApp( ItemsP.fullName, 14, ColorTextbody, true),
                     SizedBox(height: 4,),
-                    TextApp(' کد ملی : '+ItemsP.NationalCode.toString(), 12, ColorTitleText, true),
+                    TextApp(ItemsP.nationalCode.toString().isEmpty?': کد ملی '+'نامشخص':': کد ملی '+ItemsP.nationalCode.toString(), 12, ColorTitleText, true),
                   ],
                 )
               ],

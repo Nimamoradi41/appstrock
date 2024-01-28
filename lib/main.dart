@@ -1,6 +1,7 @@
 // import 'dart:js';
 
 import 'package:appstrock/Screens/Autentication/ScreenRigester.dart';
+import 'package:appstrock/Screens/Ems/ProviderEms/ProviderEms.dart';
 import 'package:appstrock/Screens/Reception/screen_reception.dart';
 import 'package:appstrock/Screens/Resident/screen_resident.dart';
 import 'package:appstrock/Screens/Teriazh/screen_teriazh.dart';
@@ -24,6 +25,7 @@ void main() {
   runApp(  MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ProviderReception()),
+        ChangeNotifierProvider(create: (context) => ProviderEms()),
         ChangeNotifierProvider(create: (context) => ProviderSickCarrier()),
         ChangeNotifierProvider(create: (context) => ProviderResident()),
         ChangeNotifierProvider(create: (context) => ProviderResidentDetaile()),
@@ -49,8 +51,9 @@ class _MyAppState extends State<MyApp> {
       // home: ScreenLogin(),
       // home: ScreenRigester(),
       // home: ScreenCodeOtp(),
-      // home: scr(),
-      home: ScreenEms(),
+      home: scr(),
+      // home: ScreenEms(),
+      // home: ScreenEms(),
       // home: Screen_Teriazh(),
       // home: ScreenReception(),
       // home: ScreenResident(),

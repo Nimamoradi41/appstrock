@@ -1,5 +1,7 @@
 
 import 'package:appstrock/Screens/Autentication/ApiServiceAutentication.dart';
+import 'package:appstrock/Screens/Ems/screen_ems.dart';
+import 'package:appstrock/Screens/Teriazh/screen_teriazh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_svg/svg.dart';
@@ -30,11 +32,6 @@ class _ScreenRigesterState extends State<ScreenRigester> {
     'فوریت های پزشکی',
     'تریاژ',
     'پزیرش',
-    'رزیدنت',
-    'بیماربر',
-    'آزمایشگاه',
-    'استروک',
-    'دکتر متخصص',
   ];
 
 
@@ -42,61 +39,74 @@ class _ScreenRigesterState extends State<ScreenRigester> {
   bool IsLoading=false;
   Future RunRegister(BuildContext context)async{
 
-    if(textControllerName.text.isEmpty)
-      {
-        showToast("نام و نام خانوادگی را وارد کنید",
-            position: StyledToastPosition.top,
-            context:context);
-        return;
-      }
-
-    if(textControllerNationalCode.text.isEmpty)
-    {
-      showToast("کدملی را وارد کنید",
-          position: StyledToastPosition.top,
-          context:context);
-      return;
-    }
-
-    if(textControllerNationalCode.text.length!=10)
-    {
-      showToast("کدملی اشتباه است",
-          position: StyledToastPosition.top,
-          context:context);
-      return;
-    }
-
-
-    if(textControllerPhoneNumber.text.isEmpty)
-    {
-      showToast("شماره تلفن را وارد کنید",
-          position: StyledToastPosition.top,
-          context:context);
-      return;
-    }
-
-    if(!textControllerPhoneNumber.text.startsWith('0'))
-    {
-      showToast("شماره تلفن اشتباه است",
-          position: StyledToastPosition.top,
-          context:context);
-      return;
-    }
-
-    if(textControllerPhoneNumber.text.length<11)
-    {
-      showToast("شماره تلفن اشتباه است",
-          position: StyledToastPosition.top,
-          context:context);
-      return;
-    }
-
-
-    int TypUser= await GetTypeUser(dropdownvalue);
-    ShowLoadingApp(context);
-    await Future.delayed(Duration(seconds: 3));
-    var Data=ApiServiceAutentication.Rigester(textControllerName.text, TypUser.toString(), textControllerNationalCode.text, textControllerPhoneNumber.text, context);
-
+    GoNextPage(context,ScreenEms(true,context,'نیما مرادی احدی میسلیمانی','1234567894'));
+    // if(textControllerName.text.isEmpty)
+    //   {
+    //     ShowErrorMsg(context,'نام و نام خانوادگی را وارد کنید');
+    //     return;
+    //   }
+    //
+    // if(textControllerNationalCode.text.isEmpty)
+    // {
+    //
+    //   ShowErrorMsg(context,'کدملی را وارد کنید');
+    //   return;
+    // }
+    //
+    // if(textControllerNationalCode.text.length!=10)
+    // {
+    //   ShowErrorMsg(context,'کدملی اشتباه است');
+    //   return;
+    // }
+    //
+    //
+    // if(textControllerPhoneNumber.text.isEmpty)
+    // {
+    //
+    //   ShowErrorMsg(context,'شماره تلفن را وارد کنید');
+    //   return;
+    // }
+    //
+    // if(!textControllerPhoneNumber.text.startsWith('0'))
+    // {
+    //   ShowErrorMsg(context,'شماره تلفن اشتباه است');
+    //   return;
+    // }
+    //
+    // if(textControllerPhoneNumber.text.length<11)
+    // {
+    //
+    //   ShowErrorMsg(context,'شماره تلفن اشتباه است');
+    //   return;
+    // }
+    //
+    //
+    // int TypUser= await GetTypeUser(dropdownvalue);
+    // ShowLoadingApp(context);
+    // // ignore: use_build_context_synchronously
+    // var Data=await ApiServiceAutentication.Rigester(textControllerName.text, TypUser.toString(), textControllerNationalCode.text, textControllerPhoneNumber.text, context);
+    //
+    //
+    //  if(Data!=null)
+    //   {
+    //     if(Data.success)
+    //       {
+    //          if(TypUser==1)
+    //           {
+    //             // ignore: use_build_context_synchronously
+    //             await  LoginInApp(Data.data.name,Data.data.nationalCode,1,true);
+    //             GoNextPage(context,ScreenEms(true,context,Data.data.name,Data.data.nationalCode));
+    //           }
+    //          if(TypUser==2)
+    //          {
+    //            // ignore: use_build_context_synchronously
+    //            await  LoginInApp(Data.data.name,Data.data.nationalCode,2,true);
+    //            GoNextPage(context,Screen_Teriazh());
+    //          }
+    //       }else{
+    //       ShowErrorMsg(context,Data.message);
+    //     }
+    //   }
 
 
 

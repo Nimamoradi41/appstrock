@@ -30,21 +30,25 @@ class ScreenReception extends StatelessWidget {
       //Set an animation
     }
 
-    Notifi=Provider.of<ProviderReception>(context,listen: false);
+
+    Notifi.ListItemsPatient.add(ModelPatient(id: 7445, fullName: 'NimaMorado', nationalCode: '1788484', age: '32', gender: 'مرد'));
+    // ignore: invalid_use_of_visible_for_testing_member
+    Notifi.notifyListeners();
+    // Notifi=Provider.of<ProviderReception>(context,listen: false);
 
     Name=NewName;
     Code=CodeNew;
 
-    try{
-      connection=HubConnectionBuilder().withUrl('https://fmirzavand.ir/patientHub').build();
-      connection.on('ReceivePatientUpdate', (arguments) {
-        RunListP(context,false);
-      });
-      connection.start();
-    }catch (E)
-    {
-      print(E.toString());
-    }
+    // try{
+    //   connection=HubConnectionBuilder().withUrl('https://fmirzavand.ir/patientHub').build();
+    //   connection.on('ReceivePatientUpdate', (arguments) {
+    //     RunListP(context,false);
+    //   });
+    //   connection.start();
+    // }catch (E)
+    // {
+    //   print(E.toString());
+    // }
 
     // RunListP(context, true);
   }
@@ -437,15 +441,17 @@ class ScreenReception extends StatelessWidget {
                           height:  hei*0.68,
                           child: Consumer<ProviderReception>(
                             builder: (context,newstate,child){
-                              ItemsP=newstate.ListItemsPatient;
+                              // ItemsP=newstate.ListItemsPatient;
                               return ListView.builder(
-                                itemCount: ItemsP.length,
+                                // itemCount: ItemsP.length,
+                                itemCount: 2,
                                 itemBuilder: (ctx,item){
                                   return InkWell(
                                     onTap: (){
                                       _showAlertDialog(context);
                                     },
-                                    child: ItemPatient(wid: wid, ItemsP: ItemsP[item],),
+                                    // child: ItemPatient(wid: wid, ItemsP: ItemsP[item],),
+                                    child: ItemPatient(wid: wid),
                                   );
                                 },
                               );

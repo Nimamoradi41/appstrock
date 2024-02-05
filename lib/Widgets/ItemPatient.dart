@@ -9,11 +9,11 @@ class ItemPatient extends StatelessWidget {
   const ItemPatient({
     super.key,
     required this.wid,
-    required this.ItemsP,
+    // required this.ItemsP,
   });
-
+  //
   final double wid;
-  final ModelPatient ItemsP;
+  // final ModelPatient ItemsP;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,8 @@ class ItemPatient extends StatelessWidget {
                       children: [
                         TextApp('سن', 10, ColorTitleText, false),
                         SizedBox(height: 4,),
-                        TextApp(ItemsP.age.toString().isEmpty?'نامشخص':ItemsP.age.toString(), 12, ColorTextbody, true),
+                        // TextApp(ItemsP.age.toString().isEmpty?'نامشخص':ItemsP.age.toString(), 12, ColorTextbody, true),
+                        TextApp('26', 12, ColorTextbody, true),
                       ],
                     ),
                     SizedBox(width: 12,),
@@ -62,7 +63,8 @@ class ItemPatient extends StatelessWidget {
                       children: [
                         TextApp('جنسیت', 10, ColorTitleText, false),
                         SizedBox(height: 4,),
-                        TextApp(ItemsP.gender.toString().isEmpty?'نامشخص':ItemsP.gender.toString() , 12, ColorTextbody, true),
+                        // TextApp(ItemsP.gender.toString().isEmpty?'نامشخص':ItemsP.gender.toString() , 12, ColorTextbody, true),
+                        TextApp('مرد' , 12, ColorTextbody, true),
                       ],
                     ),
                     SizedBox(width: 8,),
@@ -73,9 +75,11 @@ class ItemPatient extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    TextApp( ItemsP.fullName, 14, ColorTextbody, true),
+                    // TextApp( ItemsP.fullName, 14, ColorTextbody, true),
+                    TextApp( 'نیما مرادی', 14, ColorTextbody, true),
                     SizedBox(height: 4,),
-                    TextApp(ItemsP.nationalCode.toString().isEmpty?': کد ملی '+'نامشخص':': کد ملی '+ItemsP.nationalCode.toString(), 12, ColorTitleText, true),
+                    TextApp('17418848', 12, ColorTitleText, true),
+                    // TextApp(ItemsP.nationalCode.toString().isEmpty?': کد ملی '+'نامشخص':': کد ملی '+ItemsP.nationalCode.toString(), 12, ColorTitleText, true),
                   ],
                 )
               ],

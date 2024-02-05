@@ -18,6 +18,10 @@ class ScreenResident extends StatelessWidget {
 
   bool status=false;
 
+  ScreenResident(){
+     // var Data=
+  }
+
   List<ModelPatient> ItemsP=[];
   var items = [
     'مرد',
@@ -124,7 +128,6 @@ class ScreenResident extends StatelessWidget {
                                       children: [
                                         TextApp2(' : نام ونام خانوادگی',14,ColorTextsubject,false),
                                         TextApp2('نیما مرادی',16,ColorTextbody,true),
-
                                       ],
                                     ),
                                   ),
@@ -195,8 +198,6 @@ class ScreenResident extends StatelessWidget {
                     ),
                   ),
                 ),
-
-
                 Positioned(
                     bottom: 8,
                     right: 8,

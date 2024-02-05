@@ -27,12 +27,9 @@ class _scrState extends State<scr> {
   List<Modelsuggestionssvsv> list=[];
   void initC()
   {
-
     connection=HubConnectionBuilder().withUrl(serverurl).build();
     connection.on('ReceivePatientUpdate', (arguments) {
-
       Run();
-
     });
     Run();
   }

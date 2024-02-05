@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
       ),
       debugShowCheckedModeBanner: false,
       // home: ScreenLogin(),
-      // home: ScreenRigester(),
+      home: ScreenRigester(),
       // home: ScreenCodeOtp(),
       // home: scr(),
       // home: ScreenEms(),

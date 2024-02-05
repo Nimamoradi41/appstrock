@@ -2,8 +2,8 @@ import 'package:appstrock/Screens/Reception/ApiServiceReception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:jalali_date/jalali_date.dart';
 import 'package:provider/provider.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 import 'package:signalr_netcore/hub_connection.dart';
 import 'package:signalr_netcore/hub_connection_builder.dart';
 
@@ -258,7 +258,7 @@ class ScreenReception extends StatelessWidget {
 
   Future RunListP(BuildContext context,bool refresh) async
   {
-    final date = PersianDate.now();
+    Jalali date=Jalali.now();
     String formattedDate =
         '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
     // چاپ تاریخ جلالی با فرمت مورد نظر

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
-import 'package:jalali_date/jalali_date.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 import '../../Constants.dart';
 import '../Reception/screen_reception.dart';
 import 'ProviderEms/ProviderEms.dart';
@@ -47,7 +47,8 @@ import 'ProviderEms/ProviderEms.dart';
        return;
      }
 
-     final date = PersianDate.now();
+
+     Jalali date=Jalali.now();
      String formattedDate =
          '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
      // چاپ تاریخ جلالی با فرمت مورد نظر

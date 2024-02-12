@@ -3,12 +3,18 @@ import 'package:provider/provider.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/TextApp.dart';
+import '../Reception/Model/ModelPatient.dart';
 import 'ProviderResident/ProviderResidentDetaile.dart';
 
 
 
 class ScreenDetailPatient extends StatelessWidget {
   late var Notifi=ProviderResidentDetaile();
+
+
+  ScreenDetailPatient(this.modelPatient);
+
+  ModelPatient modelPatient;
   @override
   Widget build(BuildContext context) {
     Notifi=Provider.of<ProviderResidentDetaile>(context);
@@ -87,7 +93,7 @@ class ScreenDetailPatient extends StatelessWidget {
                                       children: [
                                         TextApp('کدملی', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp('123456587965454', 14, ColorTextbody, true)
+                                        TextApp(modelPatient.nationalCode.isEmpty  ? 'نامشخص':modelPatient.nationalCode, 14, ColorTextbody, true)
                                       ],
                                     )),
                                     SizedBox(width: 8,),
@@ -102,7 +108,37 @@ class ScreenDetailPatient extends StatelessWidget {
                                       children: [
                                         TextApp('نام و نام خانوادگی', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp('نیما مرادی', 14, ColorTextbody, true)
+                                        TextApp(modelPatient.fullName.isEmpty  ? 'نامشخص':modelPatient.fullName, 14, ColorTextbody, true)
+                                      ],
+                                    )),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        TextApp('سن', 12, ColorTitleText, false),
+                                        SizedBox(height: 8,),
+                                        TextApp(modelPatient.age.isEmpty  ? 'نامشخص':modelPatient.age, 14, ColorTextbody, true)
+                                      ],
+                                    )),
+                                    SizedBox(width: 8,),
+                                    Container(
+                                      width: 1,
+                                      height: 25,
+                                      color: Colors.black12,
+                                    ),
+                                    SizedBox(width: 8,),
+                                    Expanded(child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        TextApp('جنسیت', 12, ColorTitleText, false),
+                                        SizedBox(height: 8,),
+                                        TextApp(modelPatient.gender.isEmpty  ? 'نامشخص':modelPatient.gender, 14, ColorTextbody, true)
                                       ],
                                     )),
                                   ],
@@ -148,6 +184,9 @@ class ScreenDetailPatient extends StatelessWidget {
                                      ),
                                    ),
                                  ),
+
+
+                                modelPatient.
                                 Row(
                                   children: [
                                     Expanded(child: Padding(
@@ -160,7 +199,7 @@ class ScreenDetailPatient extends StatelessWidget {
 
                                           },
                                           style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(BtnColorgreen),
+                                              backgroundColor: MaterialStateProperty.all(BtnColorred),
                                               padding: MaterialStateProperty.all(EdgeInsets.all(8)),
                                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                   RoundedRectangleBorder(
@@ -170,7 +209,7 @@ class ScreenDetailPatient extends StatelessWidget {
                                           ),
                                           child:Padding(
                                             padding: const EdgeInsets.all(10.0),
-                                            child: Text('کد 724 نیست',
+                                            child: Text('CT',
                                               style: TextStyle(color:Colors.white,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),),
@@ -194,13 +233,39 @@ class ScreenDetailPatient extends StatelessWidget {
                                           ),
                                           child:Padding(
                                             padding: const EdgeInsets.all(10.0),
-                                            child: Text('کد 724 هست',
+                                            child: Text('MIR',
                                               style: TextStyle(color:Colors.white,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),),
                                           )),
                                     ))
                                   ],
+                                ),
+                                Container(
+                                  width: wid,
+                                  margin: const EdgeInsets.all(8),
+                                  child: ElevatedButton(
+                                      onPressed: (){
+
+
+
+                                      },
+                                      style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all(BtnColorgreen),
+                                          padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8.0),
+                                              )
+                                          )
+                                      ),
+                                      child:Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text('کد 724 نیست',
+                                          style: TextStyle(color:Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),),
+                                      )),
                                 ),
                                 SizedBox(height: 16,),
                               ],

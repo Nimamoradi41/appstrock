@@ -24,8 +24,12 @@ class ApiServiceReception{
 
     var request = http.MultipartRequest('POST', Uri.parse('https://fmirzavand.ir/Patients/PatientList'));
     request.fields.addAll({
-      'date': Date,
+      // 'date': Date,
+      'date': '1402/11/02',
     });
+
+
+    print(request.fields.toString());
 
     try{
       http.StreamedResponse response = await request.send().timeout(
@@ -34,9 +38,11 @@ class ApiServiceReception{
         ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
       }) ;
 
+
       if(response.statusCode==200)
       {
         String str= await response.stream.bytesToString();
+        print(str);
         ModelListPatient data= await  modelListPatientFromJson(str);
         login=data;
       }else{

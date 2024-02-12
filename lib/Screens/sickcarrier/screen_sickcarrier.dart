@@ -179,7 +179,8 @@ class ScreenSickCarrier extends StatelessWidget {
                               return ListView.builder(
                                 itemCount: ItemsP.length,
                                 itemBuilder: (ctx,item){
-                                  return ItemPatient(wid: wid, ItemsP: ItemsP[item],);
+                                  // return ItemPatient(wid: wid, ItemsP: ItemsP[item],);
+                                  return Container();
                                 },
                               );
                             },

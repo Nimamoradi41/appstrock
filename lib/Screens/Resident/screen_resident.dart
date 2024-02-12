@@ -1,13 +1,16 @@
+import 'package:appstrock/Screens/Reception/ApiServiceReception.dart';
 import 'package:appstrock/Screens/Reception/ProviderReception/ProviderReception.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
 import '../../Widgets/TextApp.dart';
 import '../Reception/Model/ModelPatient.dart';
+import 'ScreenDetailPatient.dart';
 
 
 
@@ -29,6 +32,48 @@ class ScreenResident extends StatelessWidget {
   ];
   String dropdownvalue = 'مرد';
   late var Notifi=ProviderReception();
+
+  ScreenResident(this.MainContext){
+    RunListP(MainContext,false);
+  }
+
+  BuildContext MainContext;
+
+
+  Future RunListP(BuildContext context,bool refresh) async
+  {
+    Jalali date=Jalali.now();
+    String formattedDate =
+        '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+
+
+
+
+
+
+
+
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceReception.ListPatient(formattedDate,context,refresh);
+
+
+
+
+    print(Data.toJson());
+
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        Notifi.setItems(Data.data);
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Notifi=Provider.of<ProviderReception>(context);
@@ -181,7 +226,12 @@ class ScreenResident extends StatelessWidget {
                               return ListView.builder(
                                 itemCount: ItemsP.length,
                                 itemBuilder: (ctx,item){
-                                  return ItemPatient(wid: wid, ItemsP: ItemsP[item],);
+                                  // return ItemPatient(wid: wid, ItemsP: ItemsP[item],);
+                                  return InkWell(
+                                      onTap: (){
+                                        GoNextPage(context,ScreenDetailPatient(ItemsP[item]));
+                                      },
+                                      child: ItemPatient(wid: wid));
                                 },
                               );
                             },

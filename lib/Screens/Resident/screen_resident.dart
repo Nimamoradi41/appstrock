@@ -21,9 +21,6 @@ class ScreenResident extends StatelessWidget {
 
   bool status=false;
 
-  ScreenResident(){
-     // var Data=
-  }
 
   List<ModelPatient> ItemsP=[];
   var items = [
@@ -229,7 +226,7 @@ class ScreenResident extends StatelessWidget {
                                   // return ItemPatient(wid: wid, ItemsP: ItemsP[item],);
                                   return InkWell(
                                       onTap: (){
-                                        GoNextPage(context,ScreenDetailPatient(ItemsP[item]));
+                                        GoNextPage(context,ScreenDetailPatient(ItemsP[item],context));
                                       },
                                       child: ItemPatient(wid: wid));
                                 },

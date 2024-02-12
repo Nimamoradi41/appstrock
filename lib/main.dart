@@ -6,6 +6,7 @@ import 'package:appstrock/Screens/Reception/screen_reception.dart';
 import 'package:appstrock/Screens/Resident/screen_resident.dart';
 import 'package:appstrock/Screens/Teriazh/screen_teriazh.dart';
 import 'package:appstrock/scr.dart';
+import 'package:appstrock/test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -50,14 +51,15 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       // home: ScreenLogin(),
       // home: ScreenRigester(),
-      home: ScreenResident(context),
+      // home: ScreenResident(context),
+      home: test(),
       // home: ScreenCodeOtp(),
       // home: scr(),
       // home: ScreenEms(),
       // home: ScreenEms(),
       // home: Screen_Teriazh(),
       // home: ScreenReception(),
-      home: ScreenResident(),
+      // home: ScreenResident(),
       // home: ScreenDetailPatient(),
       // home: ScreenSickCarrier(),
     );

@@ -24,6 +24,109 @@ void GoNextPage(BuildContext context,dynamic Screen) {
 }
 
 
+Future<bool>   ShowAllow(BuildContext context,String BodyText) async{
+
+  bool Flag=false;
+  await  showDialog(context: context, builder:
+      (ctx){
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              margin: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                        color: ColorApp,
+                        borderRadius: BorderRadius.only(topRight: Radius.circular(8),topLeft: Radius.circular(8))
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: TextApp('مجوز',16,Colors.white,true),
+                    ),
+                  ),
+                  SizedBox(height: 16,),
+                  TextApp(BodyText,18,Colors.black87,true),
+                  SizedBox(height: 16,),
+                  Row(
+                    children: [
+
+                      Expanded(child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: ElevatedButton(
+                            onPressed: (){
+                              Navigator.pop(context);
+                              // NeedToCT(context);
+
+                            },
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(BtnColorgreen),
+                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    )
+                                )
+                            ),
+                            child:Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text('خیر',
+                                style: TextStyle(color:Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),),
+                            )),
+                      )),
+                      Expanded(child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: ElevatedButton(onPressed: (){
+                          Navigator.pop(context);
+                          Flag=true;
+
+                        },
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(BtnColorred),
+                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    )
+                                )
+                            ),
+                            child:Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text('بله',
+                                style: TextStyle(color:Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),),
+                            )),
+                      ))
+                    ],
+                  ),
+                  SizedBox(height: 8,),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  );
+
+
+  return Flag;
+
+}
 
 BoxDecoration MainDecoration=BoxDecoration(
     color: Colors.white,

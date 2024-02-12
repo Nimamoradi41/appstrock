@@ -31,7 +31,7 @@ class ScreenReception extends StatelessWidget {
     }
 
 
-    Notifi.ListItemsPatient.add(ModelPatient(id: 7445, fullName: 'NimaMorado', nationalCode: '1788484', age: '32', gender: 'مرد'));
+    Notifi.ListItemsPatient.add(ModelPatient(id: 7445, fullName: 'NimaMorado', nationalCode: '1788484', age: '32', gender: 'مرد', timeOfAddToSystem: '', dateOfAddToSystem: '', needToMRI: false, isNot724: false, needToCT: false));
     // ignore: invalid_use_of_visible_for_testing_member
     Notifi.notifyListeners();
     // Notifi=Provider.of<ProviderReception>(context,listen: false);

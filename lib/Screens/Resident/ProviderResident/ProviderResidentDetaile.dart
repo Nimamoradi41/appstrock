@@ -7,11 +7,11 @@ import '../../Reception/Model/ModelPatient.dart';
 class ProviderResidentDetaile extends ChangeNotifier{
 
 
-  List<ModelPatient> ListItemsPatient=[];
+  late ModelPatient PatientItem;
   bool status=false;
-   void setItems(List<ModelPatient> newitem)
+   void setItems(ModelPatient newitem)
    {
-     ListItemsPatient=newitem;
+     PatientItem=newitem;
      notifyListeners();
    }
 

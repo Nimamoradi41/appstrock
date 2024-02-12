@@ -1,4 +1,6 @@
+import 'package:appstrock/Screens/Resident/ApiServiceResident.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker_bdaya/flutter_datetime_picker_bdaya.dart';
 import 'package:provider/provider.dart';
 
 import '../../Constants.dart';
@@ -8,13 +10,190 @@ import 'ProviderResident/ProviderResidentDetaile.dart';
 
 
 
-class ScreenDetailPatient extends StatelessWidget {
-  late var Notifi=ProviderResidentDetaile();
+class ScreenDetailPatient extends StatefulWidget {
+
+  ScreenDetailPatient(this.modelPatient,this.MainCtx);
+  
 
 
-  ScreenDetailPatient(this.modelPatient);
+
+
 
   ModelPatient modelPatient;
+  BuildContext MainCtx;
+
+  @override
+  State<ScreenDetailPatient> createState() => _ScreenDetailPatientState();
+}
+
+class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
+  late var Notifi=ProviderResidentDetaile();
+
+  // Future NeedToCT(BuildContext context)async{
+  Future NeedToCT()async{
+
+
+    DateTime? TimeStart;
+    var Flag= await   ShowAllow(widget.MainCtx,'آیا از CT مطمئن هستید ؟ ');
+
+
+    if(Flag)
+      {
+        // ignore: use_build_context_synchronously
+        await   DatePickerBdaya.showTimePicker(widget.MainCtx,
+            showTitleActions: true,
+            onConfirm: (date) {
+              TimeStart=date;
+            }, currentTime: DateTime.now(), locale: LocaleType.fa);
+
+
+
+        if(TimeStart!=null)
+          {
+            var Data= await ApiServiceResident.NeedToCT(widget.modelPatient.id.toString(), widget.MainCtx, TimeStart!.millisecondsSinceEpoch.toString());
+            if(Data!=null)
+              {
+                if(Data.success)
+                  {
+                    widget.modelPatient.needToCT=true;
+                    Notifi.setItems(widget.modelPatient);
+                    // ignore: use_build_context_synchronously
+                    ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
+                  }else
+                    {
+                      // ignore: use_build_context_synchronously
+                      ShowErrorMsg(widget.MainCtx, Data.message);
+                    }
+              }else{
+              // ignore: use_build_context_synchronously
+              ShowErrorMsg(widget.MainCtx, 'مشکلی در ارتباط با سرور به وچود آمده');
+            }
+          }
+
+        }
+      }
+
+  Future NeedToMRI()async{
+
+
+    DateTime? TimeStart;
+    var Flag= await   ShowAllow(widget.MainCtx,'آیا از MRI مطمئن هستید ؟ ');
+
+
+    if(Flag)
+    {
+      // ignore: use_build_context_synchronously
+      await   DatePickerBdaya.showTimePicker(widget.MainCtx,
+          showTitleActions: true,
+          onConfirm: (date) {
+            TimeStart=date;
+          }, currentTime: DateTime.now(), locale: LocaleType.fa);
+
+
+
+      if(TimeStart!=null)
+      {
+        var Data= await ApiServiceResident.NeedToMRI(widget.modelPatient.id.toString(), widget.MainCtx, TimeStart!.millisecondsSinceEpoch.toString());
+        if(Data!=null)
+        {
+          if(Data.success)
+          {
+            widget.modelPatient.needToMRI=true;
+            Notifi.setItems(widget.modelPatient);
+            // ignore: use_build_context_synchronously
+            ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
+          }else
+          {
+            // ignore: use_build_context_synchronously
+            ShowErrorMsg(widget.MainCtx, Data.message);
+          }
+        }else{
+          // ignore: use_build_context_synchronously
+          ShowErrorMsg(widget.MainCtx, 'مشکلی در ارتباط با سرور به وچود آمده');
+        }
+      }
+
+    }
+  }
+
+  Future FormNIHSS()async{
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(32),topRight: Radius.circular(32)),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                              color: ColorApp,
+                              borderRadius: BorderRadius.only(topRight: Radius.circular(8),topLeft: Radius.circular(8))
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: TextApp('NIHSS',16,Colors.white,true),
+                          ),
+                        ),
+                        SizedBox(height: 16,),
+
+
+                        // QuestionWidget
+                        // Row(
+                        //   children: [
+                        //     Expanded(child: TextApp(
+                        //       'Level of Consciousnees',14,Colors.black45,false
+                        //     ))
+                        //   ],
+                        // ),
+                        // SizedBox(height: 8,),
+                        // Column(
+                        //   children: [
+                        //     Row(
+                        //       children: [
+                        //
+                        //         Expanded(child: TextApp(
+                        //             'Level of Consciousnees',14,Colors.black87,false
+                        //         ))
+                        //       ],
+                        //     )
+                        //   ],
+                        // )
+
+
+
+
+
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+
+  }
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     Notifi=Provider.of<ProviderResidentDetaile>(context);
@@ -93,7 +272,7 @@ class ScreenDetailPatient extends StatelessWidget {
                                       children: [
                                         TextApp('کدملی', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(modelPatient.nationalCode.isEmpty  ? 'نامشخص':modelPatient.nationalCode, 14, ColorTextbody, true)
+                                        TextApp(widget.modelPatient.nationalCode.isEmpty  ? 'نامشخص':widget.modelPatient.nationalCode, 14, ColorTextbody, true)
                                       ],
                                     )),
                                     SizedBox(width: 8,),
@@ -108,7 +287,7 @@ class ScreenDetailPatient extends StatelessWidget {
                                       children: [
                                         TextApp('نام و نام خانوادگی', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(modelPatient.fullName.isEmpty  ? 'نامشخص':modelPatient.fullName, 14, ColorTextbody, true)
+                                        TextApp(widget.modelPatient.fullName.isEmpty  ? 'نامشخص':widget.modelPatient.fullName, 14, ColorTextbody, true)
                                       ],
                                     )),
                                   ],
@@ -123,7 +302,7 @@ class ScreenDetailPatient extends StatelessWidget {
                                       children: [
                                         TextApp('سن', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(modelPatient.age.isEmpty  ? 'نامشخص':modelPatient.age, 14, ColorTextbody, true)
+                                        TextApp(widget.modelPatient.age.isEmpty  ? 'نامشخص':widget.modelPatient.age, 14, ColorTextbody, true)
                                       ],
                                     )),
                                     SizedBox(width: 8,),
@@ -138,7 +317,7 @@ class ScreenDetailPatient extends StatelessWidget {
                                       children: [
                                         TextApp('جنسیت', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(modelPatient.gender.isEmpty  ? 'نامشخص':modelPatient.gender, 14, ColorTextbody, true)
+                                        TextApp(widget.modelPatient.gender.isEmpty  ? 'نامشخص':widget.modelPatient.gender, 14, ColorTextbody, true)
                                       ],
                                     )),
                                   ],
@@ -162,7 +341,7 @@ class ScreenDetailPatient extends StatelessWidget {
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp('14:30', 16, ColorTextbody, true),
+                                              TextApp(widget.modelPatient.timeOfAddToSystem.isEmpty  ? 'نامشخص':widget.modelPatient.timeOfAddToSystem, 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
                                                   child: TextApp(' :  زمان ثبت در سیسیتم', 14, ColorTitleText, false))),
@@ -173,10 +352,25 @@ class ScreenDetailPatient extends StatelessWidget {
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp('1402/12/12', 16, ColorTextbody, true),
+                                              TextApp(widget.modelPatient.dateOfAddToSystem.isEmpty  ? 'نامشخص':widget.modelPatient.dateOfAddToSystem, 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
                                                   child: TextApp(' :  تاریخ ثبت در سیسیتم', 14, ColorTitleText, false))),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
+                                              widget.modelPatient.needToCT ? ' اعلان CT' :
+                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
+
+                                                  , 16, ColorTextbody, true),
+                                              Expanded(child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' :  وضعیت بیمار', 14, ColorTitleText, false))),
                                             ],
                                           ),
                                         )
@@ -184,11 +378,10 @@ class ScreenDetailPatient extends StatelessWidget {
                                      ),
                                    ),
                                  ),
-
-
-                                modelPatient.
+                                !widget.modelPatient.needToCT && !widget.modelPatient.isNot724 && !widget.modelPatient.needToMRI ?
                                 Row(
                                   children: [
+
                                     Expanded(child: Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                       child: ElevatedButton(
@@ -196,6 +389,7 @@ class ScreenDetailPatient extends StatelessWidget {
                                           onPressed: (){
 
 
+                                            NeedToCT();
 
                                           },
                                           style: ButtonStyle(
@@ -218,9 +412,7 @@ class ScreenDetailPatient extends StatelessWidget {
                                     Expanded(child: Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                       child: ElevatedButton(onPressed: (){
-
-
-
+                                        NeedToMRI();
                                       },
                                           style: ButtonStyle(
                                               backgroundColor: MaterialStateProperty.all(BtnColorred),
@@ -240,7 +432,8 @@ class ScreenDetailPatient extends StatelessWidget {
                                           )),
                                     ))
                                   ],
-                                ),
+                                ) :Container(),
+                                !widget.modelPatient.needToCT && !widget.modelPatient.isNot724 && !widget.modelPatient.needToMRI ?
                                 Container(
                                   width: wid,
                                   margin: const EdgeInsets.all(8),
@@ -266,7 +459,36 @@ class ScreenDetailPatient extends StatelessWidget {
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),),
                                       )),
-                                ),
+                                ):
+                                Container(),
+
+                                widget.modelPatient.needToCT || widget.modelPatient.needToMRI  ?
+                                Container(
+                                  width: wid,
+                                  margin: const EdgeInsets.all(8),
+                                  child: ElevatedButton(
+                                      onPressed: (){
+                                        FormNIHSS();
+
+
+                                      },
+                                      style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all(ColorApp),
+                                          padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8.0),
+                                              )
+                                          )
+                                      ),
+                                      child:Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text('تکمیل فرم NIHSS',
+                                          style: TextStyle(color:Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),),
+                                      )),
+                                ):Container(),
                                 SizedBox(height: 16,),
                               ],
                             ),
@@ -289,3 +511,44 @@ class ScreenDetailPatient extends StatelessWidget {
     );
   }
 }
+
+class QuestionWidget extends StatefulWidget {
+   String question;
+    List<String> options;
+     int Selected;
+
+
+   QuestionWidget(this.question, this.options, this.Selected);
+
+  @override
+  _QuestionWidgetState createState() => _QuestionWidgetState();
+}
+
+
+
+class _QuestionWidgetState extends State<QuestionWidget> {
+  late String _selectedAnswer=widget.question[0];
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        TextApp('What is the capital of France?',14,Colors.black54,false),
+        // RadioListTile(
+        //   title: TextApp('What is the capital of France?',14,Colors.black54,false),
+        //   value: option,
+        //   groupValue: _selectedAnswer,
+        //   onChanged: (value) {
+        //     setState(() {
+        //       _selectedAnswer = value!;
+        //       widget.Selected=widget.question.indexOf(value);
+        //       print(widget.Selected.toString());
+        //     });
+        //   },
+        //
+        // ),
+
+      ],
+    );
+  }
+}
+

@@ -14,7 +14,7 @@ import 'Models/ModelLogin.dart';
 import 'Models/ModelOtpCode.dart';
 
 class ApiServiceAutentication{
-  static Future<ModelRigester> Rigester(String Name,String Typeuser,String NationalCode,String PhoneNumber,BuildContext context) async {
+  static Future<ModelRigester> Rigester(String Name,String Typeuser,String NationalCode,String PhoneNumber,String Password,BuildContext context) async {
     var login;
 
 
@@ -23,7 +23,8 @@ class ApiServiceAutentication{
       'Name': Name,
       'NationalCode': NationalCode,
       'MobileNumber': PhoneNumber,
-      'DepartmentId': Typeuser
+      'DepartmentId': Typeuser,
+      'Password': Password
     });
 
     try{

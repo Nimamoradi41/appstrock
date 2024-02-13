@@ -5,37 +5,138 @@ import 'Screens/Resident/ScreenDetailPatient.dart';
 import 'Widgets/TextApp.dart';
 
 
-class test extends StatefulWidget {
+class QuestionAnswer {
+  final String question;
+  final List<String> options;
+  final int correctIndex;
+  int? selectedAnswer;
 
-
-  @override
-  State<test> createState() => _testState();
+  QuestionAnswer({
+    required this.question,
+    required this.options,
+    required this.correctIndex,
+    this.selectedAnswer,
+  });
 }
 
-class _testState extends State<test> {
+class ExamForm extends StatefulWidget {
+  late void Function(List<Map<String, dynamic>>) onClose;
 
-  int SelectedOne = 0;
+
+  ExamForm(this.onClose);
+
+  @override
+  _ExamFormState createState() => _ExamFormState();
+}
+
+class _ExamFormState extends State<ExamForm> {
+  List<QuestionAnswer> questions = [
+    QuestionAnswer(
+      question: 'Level of Consciousness',
+      options: ['Alert', 'Drowsy', 'Stuporous', 'coma'],
+      correctIndex: 0,
+    ),
+    QuestionAnswer(
+      question: 'LOC Questions',
+      options: ['Answers both correctly', 'Answers one correctly', 'Answers neither correctly'],
+      correctIndex: 0,
+    ),
+    QuestionAnswer(
+      question: 'LOC commands',
+      options: ['Performs both tasks correctly', 'Performs one task correctly', 'Performs neither task correctly'],
+      correctIndex: 0,
+    ),
+    QuestionAnswer(
+      question: 'Best Gaze',
+      options: ['Normal', 'Partial gaze palsy', 'Forced deviation'],
+      correctIndex: 0,
+    ),
+    QuestionAnswer(
+      question: 'Visual',
+      options: ['No visual loss', 'Partial hemianopia', 'Complete hemianopia','Bilateral hemianopia'],
+      correctIndex: 0,
+    ),
+    QuestionAnswer(
+      question: 'Facial Palsy',
+      options: ['Normal', 'Minor paralysis', 'Partial paralysis','Complete paralysis'],
+      correctIndex: 0,
+    ),
+    QuestionAnswer(
+      question: 'Motor Arm-left',
+      options: ['No drift', 'Drift', 'Some effort against gravity','No effort against gravity','No movement'],
+      correctIndex: 0,
+    ),
+
+    QuestionAnswer(
+      question: 'Motor Arm-right',
+      options: ['No drift', 'Drift', 'Some effort against gravity','No effort against gravity','No movement'],
+      correctIndex: 0,
+    ),
+
+    QuestionAnswer(
+      question: 'Motor Leg-left',
+      options: ['No drift', 'Drift', 'Some effort against gravity','No effort against gravity','No movement'],
+      correctIndex: 0,
+    ),
 
 
-  List<Widget> questions=[];
+    QuestionAnswer(
+      question: 'Motor Leg- right',
+      options: ['No drift', 'Drift', 'Some effort against gravity','No effort against gravity','No movement'],
+      correctIndex: 0,
+    ),
+
+
+
+    QuestionAnswer(
+      question: 'Limb Ataxia',
+      options: ['Absent', 'Present in one limb','Present in two limbs'],
+      correctIndex: 0,
+    ),
+
+    QuestionAnswer(
+      question: 'Sensory',
+      options: ['Normal', 'Mild-to-moderate sensory loss','Severe or total sensory loss'],
+      correctIndex: 0,
+    ),
+
+
+    QuestionAnswer(
+      question: 'Best Language',
+      options: ['No aphasia', 'Mild-to-moderate aphasia','Severe aphasia','Mute, global aphasia'],
+      correctIndex: 0,
+    ),
+
+
+    QuestionAnswer(
+      question: 'Dysarthria',
+      options: ['No aphasia', 'Mild-to-moderate aphasia','Severe aphasia'],
+      correctIndex: 0,
+    ),
+
+    QuestionAnswer(
+      question: 'Extinction and Inattention (formerly Neglect)',
+      options: ['No neglect', 'Partial neglect','Complete neglect'],
+      correctIndex: 0,
+    ),
+
+
+
+
+
+  ];
   @override
   void initState() {
     super.initState();
-      questions = [
-      QuestionWidget(
-        "What is the capital of France?",
-        ["Paris", "London", "Rome", "Berlin"],
-        SelectedOne,
-      ),
-    ];
 
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Center(
+    return Container(
+      height: 120,
+      width: 100,
+      child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -60,23 +161,14 @@ class _testState extends State<test> {
                       ),
                     ),
                     SizedBox(height: 16,),
-                    Column(
-                      children: questions,
-                    ),
-                    InkWell(
-                      onTap: (){
-                        print(SelectedOne.toString());
-                      },
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        color: Colors.red,
-                      ),
-                    )
+
+
+
+                    // QuestionWidget
                     // Row(
                     //   children: [
                     //     Expanded(child: TextApp(
-                    //         'Level of Consciousnees',14,Colors.black45,false
+                    //       'Level of Consciousnees',14,Colors.black45,false
                     //     ))
                     //   ],
                     // ),
@@ -102,9 +194,79 @@ class _testState extends State<test> {
                 ),
               ),
             ),
+            InkWell(
+              onTap: (){
+                _submitForm();
+              },
+              child: Container(
+                width: 100,
+                height: 100,
+                color: Colors.red,
+              ),
+            ),
+            ListView.builder(
+              itemCount: questions.length,
+              shrinkWrap: false,
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: ColorApp,width: 3)
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextApp(questions[index].question,14 , Colors.black54, true),
+
+                        SizedBox(height: 10),
+                        Column(
+                          children: List.generate(
+                            questions[index].options.length,
+                                (optionIndex) {
+                              return RadioListTile(
+                                title: TextApp3(questions[index].options[optionIndex],14 , Colors.black87, true),
+                                value: optionIndex,
+                                groupValue: questions[index].selectedAnswer,
+                                onChanged: (value) {
+                                  setState(() {
+                                    questions[index].selectedAnswer = value;
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+
+
           ],
         ),
       ),
     );
+  }
+
+  void _submitForm() {
+    List<Map<String, dynamic>> answers = [];
+    for (var question in questions) {
+      answers.add({
+        'question': question.question,
+        'selected_answer': question.selectedAnswer,
+      });
+    }
+
+
+
+    if (widget.onClose != null) {
+      widget.onClose(answers);
+    }
   }
 }

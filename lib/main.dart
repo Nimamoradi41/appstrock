@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
+import 'Constants.dart';
 import 'Screens/Autentication/ScreenCodeOtp.dart';
 import 'Screens/Autentication/ScreenLogin.dart';
 import 'Screens/Ems/screen_ems.dart';
@@ -21,6 +22,7 @@ import 'Screens/Resident/ProviderResident/ProviderResidentDetaile.dart';
 import 'Screens/Resident/ScreenDetailPatient.dart';
 import 'Screens/sickcarrier/ProviderSickCarrier/ProviderSickCarrier.dart';
 import 'Screens/sickcarrier/screen_sickcarrier.dart';
+import 'Widgets/TextApp.dart';
 
 void main() {
   runApp(  MultiProvider(
@@ -35,13 +37,24 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+
+  Future<void> Run(BuildContext context) async{
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ExamForm((vas){
+          print(vas.toString());
+        });
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -50,9 +63,28 @@ class _MyAppState extends State<MyApp> {
       ),
       debugShowCheckedModeBanner: false,
       // home: ScreenLogin(),
-      // home: ScreenRigester(),
+      home: ScreenRigester(),
       // home: ScreenResident(context),
-      home: test(),
+      // home: test(),
+      // home: ExamForm(),
+      // home: Scaffold(
+      //   body: Column(
+      //     children: [
+      //       Center(
+      //         child: InkWell(
+      //           onTap: (){
+      //            Run(context);
+      //           },
+      //           child: Container(
+      //             width: 100,
+      //             height: 100,
+      //             color: Colors.black87,
+      //           ),
+      //         ),
+      //       )
+      //     ],
+      //   ),
+      // ),
       // home: ScreenCodeOtp(),
       // home: scr(),
       // home: ScreenEms(),

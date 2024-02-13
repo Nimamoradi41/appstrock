@@ -39,74 +39,82 @@ class _ScreenRigesterState extends State<ScreenRigester> {
   bool IsLoading=false;
   Future RunRegister(BuildContext context)async{
 
-    GoNextPage(context,ScreenEms(true,context,'نیما مرادی احدی میسلیمانی','1234567894'));
-    // if(textControllerName.text.isEmpty)
-    //   {
-    //     ShowErrorMsg(context,'نام و نام خانوادگی را وارد کنید');
-    //     return;
-    //   }
-    //
-    // if(textControllerNationalCode.text.isEmpty)
-    // {
-    //
-    //   ShowErrorMsg(context,'کدملی را وارد کنید');
-    //   return;
-    // }
-    //
-    // if(textControllerNationalCode.text.length!=10)
-    // {
-    //   ShowErrorMsg(context,'کدملی اشتباه است');
-    //   return;
-    // }
-    //
-    //
-    // if(textControllerPhoneNumber.text.isEmpty)
-    // {
-    //
-    //   ShowErrorMsg(context,'شماره تلفن را وارد کنید');
-    //   return;
-    // }
-    //
-    // if(!textControllerPhoneNumber.text.startsWith('0'))
-    // {
-    //   ShowErrorMsg(context,'شماره تلفن اشتباه است');
-    //   return;
-    // }
-    //
-    // if(textControllerPhoneNumber.text.length<11)
-    // {
-    //
-    //   ShowErrorMsg(context,'شماره تلفن اشتباه است');
-    //   return;
-    // }
-    //
-    //
-    // int TypUser= await GetTypeUser(dropdownvalue);
-    // ShowLoadingApp(context);
-    // // ignore: use_build_context_synchronously
-    // var Data=await ApiServiceAutentication.Rigester(textControllerName.text, TypUser.toString(), textControllerNationalCode.text, textControllerPhoneNumber.text, context);
-    //
-    //
-    //  if(Data!=null)
-    //   {
-    //     if(Data.success)
-    //       {
-    //          if(TypUser==1)
-    //           {
-    //             // ignore: use_build_context_synchronously
-    //             await  LoginInApp(Data.data.name,Data.data.nationalCode,1,true);
-    //             GoNextPage(context,ScreenEms(true,context,Data.data.name,Data.data.nationalCode));
-    //           }
-    //          if(TypUser==2)
-    //          {
-    //            // ignore: use_build_context_synchronously
-    //            await  LoginInApp(Data.data.name,Data.data.nationalCode,2,true);
-    //            GoNextPage(context,Screen_Teriazh());
-    //          }
-    //       }else{
-    //       ShowErrorMsg(context,Data.message);
-    //     }
-    //   }
+    // GoNextPage(context,ScreenEms(true,context,'نیما مرادی احدی میسلیمانی','1234567894'));
+    if(textControllerName.text.isEmpty)
+      {
+        ShowErrorMsg(context,'نام و نام خانوادگی را وارد کنید');
+        return;
+      }
+
+    if(textControllerNationalCode.text.isEmpty)
+    {
+
+      ShowErrorMsg(context,'کدملی را وارد کنید');
+      return;
+    }
+
+    if(textControllerNationalCode.text.length!=10)
+    {
+      ShowErrorMsg(context,'کدملی اشتباه است');
+      return;
+    }
+
+
+    if(textControllerPhoneNumber.text.isEmpty)
+    {
+
+      ShowErrorMsg(context,'شماره تلفن را وارد کنید');
+      return;
+    }
+
+    if(!textControllerPhoneNumber.text.startsWith('0'))
+    {
+      ShowErrorMsg(context,'شماره تلفن اشتباه است');
+      return;
+    }
+
+    if(textControllerPhoneNumber.text.length<11)
+    {
+
+      ShowErrorMsg(context,'شماره تلفن اشتباه است');
+      return;
+    }
+
+
+    if(textControllerPassWord.text.isEmpty)
+    {
+
+      ShowErrorMsg(context,'رمز عبور را وارد کنید');
+      return;
+    }
+
+
+    int TypUser= await GetTypeUser(dropdownvalue);
+    ShowLoadingApp(context);
+    // ignore: use_build_context_synchronously
+    var Data=await ApiServiceAutentication.Rigester(textControllerName.text, TypUser.toString(), textControllerNationalCode.text, textControllerPhoneNumber.text,textControllerPassWord.text, context);
+
+
+     if(Data!=null)
+      {
+        if(Data.success)
+          {
+             if(TypUser==1)
+              {
+                // ignore: use_build_context_synchronously
+                await  LoginInApp(Data.data.name,Data.data.nationalCode,1,true);
+                GoNextPage(context,ScreenEms(true,context,Data.data.name,Data.data.nationalCode));
+              }
+             if(TypUser==2)
+             {
+               // ignore: use_build_context_synchronously
+               await  LoginInApp(Data.data.name,Data.data.nationalCode,2,true);
+               GoNextPage(context,Screen_Teriazh());
+             }
+          }else{
+          ShowErrorMsg(context,Data.message);
+        }
+      }
 
 
 
@@ -116,6 +124,7 @@ class _ScreenRigesterState extends State<ScreenRigester> {
   var textControllerName=TextEditingController();
   var textControllerNationalCode=TextEditingController();
   var textControllerPhoneNumber=TextEditingController();
+  var textControllerPassWord=TextEditingController();
   @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
@@ -246,6 +255,31 @@ class _ScreenRigesterState extends State<ScreenRigester> {
                               ),
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: TextField(
+                                maxLines: 1,
+
+                                controller: textControllerPassWord,
+                                keyboardType: TextInputType.text,
+                                decoration: InputDecoration(
+                                  labelText: 'رمز عبور',
+                                  labelStyle: TextStyle(
+                                      color: ColorApp
+                                  ),
+                                  counterText: "",
+
+                                  enabledBorder: outlinedBorderBlack,
+                                  focusedBorder: outlinedBorderPurple,
+
+                                ),
+                              ),
+                            ),
+                          ),
+
+
 
 
 

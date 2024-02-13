@@ -53,3 +53,31 @@ class TextApp2 extends StatelessWidget {
       ),);
   }
 }
+
+
+class TextApp3 extends StatelessWidget {
+
+  String Title;
+  double Fontsize;
+  Color Mcolor;
+  bool Isbold=false;
+
+
+  TextApp3(this.Title, this.Fontsize, this.Mcolor, this.Isbold);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(Title,
+      textAlign: TextAlign.start,
+      style: TextStyle(
+          color: Mcolor,
+          shadows: [
+
+          ],
+          fontSize: Fontsize,
+          fontWeight: Isbold==true?
+          FontWeight.bold:FontWeight.normal
+      ),);
+  }
+}

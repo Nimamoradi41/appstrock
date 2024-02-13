@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/TextApp.dart';
+import '../../test.dart';
 import '../Reception/Model/ModelPatient.dart';
 import 'ProviderResident/ProviderResidentDetaile.dart';
 
@@ -116,76 +117,89 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
     }
   }
 
+  // Future FormNIHSS()async{
+  //
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (context) {
+  //       return Scaffold(
+  //         backgroundColor: Colors.transparent,
+  //         body: Center(
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.start,
+  //             children: [
+  //               Container(
+  //                 margin: EdgeInsets.all(8),
+  //                 decoration: BoxDecoration(
+  //                   color: Colors.white,
+  //                   borderRadius: BorderRadius.only(topLeft: Radius.circular(32),topRight: Radius.circular(32)),
+  //                 ),
+  //                 child: SingleChildScrollView(
+  //                   child: Column(
+  //                     children: [
+  //                       Container(
+  //                         width: double.infinity,
+  //                         decoration: const BoxDecoration(
+  //                             color: ColorApp,
+  //                             borderRadius: BorderRadius.only(topRight: Radius.circular(8),topLeft: Radius.circular(8))
+  //                         ),
+  //                         child: Padding(
+  //                           padding: const EdgeInsets.all(4.0),
+  //                           child: TextApp('NIHSS',16,Colors.white,true),
+  //                         ),
+  //                       ),
+  //                       SizedBox(height: 16,),
+  //
+  //
+  //
+  //                       // QuestionWidget
+  //                       // Row(
+  //                       //   children: [
+  //                       //     Expanded(child: TextApp(
+  //                       //       'Level of Consciousnees',14,Colors.black45,false
+  //                       //     ))
+  //                       //   ],
+  //                       // ),
+  //                       // SizedBox(height: 8,),
+  //                       // Column(
+  //                       //   children: [
+  //                       //     Row(
+  //                       //       children: [
+  //                       //
+  //                       //         Expanded(child: TextApp(
+  //                       //             'Level of Consciousnees',14,Colors.black87,false
+  //                       //         ))
+  //                       //       ],
+  //                       //     )
+  //                       //   ],
+  //                       // )
+  //
+  //
+  //
+  //
+  //
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  //
+  //
+  // }
   Future FormNIHSS()async{
 
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  margin: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(32),topRight: Radius.circular(32)),
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          decoration: const BoxDecoration(
-                              color: ColorApp,
-                              borderRadius: BorderRadius.only(topRight: Radius.circular(8),topLeft: Radius.circular(8))
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: TextApp('NIHSS',16,Colors.white,true),
-                          ),
-                        ),
-                        SizedBox(height: 16,),
-
-
-                        // QuestionWidget
-                        // Row(
-                        //   children: [
-                        //     Expanded(child: TextApp(
-                        //       'Level of Consciousnees',14,Colors.black45,false
-                        //     ))
-                        //   ],
-                        // ),
-                        // SizedBox(height: 8,),
-                        // Column(
-                        //   children: [
-                        //     Row(
-                        //       children: [
-                        //
-                        //         Expanded(child: TextApp(
-                        //             'Level of Consciousnees',14,Colors.black87,false
-                        //         ))
-                        //       ],
-                        //     )
-                        //   ],
-                        // )
-
-
-
-
-
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+        return ExamForm((vas) {
+          print(vas.toString());
+        });
+      });
 
 
   }

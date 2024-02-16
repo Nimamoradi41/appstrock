@@ -11,6 +11,8 @@ class ModelPatient {
   bool needToMRI;
   bool isNot724;
   bool needToCT;
+  bool IsNIHSS;
+  bool IsLab;
 
   ModelPatient({
     required this.id,
@@ -23,6 +25,8 @@ class ModelPatient {
     required this.needToMRI,
     required this.isNot724,
     required this.needToCT,
+    required this.IsNIHSS,
+    required this.IsLab,
   });
 
   factory ModelPatient.fromJson(Map<String, dynamic> json) => ModelPatient(
@@ -36,6 +40,8 @@ class ModelPatient {
     needToMRI: json["needToMRI"],
     isNot724: json["isNot724"],
     needToCT: json["needToCT"],
+    IsNIHSS: json["IsNIHSS"],
+    IsLab: json["IsLab"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -49,5 +55,7 @@ class ModelPatient {
     "needToMRI": needToMRI,
     "isNot724": isNot724,
     "needToCT": needToCT,
+    "IsNIHSS": IsNIHSS,
+    "IsLab": IsLab,
   };
 }

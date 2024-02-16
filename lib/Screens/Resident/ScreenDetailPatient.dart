@@ -1,4 +1,5 @@
 import 'package:appstrock/Screens/Resident/ApiServiceResident.dart';
+import 'package:appstrock/Screens/Resident/ScreenFormNIHS.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_bdaya/flutter_datetime_picker_bdaya.dart';
 import 'package:provider/provider.dart';
@@ -36,8 +37,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
 
     DateTime? TimeStart;
     var Flag= await   ShowAllow(widget.MainCtx,'آیا از CT مطمئن هستید ؟ ');
-
-
     if(Flag)
       {
         // ignore: use_build_context_synchronously
@@ -117,92 +116,21 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
     }
   }
 
-  // Future FormNIHSS()async{
-  //
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (context) {
-  //       return Scaffold(
-  //         backgroundColor: Colors.transparent,
-  //         body: Center(
-  //           child: Column(
-  //             mainAxisAlignment: MainAxisAlignment.start,
-  //             children: [
-  //               Container(
-  //                 margin: EdgeInsets.all(8),
-  //                 decoration: BoxDecoration(
-  //                   color: Colors.white,
-  //                   borderRadius: BorderRadius.only(topLeft: Radius.circular(32),topRight: Radius.circular(32)),
-  //                 ),
-  //                 child: SingleChildScrollView(
-  //                   child: Column(
-  //                     children: [
-  //                       Container(
-  //                         width: double.infinity,
-  //                         decoration: const BoxDecoration(
-  //                             color: ColorApp,
-  //                             borderRadius: BorderRadius.only(topRight: Radius.circular(8),topLeft: Radius.circular(8))
-  //                         ),
-  //                         child: Padding(
-  //                           padding: const EdgeInsets.all(4.0),
-  //                           child: TextApp('NIHSS',16,Colors.white,true),
-  //                         ),
-  //                       ),
-  //                       SizedBox(height: 16,),
-  //
-  //
-  //
-  //                       // QuestionWidget
-  //                       // Row(
-  //                       //   children: [
-  //                       //     Expanded(child: TextApp(
-  //                       //       'Level of Consciousnees',14,Colors.black45,false
-  //                       //     ))
-  //                       //   ],
-  //                       // ),
-  //                       // SizedBox(height: 8,),
-  //                       // Column(
-  //                       //   children: [
-  //                       //     Row(
-  //                       //       children: [
-  //                       //
-  //                       //         Expanded(child: TextApp(
-  //                       //             'Level of Consciousnees',14,Colors.black87,false
-  //                       //         ))
-  //                       //       ],
-  //                       //     )
-  //                       //   ],
-  //                       // )
-  //
-  //
-  //
-  //
-  //
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  //
-  //
-  // }
-  Future FormNIHSS()async{
 
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return ExamForm((vas) {
-          print(vas.toString());
-        });
-      });
 
+  Future AddNIHS()async{
+
+
+    ShowLoadingApp(context);
+   await Future.delayed(Duration(seconds: 2));
+    widget.modelPatient.IsNIHSS=true;
+    Notifi.setItems(widget.modelPatient);
+    Navigator.pop(context);
+    // ignore: use_build_context_synchronously
+    ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
 
   }
+
 
 
 
@@ -261,7 +189,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
                         ),
                       )
                     ],
-
                   ),
                 ),
                 Positioned(
@@ -387,6 +314,32 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
                                                   child: TextApp(' :  وضعیت بیمار', 14, ColorTitleText, false))),
                                             ],
                                           ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              TextApp(widget.modelPatient.IsNIHSS ? 'تکمیل شده است': 'تکمیل نشده است'
+
+                                                  , 16, ColorTextbody, true),
+                                              Expanded(child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' :  فرم NIHSS', 14, ColorTitleText, false))),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              TextApp(widget.modelPatient.IsLab ? 'تکمیل شده است': 'تکمیل نشده است'
+
+                                                  , 16, ColorTextbody, true),
+                                              Expanded(child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' :  فرم آزمایشگاه', 14, ColorTitleText, false))),
+                                            ],
+                                          ),
                                         )
                                       ],
                                      ),
@@ -401,8 +354,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
                                       child: ElevatedButton(
 
                                           onPressed: (){
-
-
                                             NeedToCT();
 
                                           },
@@ -482,14 +433,22 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
                                   margin: const EdgeInsets.all(8),
                                   child: ElevatedButton(
                                       onPressed: (){
-                                        FormNIHSS();
-
-
+                                       GoNextPage(context, ScreenFormNIHS((p0) {
+                                         Navigator.pop(context);
+                                         AddNIHS();
+                                       },widget.modelPatient.IsNIHSS));
                                       },
                                       style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all(ColorApp),
+                                          backgroundColor: widget.modelPatient.IsNIHSS ?
+                                          MaterialStateProperty.all(Colors.white):
+                                          MaterialStateProperty.all(ColorApp),
                                           padding: MaterialStateProperty.all(EdgeInsets.all(8)),
                                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                              widget.modelPatient.IsNIHSS ?
+                                              RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8.0),
+                                                side:  const BorderSide(color: ColorApp,width: 2)
+                                              ):
                                               RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(8.0),
                                               )
@@ -497,8 +456,9 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
                                       ),
                                       child:Padding(
                                         padding: const EdgeInsets.all(10.0),
-                                        child: Text('تکمیل فرم NIHSS',
-                                          style: TextStyle(color:Colors.white,
+                                        child: Text( widget.modelPatient.IsNIHSS ?'نمایش فرم NIHSS':'تکمیل فرم NIHSS',
+                                          style: TextStyle(
+                                              color:widget.modelPatient.IsNIHSS ? ColorApp : Colors.white,
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),),
                                       )),
@@ -526,43 +486,4 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
   }
 }
 
-class QuestionWidget extends StatefulWidget {
-   String question;
-    List<String> options;
-     int Selected;
-
-
-   QuestionWidget(this.question, this.options, this.Selected);
-
-  @override
-  _QuestionWidgetState createState() => _QuestionWidgetState();
-}
-
-
-
-class _QuestionWidgetState extends State<QuestionWidget> {
-  late String _selectedAnswer=widget.question[0];
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        TextApp('What is the capital of France?',14,Colors.black54,false),
-        // RadioListTile(
-        //   title: TextApp('What is the capital of France?',14,Colors.black54,false),
-        //   value: option,
-        //   groupValue: _selectedAnswer,
-        //   onChanged: (value) {
-        //     setState(() {
-        //       _selectedAnswer = value!;
-        //       widget.Selected=widget.question.indexOf(value);
-        //       print(widget.Selected.toString());
-        //     });
-        //   },
-        //
-        // ),
-
-      ],
-    );
-  }
-}
 

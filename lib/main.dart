@@ -2,6 +2,7 @@
 
 import 'package:appstrock/Screens/Autentication/ScreenRigester.dart';
 import 'package:appstrock/Screens/Ems/ProviderEms/ProviderEms.dart';
+import 'package:appstrock/Screens/Reception/Model/ModelPatient.dart';
 import 'package:appstrock/Screens/Reception/screen_reception.dart';
 import 'package:appstrock/Screens/Resident/screen_resident.dart';
 import 'package:appstrock/Screens/Teriazh/screen_teriazh.dart';
@@ -20,6 +21,7 @@ import 'Screens/Reception/ProviderReception/ProviderReception.dart';
 import 'Screens/Resident/ProviderResident/ProviderResident.dart';
 import 'Screens/Resident/ProviderResident/ProviderResidentDetaile.dart';
 import 'Screens/Resident/ScreenDetailPatient.dart';
+import 'Screens/Resident/ScreenFormNIHS.dart';
 import 'Screens/sickcarrier/ProviderSickCarrier/ProviderSickCarrier.dart';
 import 'Screens/sickcarrier/screen_sickcarrier.dart';
 import 'Widgets/TextApp.dart';
@@ -45,16 +47,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  Future<void> Run(BuildContext context) async{
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return ExamForm((vas){
-          print(vas.toString());
-        });
-      },
-    );
-  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -63,8 +56,17 @@ class _MyAppState extends State<MyApp> {
       ),
       debugShowCheckedModeBanner: false,
       // home: ScreenLogin(),
-      home: ScreenRigester(),
+      // home: ScreenRigester(),
       // home: ScreenResident(context),
+        home: ScreenDetailPatient(
+            ModelPatient(id: 14, fullName: 'Ahmad bagheri',
+            nationalCode: '4845154444', age: '34', gender: 'Female',
+            timeOfAddToSystem: '14:30', dateOfAddToSystem: '1402/01/01',
+            needToMRI: false, isNot724: false, needToCT: true, IsNIHSS: false, IsLab: false),context)
+        // home: ScreenFormNIHS((c){
+        //
+        //   print(c.toString());
+        // })
       // home: test(),
       // home: ExamForm(),
       // home: Scaffold(

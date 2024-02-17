@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:provider/provider.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/TextApp.dart';
+import 'ProviderTeraizh.dart';
 
 class Screen_Teriazh extends StatefulWidget {
 
@@ -21,8 +23,23 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
 
   String dropdownvalue = 'مرد';
 
+
+  Future   ChangShift(bool StatusNew,BuildContext context) async
+  {
+    var Flag=await ShowAllow(context,'آیا از تغییر شیفت خود مطمئن هستید ؟');
+    if(Flag)
+    {
+      ShowLoadingApp(context);
+      await Future.delayed(Duration(seconds: 3));
+      Notifi.setstatus(StatusNew);
+      Navigator.pop(context);
+    }
+  }
+
+  late var Notifi=ProviderTeraizh();
   @override
   Widget build(BuildContext context) {
+    Notifi=Provider.of<ProviderTeraizh>(context);
     double wid=MediaQuery.of(context).size.width;
     double hei=MediaQuery.of(context).size.height;
     wid=wid>600?600:wid;
@@ -39,7 +56,7 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                   width: wid,
                   height: wid*0.25,
                   color: ColorApp,
-                  child: Column(
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(width: 16,),
@@ -47,7 +64,7 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
-                          children: const [
+                          children: [
                             RotatedBox(
                               quarterTurns: 90,
                               child: Padding(
@@ -150,13 +167,16 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                                     SizedBox(width: 8,),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: FlutterSwitch(
-                                        value: status,
-                                        activeColor: Color(0xff38b000),
-                                        onToggle: (val) {
-                                          setState(() {
-                                            status = val;
-                                          });
+                                      child: Consumer<ProviderTeraizh>(
+                                        builder: (context,newstate,child){
+                                          status=newstate.status;
+                                          return FlutterSwitch(
+                                            value: status,
+                                            activeColor: Color(0xff38b000),
+                                            onToggle: (val) {
+                                              ChangShift(val,context);
+                                            },
+                                          );
                                         },
                                       ),
                                     ),

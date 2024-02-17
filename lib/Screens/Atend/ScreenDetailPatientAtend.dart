@@ -8,13 +8,14 @@ import '../../Constants.dart';
 import '../../Widgets/TextApp.dart';
 import '../../test.dart';
 import '../Reception/Model/ModelPatient.dart';
-import 'ProviderResident/ProviderResidentDetaile.dart';
+import 'ProviderAtend/ProviderAtendDetaile.dart';
 
 
 
-class ScreenDetailPatient extends StatefulWidget {
 
-  ScreenDetailPatient(this.modelPatient,this.MainCtx);
+class ScreenDetailPatientAtend extends StatefulWidget {
+
+  ScreenDetailPatientAtend(this.modelPatient,this.MainCtx);
   
 
 
@@ -25,111 +26,18 @@ class ScreenDetailPatient extends StatefulWidget {
   BuildContext MainCtx;
 
   @override
-  State<ScreenDetailPatient> createState() => _ScreenDetailPatientState();
+  State<ScreenDetailPatientAtend> createState() => _ScreenDetailPatientState();
 }
 
-class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
-  late var Notifi=ProviderResidentDetaile();
+class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
+  late var Notifi=ProviderAtendDetaile();
 
   // Future NeedToCT(BuildContext context)async{
-  Future NeedToCT()async{
-
-
-    DateTime? TimeStart;
-    var Flag= await   ShowAllow(widget.MainCtx,'آیا از CT مطمئن هستید ؟ ');
-    if(Flag)
-      {
-        // ignore: use_build_context_synchronously
-        await   DatePickerBdaya.showTimePicker(widget.MainCtx,
-            showTitleActions: true,
-            onConfirm: (date) {
-              TimeStart=date;
-            }, currentTime: DateTime.now(), locale: LocaleType.fa);
 
 
 
-        if(TimeStart!=null)
-          {
-            var Data= await ApiServiceResident.NeedToCT(widget.modelPatient.id.toString(), widget.MainCtx, TimeStart!.millisecondsSinceEpoch.toString());
-            if(Data!=null)
-              {
-                if(Data.success)
-                  {
-                    widget.modelPatient.needToCT=true;
-                    Notifi.setItems(widget.modelPatient);
-                    // ignore: use_build_context_synchronously
-                    ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
-                  }else
-                    {
-                      // ignore: use_build_context_synchronously
-                      ShowErrorMsg(widget.MainCtx, Data.message);
-                    }
-              }else{
-              // ignore: use_build_context_synchronously
-              ShowErrorMsg(widget.MainCtx, 'مشکلی در ارتباط با سرور به وچود آمده');
-            }
-          }
-
-        }
-      }
-
-  Future NeedToMRI()async{
 
 
-    DateTime? TimeStart;
-    var Flag= await   ShowAllow(widget.MainCtx,'آیا از MRI مطمئن هستید ؟ ');
-
-
-    if(Flag)
-    {
-      // ignore: use_build_context_synchronously
-      await   DatePickerBdaya.showTimePicker(widget.MainCtx,
-          showTitleActions: true,
-          onConfirm: (date) {
-            TimeStart=date;
-          }, currentTime: DateTime.now(), locale: LocaleType.fa);
-
-
-
-      if(TimeStart!=null)
-      {
-        var Data= await ApiServiceResident.NeedToMRI(widget.modelPatient.id.toString(), widget.MainCtx, TimeStart!.millisecondsSinceEpoch.toString());
-        if(Data!=null)
-        {
-          if(Data.success)
-          {
-            widget.modelPatient.needToMRI=true;
-            Notifi.setItems(widget.modelPatient);
-            // ignore: use_build_context_synchronously
-            ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
-          }else
-          {
-            // ignore: use_build_context_synchronously
-            ShowErrorMsg(widget.MainCtx, Data.message);
-          }
-        }else{
-          // ignore: use_build_context_synchronously
-          ShowErrorMsg(widget.MainCtx, 'مشکلی در ارتباط با سرور به وچود آمده');
-        }
-      }
-
-    }
-  }
-
-
-
-  Future AddNIHS()async{
-
-
-    ShowLoadingApp(context);
-   await Future.delayed(Duration(seconds: 2));
-    widget.modelPatient.IsNIHSS=true;
-    Notifi.setItems(widget.modelPatient);
-    Navigator.pop(context);
-    // ignore: use_build_context_synchronously
-    ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-
-  }
 
 
 
@@ -138,7 +46,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
 
   @override
   Widget build(BuildContext context) {
-    Notifi=Provider.of<ProviderResidentDetaile>(context);
+    Notifi=Provider.of<ProviderAtendDetaile>(context);
     double wid=MediaQuery.of(context).size.width;
     double hei=MediaQuery.of(context).size.height;
     wid=wid>600?600:wid;
@@ -168,8 +76,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
                               padding: EdgeInsets.all(16.0),
                               child: Icon(Icons.arrow_back,color: Colors.white,size: 30,),
                             ),
-
-
                             Expanded(child:
                             Padding(
                                 padding: EdgeInsets.all(16.0),
@@ -208,12 +114,14 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
                                 padding: const EdgeInsets.all(12.0),
                                 child: Row(
                                   children: [
-                                    Expanded(child: Column(
+                                    Expanded(child:
+                                    Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         TextApp('کدملی', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(widget.modelPatient.nationalCode.isEmpty  ? 'نامشخص':widget.modelPatient.nationalCode, 14, ColorTextbody, true)
+                                        TextApp(widget.modelPatient.nationalCode.isEmpty
+                                            ? 'نامشخص':widget.modelPatient.nationalCode, 14, ColorTextbody, true)
                                       ],
                                     )),
                                     SizedBox(width: 8,),
@@ -300,6 +208,12 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
                                             ],
                                           ),
                                         ),
+                                        Container(
+                                          width: wid,
+                                          height: 2,
+                                          color: Colors.black12,
+                                          margin: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+                                        ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
@@ -311,7 +225,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
                                                   , 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  وضعیت بیمار', 14, ColorTitleText, false))),
+                                                  child: TextApp(' :  زمان شروع علائم ', 14, ColorTitleText, false))),
                                             ],
                                           ),
                                         ),
@@ -319,17 +233,14 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(
-                                                  widget.modelPatient.IsNIHSS== null ?
-                                                  'تکمیل نشده است':
-                                                  widget.modelPatient.IsNIHSS!?
-                                                   'تکمیل شده است':
-                                                  'تکمیل نشده است'
+                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
+                                              widget.modelPatient.needToCT ? ' اعلان CT' :
+                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
 
                                                   , 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  فرم NIHSS', 14, ColorTitleText, false))),
+                                                  child: TextApp(' :  زمان تکمیل NIHSS ', 14, ColorTitleText, false))),
                                             ],
                                           ),
                                         ),
@@ -337,18 +248,78 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.IsLab == null  ?'تکمیل نشده است' :
-                                              widget.modelPatient.IsLab! ?
-                                              'تکمیل شده است':
-                                              'تکمیل نشده است'
+                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
+                                              widget.modelPatient.needToCT ? ' اعلان CT' :
+                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
 
                                                   , 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  فرم آزمایشگاه', 14, ColorTitleText, false))),
+                                                  child: TextApp(' :  زمان تکمیل آزمایش ', 14, ColorTitleText, false))),
                                             ],
                                           ),
-                                        )
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
+                                              widget.modelPatient.needToCT ? ' اعلان CT' :
+                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
+
+                                                  , 16, ColorTextbody, true),
+                                              Expanded(child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' :  زمان اعلان کد ', 14, ColorTitleText, false))),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
+                                              widget.modelPatient.needToCT ? ' اعلان CT' :
+                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
+
+                                                  , 16, ColorTextbody, true),
+                                              Expanded(child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' :  وضعیت بیمار ', 14, ColorTitleText, false))),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
+                                              widget.modelPatient.needToCT ? ' اعلان CT' :
+                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
+
+                                                  , 16, ColorTextbody, true),
+                                              Expanded(child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' :  وضعیت بیمار ', 14, ColorTitleText, false))),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
+                                              widget.modelPatient.needToCT ? ' اعلان CT' :
+                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
+
+                                                  , 16, ColorTextbody, true),
+                                              Expanded(child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' :  زمان اتمام ', 14, ColorTitleText, false))),
+                                            ],
+                                          ),
+                                        ),
+
                                       ],
                                      ),
                                    ),
@@ -356,132 +327,137 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> {
                                 !widget.modelPatient.needToCT && !widget.modelPatient.isNot724 && !widget.modelPatient.needToMRI ?
                                 Row(
                                   children: [
-
                                     Expanded(child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                      child: ElevatedButton(
+                                      padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                      child: Container(
+                                        width: wid,
+                                        margin: const EdgeInsets.all(8),
+                                        child: ElevatedButton(
+                                            onPressed: (){
 
-                                          onPressed: (){
-                                            NeedToCT();
-
-                                          },
-                                          style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8.0),
-                                                  )
-                                              )
-                                          ),
-                                          child:Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Text('CT',
-                                              style: TextStyle(color:Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold),),
-                                          )),
+                                            },
+                                            style: ButtonStyle(
+                                                backgroundColor:MaterialStateProperty.all(Colors.white),
+                                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(8.0),
+                                                        side:  const BorderSide(color: ColorApp,width: 2)
+                                                    )
+                                                )
+                                            ),
+                                            child:const Padding(
+                                              padding: EdgeInsets.all(10.0),
+                                              child: Text('NIHSS',
+                                                style: TextStyle(
+                                                    color:
+                                                    ColorApp,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold),),
+                                            )),
+                                      ),
                                     )),
                                     Expanded(child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                      child: ElevatedButton(onPressed: (){
-                                        NeedToMRI();
-                                      },
-                                          style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8.0),
-                                                  )
-                                              )
-                                          ),
-                                          child:Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Text('MIR',
-                                              style: TextStyle(color:Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold),),
-                                          )),
+                                      padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                      child: Container(
+                                        width: wid,
+                                        margin: const EdgeInsets.all(8),
+                                        child: ElevatedButton(
+                                            onPressed: (){
+
+                                            },
+                                            style: ButtonStyle(
+                                                backgroundColor:MaterialStateProperty.all(Colors.white),
+                                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(8.0),
+                                                        side:  const BorderSide(color: ColorApp,width: 2)
+                                                    )
+                                                )
+                                            ),
+                                            child:const Padding(
+                                              padding: EdgeInsets.all(10.0),
+                                              child: Text('آزمایش',
+                                                style: TextStyle(
+                                                    color:
+                                                    ColorApp,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold),),
+                                            )),
+                                      ),
                                     ))
                                   ],
                                 ) :Container(),
-                                !widget.modelPatient.needToCT && !widget.modelPatient.isNot724 && !widget.modelPatient.needToMRI ?
+
+
+
+
+
+
+
+                                widget.modelPatient.ResonNot == null ?Container():
+                                widget.modelPatient.ResonNot!.isNotEmpty?
                                 Container(
                                   width: wid,
                                   margin: const EdgeInsets.all(8),
                                   child: ElevatedButton(
                                       onPressed: (){
-
-
-
                                       },
                                       style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all(BtnColorgreen),
+                                          backgroundColor:MaterialStateProperty.all(Colors.white),
                                           padding: MaterialStateProperty.all(EdgeInsets.all(8)),
                                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(8.0),
-                                              )
-                                          )
-                                      ),
-                                      child:Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Text('کد 724 نیست',
-                                          style: TextStyle(color:Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),),
-                                      )),
-                                ):
-                                Container(),
-
-                                widget.modelPatient.needToCT || widget.modelPatient.needToMRI  ?
-                                Container(
-                                  width: wid,
-                                  margin: const EdgeInsets.all(8),
-                                  child: ElevatedButton(
-                                      onPressed: (){
-                                       GoNextPage(context, ScreenFormNIHS((p0) {
-                                         Navigator.pop(context);
-                                         AddNIHS();
-                                       },widget.modelPatient.IsNIHSS==null? false:widget.modelPatient.IsNIHSS!));
-                                      },
-                                      style: ButtonStyle(
-                                          backgroundColor: widget.modelPatient.IsNIHSS == null ?
-                                          MaterialStateProperty.all(Colors.white):
-                                          MaterialStateProperty.all(ColorApp),
-                                          padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                              widget.modelPatient.IsNIHSS == null ?
-                                              RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(8.0),
-                                              ):
-                                              widget.modelPatient.IsNIHSS! ?
                                               RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.circular(8.0),
                                                   side:  const BorderSide(color: ColorApp,width: 2)
-                                              ):
-                                              RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(8.0),
                                               )
                                           )
                                       ),
-                                      child:Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Text( widget.modelPatient.IsNIHSS ==null?
-                                        'تکمیل فرم NIHSS':
-                                        widget.modelPatient.IsNIHSS!
-
-                                            ?'نمایش فرم NIHSS':'تکمیل فرم NIHSS',
+                                      child:const Padding(
+                                        padding: EdgeInsets.all(10.0),
+                                        child: Text('عکس های ارسال شده رزیدنت',
                                           style: TextStyle(
                                               color:
-                                              widget.modelPatient.IsNIHSS==null ?Colors.white:
-                                              widget.modelPatient.IsNIHSS!?
-                                              ColorApp : Colors.white,
+                                              ColorApp,
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),),
                                       )),
                                 ):Container(),
+                                
+
+
+                                widget.modelPatient.ResonNot == null ?Container():
+                                widget.modelPatient.ResonNot!.isNotEmpty?
+                                Container(
+                                  width: wid,
+                                  margin: const EdgeInsets.all(8),
+                                  child: ElevatedButton(
+                                      onPressed: (){
+
+                                      },
+                                      style: ButtonStyle(
+                                          backgroundColor:MaterialStateProperty.all(Colors.white),
+                                          padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                  side:  const BorderSide(color: ColorApp,width: 2)
+                                              )
+                                          )
+                                      ),
+                                      child:const Padding(
+                                        padding: EdgeInsets.all(10.0),
+                                        child: Text('نمایش دلیل رزیدنت',
+                                          style: TextStyle(
+                                              color:
+                                              ColorApp,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),),
+                                      )),
+                                ):Container(),
+
+
                                 SizedBox(height: 16,),
                               ],
                             ),

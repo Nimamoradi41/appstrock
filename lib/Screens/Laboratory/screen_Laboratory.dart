@@ -1,3 +1,4 @@
+import 'package:appstrock/Screens/Laboratory/ScreenLaboratoryDetailPatient.dart';
 import 'package:appstrock/Screens/Reception/ApiServiceReception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
@@ -10,46 +11,59 @@ import 'package:signalr_netcore/hub_connection_builder.dart';
 import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
 import '../../Widgets/TextApp.dart';
-import 'Model/ModelPatient.dart';
-import 'ProviderReception/ProviderReception.dart';
-
-
-
-class ScreenReception extends StatefulWidget {
+import '../Reception/Model/ModelPatient.dart';
+import '../Reception/ProviderReception/ProviderReception.dart';
 
 
 
 
-  String  Name='';
-  String Code='';
-  bool IsRigester;
+class ScreenLaboratory extends StatefulWidget {
 
 
-  ScreenReception(this.Name, this.Code, this.IsRigester);
+
 
   @override
-  State<ScreenReception> createState() => _ScreenReceptionState();
+  State<ScreenLaboratory> createState() => _ScreenLaboratoryState();
 }
 
-class _ScreenReceptionState extends State<ScreenReception> {
+class _ScreenLaboratoryState extends State<ScreenLaboratory> {
+  String  Name='';
+
+  String Code='';
+
   late HubConnection connection;
 
-  Future   ChangShift(bool StatusNew,BuildContext context) async
-  {
-    var Flag=await ShowAllow(context,'آیا از تغییر شیفت خود مطمئن هستید ؟');
-    if(Flag)
+  ScreenReception(bool IsRigester,BuildContext context,String NewName,String CodeNew){
+    if(IsRigester)
     {
-      ShowLoadingApp(context);
-      await Future.delayed(Duration(seconds: 3));
-      Notifi.setstatus(StatusNew);
-      Navigator.pop(context);
+      ShowSuccesMsg(context, 'ثبت نام با موفقیت انجام شد');
+      //Set an animation
     }
+
+
+    Notifi.ListItemsPatient.add(ModelPatient(id: 7445, fullName: 'NimaMorado', nationalCode: '1788484', age: '32', gender: 'مرد', timeOfAddToSystem: '', dateOfAddToSystem: '', needToMRI: false, isNot724: false, needToCT: false, IsNIHSS: false, IsLab: false, timeOfAddLabotory: '', ResonNot: ''));
+    // ignore: invalid_use_of_visible_for_testing_member
+    Notifi.notifyListeners();
+    // Notifi=Provider.of<ProviderReception>(context,listen: false);
+
+    Name=NewName;
+    Code=CodeNew;
+
+    // try{
+    //   connection=HubConnectionBuilder().withUrl('https://fmirzavand.ir/patientHub').build();
+    //   connection.on('ReceivePatientUpdate', (arguments) {
+    //     RunListP(context,false);
+    //   });
+    //   connection.start();
+    // }catch (E)
+    // {
+    //   print(E.toString());
+    // }
+
+    // RunListP(context, true);
   }
 
   bool status=false;
-
-
-
 
   Future<void> _showAlertDialog(BuildContext context) async {
     return showDialog<void>(
@@ -296,11 +310,7 @@ class _ScreenReceptionState extends State<ScreenReception> {
 
 
 
-  @override
-  void initState() {
-    super.initState();
 
-  }
   @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
@@ -319,7 +329,7 @@ class _ScreenReceptionState extends State<ScreenReception> {
                   width: wid,
                   height: wid*0.25,
                   color: ColorApp,
-                  child: Column(
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(width: 16,),
@@ -327,7 +337,7 @@ class _ScreenReceptionState extends State<ScreenReception> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
-                          children: const [
+                          children: [
                             RotatedBox(
                               quarterTurns: 90,
                               child: Padding(
@@ -339,7 +349,7 @@ class _ScreenReceptionState extends State<ScreenReception> {
                             Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Text(
-                                  'پذیرش',
+                                  'آزمایشگاه',
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                       color: Colors.white,
@@ -378,7 +388,7 @@ class _ScreenReceptionState extends State<ScreenReception> {
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         TextApp2(' : کدملی',14,ColorTextsubject,false),
-                                        TextApp2(widget.Code,16,ColorTextbody,true),
+                                        TextApp2(Code,16,ColorTextbody,true),
                                       ],
                                     ),
                                   ),
@@ -397,7 +407,7 @@ class _ScreenReceptionState extends State<ScreenReception> {
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         TextApp2(' : نام ونام خانوادگی',14,ColorTextsubject,false),
-                                        TextApp2(widget.Name,16,ColorTextbody,true),
+                                        TextApp2(Name,16,ColorTextbody,true),
 
                                       ],
                                     ),
@@ -422,7 +432,10 @@ class _ScreenReceptionState extends State<ScreenReception> {
                                             value: status,
                                             activeColor: Color(0xff38b000),
                                             onToggle: (val) {
-                                              ChangShift(val,context);
+                                              Notifi.setstatus(!status);
+                                              // setState(() {
+                                              //   status = val;
+                                              // });
                                             },
                                           );
                                         },
@@ -449,7 +462,17 @@ class _ScreenReceptionState extends State<ScreenReception> {
                                 itemBuilder: (ctx,item){
                                   return InkWell(
                                     onTap: (){
-                                      _showAlertDialog(context);
+                                       GoNextPage(context,
+                                           ScreenLaboratoryDetailPatient(
+                                           ModelPatient(id: 10, fullName: 'Ahmad Bagheri',
+                                               nationalCode: '548548548484', age: '45',
+                                               gender: 'مرد',
+                                               timeOfAddToSystem: '14:20',
+                                               dateOfAddToSystem: '1402/02/02',
+                                               needToMRI: false,
+                                               isNot724: false,
+                                               needToCT: false,
+                                           IsNIHSS: false, IsLab: false, timeOfAddLabotory: '', ResonNot: ''), context));
                                     },
                                     // child: ItemPatient(wid: wid, ItemsP: ItemsP[item],),
                                     child: ItemPatient(wid: wid),
@@ -465,8 +488,6 @@ class _ScreenReceptionState extends State<ScreenReception> {
                     ),
                   ),
                 ),
-
-
                 Positioned(
                     bottom: 8,
                     right: 8,

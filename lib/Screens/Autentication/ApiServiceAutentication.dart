@@ -32,7 +32,6 @@ class ApiServiceAutentication{
         Duration(seconds: 15),
       ).catchError((error) {
         ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
       }) ;
 
       if(response.statusCode==200)

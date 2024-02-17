@@ -7,12 +7,29 @@ import 'package:timer_count_down/timer_count_down.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/TextApp.dart';
+import '../Ems/screen_ems.dart';
+import '../Teriazh/screen_teriazh.dart';
 import 'ApiServiceAutentication.dart';
 
 
-class ScreenCodeOtp extends StatelessWidget {
+class ScreenCodeOtp extends StatefulWidget {
 
+
+  String Number ;
+  String Name ;
+  String NatiCode ;
+  int TypUser ;
+
+
+  ScreenCodeOtp(this.Number,this.Name,this.NatiCode,this.TypUser);
+
+  @override
+  State<ScreenCodeOtp> createState() => _ScreenCodeOtpState();
+}
+
+class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
   var ControlerTimer=CountdownController(autoStart: true);
+
   String CodeInput="";
 
   Future RunCode(String Code,BuildContext context)async{
@@ -27,11 +44,29 @@ class ScreenCodeOtp extends StatelessWidget {
 
     ShowLoadingApp(context);
     await Future.delayed(Duration(seconds: 3));
-    var Data=ApiServiceAutentication.CodeOtp(CodeInput, context);
+
+
+    if(widget.TypUser==1)
+      {
+        await  LoginInApp(widget.Name,widget.NatiCode,1,true);
+        GoNextPage(context,ScreenEms(widget.Name,widget.NatiCode,true));
+      }
+
+    if(widget.TypUser==2)
+    {
+      await  LoginInApp(widget.Name,widget.NatiCode,1,true);
+      GoNextPage(context,Screen_Teriazh());
+    }
+
+
+
+
+    // var Data=ApiServiceAutentication.CodeOtp(CodeInput, context);
 
 
 
   }
+
   @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
@@ -62,7 +97,7 @@ class ScreenCodeOtp extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(right: 16,top: 4),
-                              child: TextApp('پیامک به شماره 09909439787 ارسال شد', 16, Colors.black38, false),
+                              child: BoldText(widget.Number),
                             ),
                             SizedBox(height: 32,),
 

@@ -141,6 +141,30 @@ BoxDecoration MainDecoration=BoxDecoration(
 );
 
 
+
+
+Widget BoldText(String Body){
+  return RichText(
+    text: TextSpan(
+      children: [
+        TextSpan(text: "پیامک به شماره ",style: TextStyle(
+          color: Colors.black38,
+          fontSize: 16,
+        )),
+        TextSpan(text:Body,style: TextStyle(
+          color: Colors.black38,
+          fontSize: 16,
+          fontWeight: FontWeight.bold
+        )),
+        TextSpan(text: " ارسال شد " ,style: TextStyle(
+          color: Colors.black38,
+          fontSize: 16,
+        )),
+
+      ],
+    ),
+  );
+}
 // Loading in All App
 Future<void> ShowLoadingApp(BuildContext context) async {
       showDialog<void>(

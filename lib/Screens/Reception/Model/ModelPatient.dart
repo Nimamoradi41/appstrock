@@ -7,12 +7,14 @@ class ModelPatient {
   String age;
   String gender;
   String timeOfAddToSystem;
-  String dateOfAddToSystem;
+  String? timeOfAddLabotory;
+  String? dateOfAddToSystem;
+  String? ResonNot;
   bool needToMRI;
   bool isNot724;
   bool needToCT;
-  bool IsNIHSS;
-  bool IsLab;
+  bool? IsNIHSS;
+  bool?  IsLab;
 
   ModelPatient({
     required this.id,
@@ -21,7 +23,9 @@ class ModelPatient {
     required this.age,
     required this.gender,
     required this.timeOfAddToSystem,
+    required this.timeOfAddLabotory,
     required this.dateOfAddToSystem,
+    required this.ResonNot,
     required this.needToMRI,
     required this.isNot724,
     required this.needToCT,
@@ -37,6 +41,8 @@ class ModelPatient {
     gender: json["gender"],
     timeOfAddToSystem: json["timeOfAddToSystem"],
     dateOfAddToSystem: json["dateOfAddToSystem"],
+    timeOfAddLabotory: json["timeOfAddLabotory"],
+    ResonNot: json["ResonNot"],
     needToMRI: json["needToMRI"],
     isNot724: json["isNot724"],
     needToCT: json["needToCT"],
@@ -51,7 +57,9 @@ class ModelPatient {
     "age": age,
     "gender": gender,
     "timeOfAddToSystem": timeOfAddToSystem,
+    "timeOfAddLabotory": timeOfAddLabotory,
     "dateOfAddToSystem": dateOfAddToSystem,
+    "ResonNot": ResonNot,
     "needToMRI": needToMRI,
     "isNot724": isNot724,
     "needToCT": needToCT,

@@ -68,7 +68,7 @@ class ScreenLogin extends StatelessWidget {
         if(Data.data.departmentId==1)
         {
           // ignore: use_build_context_synchronously
-          GoNextPage(context,ScreenEms(false,context,Data.data.name,Data.data.nationalCode));
+          GoNextPage(context,ScreenEms(Data.data.name,Data.data.nationalCode,false));
         }
 
         if(Data.data.departmentId==2)
@@ -80,7 +80,7 @@ class ScreenLogin extends StatelessWidget {
         if(Data.data.departmentId==3)
         {
           // ignore: use_build_context_synchronously
-          GoNextPage(context,ScreenReception(false,context,Data.data.name,Data.data.nationalCode));
+          GoNextPage(context,ScreenReception(Data.data.name,Data.data.nationalCode,false));
         }
 
       }else{

@@ -10,7 +10,20 @@ import '../../Constants.dart';
 import '../Reception/screen_reception.dart';
 import 'ProviderEms/ProviderEms.dart';
 
- class ScreenEms extends StatelessWidget {
+ class ScreenEms extends StatefulWidget {
+   String  Name='';
+   String Code='';
+   bool IsRigester;
+
+
+
+   ScreenEms(this.Name, this.Code, this.IsRigester);
+
+   @override
+  State<ScreenEms> createState() => _ScreenEmsState();
+}
+
+class _ScreenEmsState extends State<ScreenEms> {
    bool status=false;
 
    var items = [
@@ -18,25 +31,7 @@ import 'ProviderEms/ProviderEms.dart';
      'زن',
    ];
 
-
-
-   String  Name='';
-   String Code='';
-
-   ScreenEms(bool IsRigester,BuildContext context,String NewName,String CodeNew){
-     if(IsRigester)
-       {
-         ShowSuccesMsg(context, 'ثبت نام با موفقیت انجام شد');
-         //Set an animation
-       }
-
-     Name=NewName;
-     Code=CodeNew;
-
-   }
-
    late var Notifi=ProviderEms();
-
 
    Future RunAddP(BuildContext context)async{
      if(TextConName.text.isEmpty)
@@ -81,12 +76,36 @@ import 'ProviderEms/ProviderEms.dart';
 
    }
 
-
    var TextConName=TextEditingController();
+
    var TextConCode=TextEditingController();
+
    var TextConAge=TextEditingController();
+
    var TextConGender=TextEditingController();
 
+   Future   ChangShift(bool StatusNew,BuildContext context) async
+   {
+    var Flag=await ShowAllow(context,'آیا از تغییر شیفت خود مطمئن هستید ؟');
+    if(Flag)
+      {
+        ShowLoadingApp(context);
+        await Future.delayed(Duration(seconds: 3));
+        Notifi.setstatus(StatusNew);
+        Navigator.pop(context);
+      }
+   }
+
+
+   @override
+  void initState() {
+    super.initState();
+    // if(widget.IsRigester)
+    // {
+    //   ShowSuccesMsg(context, 'ثبت نام با موفقیت انجام شد');
+    //   //Set an animation
+    // }
+  }
    @override
    Widget build(BuildContext context) {
      Notifi=Provider.of<ProviderEms>(context);
@@ -115,16 +134,11 @@ import 'ProviderEms/ProviderEms.dart';
                            crossAxisAlignment: CrossAxisAlignment.start,
                            mainAxisAlignment: MainAxisAlignment.end,
                            children:   [
-                             InkWell(
-                               onTap: (){
-                                 GoNextPage(context,ScreenReception(false,context,'NIma','459595'));
-                               },
-                               child: RotatedBox(
-                                 quarterTurns: 90,
-                                 child: Padding(
-                                   padding: EdgeInsets.all(16.0),
-                                   child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
-                                 ),
+                             RotatedBox(
+                               quarterTurns: 90,
+                               child: Padding(
+                                 padding: EdgeInsets.all(16.0),
+                                 child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
                                ),
                              ),
                              Expanded(child:
@@ -183,7 +197,7 @@ import 'ProviderEms/ProviderEms.dart';
                                        crossAxisAlignment: CrossAxisAlignment.end,
                                        children: [
                                          TextApp2(' : کدملی',14,ColorTextsubject,false),
-                                         TextApp2(Code,16,ColorTextbody,true),
+                                         TextApp2(widget.Code,16,ColorTextbody,true),
 
                                        ],
                                      ),
@@ -203,7 +217,7 @@ import 'ProviderEms/ProviderEms.dart';
                                        crossAxisAlignment: CrossAxisAlignment.end,
                                        children: [
                                          TextApp2(' : نام ونام خانوادگی',14,ColorTextsubject,false),
-                                         TextApp2(Name,16,ColorTextbody,true),
+                                         TextApp2(widget.Name,16,ColorTextbody,true),
 
                                        ],
                                      ),
@@ -228,7 +242,8 @@ import 'ProviderEms/ProviderEms.dart';
                                              value: status,
                                              activeColor: Color(0xff38b000),
                                              onToggle: (val) {
-                                               Notifi.setstatus(!status);
+                                               ChangShift(val,context);
+
 
                                              },
                                            );
@@ -415,5 +430,5 @@ import 'ProviderEms/ProviderEms.dart';
        ),
      );
    }
- }
+}
 

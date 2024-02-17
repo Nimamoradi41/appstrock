@@ -1,3 +1,4 @@
+import 'package:appstrock/Screens/Atend/ProviderAtend/ProviderAtend.dart';
 import 'package:appstrock/Screens/Reception/ApiServiceReception.dart';
 import 'package:appstrock/Screens/Reception/ProviderReception/ProviderReception.dart';
 
@@ -10,31 +11,40 @@ import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
 import '../../Widgets/TextApp.dart';
 import '../Reception/Model/ModelPatient.dart';
-import 'ScreenDetailPatient.dart';
+import 'ScreenDetailPatientAtend.dart';
 
 
 
 
 
-class ScreenResident extends StatelessWidget {
+class ScreenAtend extends StatefulWidget {
+
+  late BuildContext MainContext;
 
 
+  ScreenAtend(this.MainContext);
+
+  @override
+  State<ScreenAtend> createState() => _ScreenAtendState();
+}
+
+class _ScreenAtendState extends State<ScreenAtend> {
   bool status=false;
 
-
   List<ModelPatient> ItemsP=[];
+
   var items = [
     'مرد',
     'زن',
   ];
+
   String dropdownvalue = 'مرد';
-  late var Notifi=ProviderReception();
 
-  ScreenResident(this.MainContext){
-    RunListP(MainContext,false);
-  }
+  late var Notifi=ProviderAtend();
 
-  BuildContext MainContext;
+
+
+
 
 
   Future RunListP(BuildContext context,bool refresh) async
@@ -84,8 +94,13 @@ class ScreenResident extends StatelessWidget {
 
 
   @override
+  void initState() {
+    super.initState();
+    RunListP(widget.MainContext,false);
+  }
+  @override
   Widget build(BuildContext context) {
-    Notifi=Provider.of<ProviderReception>(context);
+    Notifi=Provider.of<ProviderAtend>(context);
     double wid=MediaQuery.of(context).size.width;
     double hei=MediaQuery.of(context).size.height;
     wid=wid>600?600:wid;
@@ -228,17 +243,25 @@ class ScreenResident extends StatelessWidget {
                           height:  hei*0.68,
                           child: Consumer<ProviderReception>(
                             builder: (context,newstate,child){
+                              print('Data');
+                              print(newstate.ListItemsPatient.toString());
                               ItemsP=newstate.ListItemsPatient;
-                              return ListView.builder(
-                                itemCount: ItemsP.length,
-                                itemBuilder: (ctx,item){
-                                  // return ItemPatient(wid: wid, ItemsP: ItemsP[item],);
-                                  return InkWell(
-                                      onTap: (){
-                                        GoNextPage(context,ScreenDetailPatient(ItemsP[item],context));
-                                      },
-                                      child: ItemPatient(wid: wid));
+                              return Consumer<ProviderAtend>(
+                                builder: (context,newstate,child){
+                                  ItemsP=newstate.ListItemsPatient;
+                                  return ListView.builder(
+                                    itemCount: ItemsP.length,
+                                    itemBuilder: (ctx,item){
+                                      // return ItemPatient(wid: wid, ItemsP: ItemsP[item],);
+                                      return InkWell(
+                                          onTap: (){
+                                            GoNextPage(context,ScreenDetailPatientAtend(ItemsP[item],context));
+                                          },
+                                          child: ItemPatient(wid: wid));
+                                    },
+                                  );
                                 },
+
                               );
                             },
 
@@ -266,5 +289,4 @@ class ScreenResident extends StatelessWidget {
       ),
     );
   }
-
 }

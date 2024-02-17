@@ -10,13 +10,14 @@ import 'package:http/http.dart'as http;
 import 'package:appstrock/Screens/Autentication/Models/ModelRigester.dart';
 
 import '../../Constants.dart';
-import 'Model/ModelListPatient.dart';
+import '../Reception/Model/ModelListPatient.dart';
 
 
 
 
 
-class ApiServiceReception{
+
+class ApiServiceLaboratory{
 
   static Future<ModelListPatient> ListPatient(String Date,BuildContext context,bool refresh) async {
     var login;
@@ -58,7 +59,6 @@ class ApiServiceReception{
 
     } on Error catch (e)
     {
-      print(e.toString());
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
     }
 

@@ -65,202 +65,7 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
 
   bool status=false;
 
-  Future<void> _showAlertDialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        double wid=MediaQuery.of(context).size.width;
-        double hei=MediaQuery.of(context).size.height;
-        wid=wid>600?600:wid;
-        return Scaffold(
-          backgroundColor: Colors.transparent ,
-          body: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: wid,
-                margin: EdgeInsets.all(8),
-                decoration: MainDecoration,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(child: TextApp2('نیما مرادی',14,ColorTextbody,true)),
-                          SizedBox(width: 16,),
-                          TextApp(' : نام ونام خانوادگی',14,ColorTitleText,false),
-                          SizedBox(width: 8,),
-                        ],
-                      ),
-                      Container(
-                        width: double.infinity,
-                        height: 1,
-                        color: Colors.black45,
-                        margin: EdgeInsets.all(8),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: TextField(
-                            decoration: InputDecoration(
-                              labelText: 'کد ملی',
-                              disabledBorder:OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8)
-                              ),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8)
-                              ),
 
-                            ),
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 16.0),
-                                child: TextApp('سن',14,ColorTitleText,false),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: TextField(
-                                    decoration: InputDecoration(
-
-                                      disabledBorder:OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(8)
-                                      ),
-                                      border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(8)
-                                      ),
-
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
-                          Expanded(child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 16.0),
-                                child: TextApp('جنسیت',14,ColorTitleText,false),
-                              ),
-                              Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: DropdownButtonFormField(
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius:   BorderRadius.all(
-                                            Radius.circular(8.0),
-                                          ),
-                                        ),
-                                        // Initial Value
-                                        // Down Arrow Icon
-
-
-                                        // Array list of items
-
-                                        // After selecting the desired option,it will
-                                        // change button value to selected value
-
-                                      ),
-                                      items: items.map((String items) {
-                                        return DropdownMenuItem(
-                                          value: items,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              Text(
-                                                items,),
-                                            ],
-                                          ),
-                                        );
-                                      }).toList()
-                                      , onChanged: (String? value) {
-                                      // setState(() {
-                                      //   dropdownvalue = value!;
-                                      // });
-                                    },
-                                    ),
-                                  )),
-                            ],
-                          ))
-                        ],
-                      ),
-
-                      SizedBox(height: 50,),
-                      Container(
-                        width: wid*0.9,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(onPressed: (){
-                                Navigator.pop(context);
-                              },
-                                  style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty.all(Colors.redAccent),
-                                      padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8.0),
-
-                                          )
-                                      )
-                                  ),
-                                  child:Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text('بستن',
-                                      style: TextStyle(color:Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),),
-                                  )),
-                            ),
-                            SizedBox(width: 16,),
-                            Expanded(
-                              child: ElevatedButton(onPressed: (){},
-                                  style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty.all(Colorbutton),
-                                      padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8.0),
-
-                                          )
-                                      )
-                                  ),
-                                  child:Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text('تکمیل اطلاعات',
-                                      style: TextStyle(color:Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),),
-                                  )),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 16,),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        );
-      },
-    );
-  }
 
   List<ModelPatient> ItemsP=[];
 
@@ -345,6 +150,13 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
                                 child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
                               ),
                             ),
+                            RotatedBox(
+                              quarterTurns: 0,
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Icon(Icons.person,color: Colors.white,size: 30,),
+                              ),
+                            ),
                             Expanded(child:
                             Padding(
                                 padding: EdgeInsets.all(16.0),
@@ -381,45 +193,6 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                Row(children: [
-                                  Expanded(
-                                    flex: 4,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        TextApp2(' : کدملی',14,ColorTextsubject,false),
-                                        TextApp2(Code,16,ColorTextbody,true),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(width: 8,),
-                                  Container(
-                                    width: 1,
-                                    color: Colors.black38,
-                                    height: 20,
-                                  ),
-                                  SizedBox(width: 8,),
-
-
-                                  Expanded(
-                                    flex: 6,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        TextApp2(' : نام ونام خانوادگی',14,ColorTextsubject,false),
-                                        TextApp2(Name,16,ColorTextbody,true),
-
-                                      ],
-                                    ),
-                                  ),
-                                ],),
-                                SizedBox(height: 4,),
-                                Container(
-                                  width: wid,
-                                  margin: EdgeInsets.all(8),
-                                  color: Colors.black12,
-                                  height: 1,
-                                ),
                                 Row(
                                   children: [
                                     SizedBox(width: 8,),

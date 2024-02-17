@@ -133,6 +133,13 @@ class _ScreenAtendState extends State<ScreenAtend> {
                                 child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
                               ),
                             ),
+                            RotatedBox(
+                              quarterTurns: 0,
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Icon(Icons.person,color: Colors.white,size: 30,),
+                              ),
+                            ),
                             Expanded(child:
                             Padding(
                                 padding: EdgeInsets.all(16.0),
@@ -145,14 +152,12 @@ class _ScreenAtendState extends State<ScreenAtend> {
                                       fontSize: 16
                                   ),
                                 )
-
                               // TextApp('فوریت های پزشکی', 16, Colors.white, true),
                             )),
                           ],
                         ),
                       )
                     ],
-
                   ),
                 ),
                 Positioned(
@@ -169,45 +174,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                Row(children: [
-                                  Expanded(
-                                    flex: 4,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        TextApp2(' : کدملی',14,ColorTextsubject,false),
-                                        TextApp2('174875455445',16,ColorTextbody,true),
 
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(width: 8,),
-                                  Container(
-                                    width: 1,
-                                    color: Colors.black38,
-                                    height: 20,
-                                  ),
-                                  SizedBox(width: 8,),
-
-
-                                  Expanded(
-                                    flex: 6,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        TextApp2(' : نام ونام خانوادگی',14,ColorTextsubject,false),
-                                        TextApp2('نیما مرادی',16,ColorTextbody,true),
-                                      ],
-                                    ),
-                                  ),
-                                ],),
-                                SizedBox(height: 4,),
-                                Container(
-                                  width: wid,
-                                  margin: EdgeInsets.all(8),
-                                  color: Colors.black12,
-                                  height: 1,
-                                ),
                                 Row(
                                   children: [
                                     SizedBox(width: 8,),

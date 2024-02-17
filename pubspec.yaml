@@ -93,6 +93,11 @@ flutter:
       fonts:
         - asset: Fonts/iransans.ttf
           weight: 200
+    - family: fredoka
+      fonts:
+        - asset: Fonts/fredoka.ttf
+          weight: 200
+
   # fonts:
   #   - family: Schyler
   #     fonts:

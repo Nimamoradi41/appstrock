@@ -30,6 +30,7 @@ import 'Screens/Resident/ProviderResident/ProviderResident.dart';
 import 'Screens/Resident/ProviderResident/ProviderResidentDetaile.dart';
 import 'Screens/Resident/ScreenDetailPatient.dart';
 import 'Screens/Resident/ScreenFormNIHS.dart';
+import 'Screens/Teriazh/ProviderTeraizh.dart';
 import 'Screens/sickcarrier/ProviderSickCarrier/ProviderSickCarrier.dart';
 import 'Screens/sickcarrier/screen_sickcarrier.dart';
 import 'Widgets/TextApp.dart';
@@ -45,6 +46,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => ProviderLaboratoryDetail()),
         ChangeNotifierProvider(create: (context) => ProviderAtend()),
         ChangeNotifierProvider(create: (context) => ProviderAtendDetaile()),
+        ChangeNotifierProvider(create: (context) => ProviderTeraizh()),
       ],
       child: MyApp()));
 }
@@ -69,7 +71,7 @@ class _MyAppState extends State<MyApp> {
       // home: ScreenLogin(),
       // home: ScreenRigester(),
       // home: ScreenAtend(context),
-      home: ScreenProfile(),
+      // home: ScreenProfile(),
       // home: ScreenLaboratory(),
       // home: ScreenDetailPatientAtend(
       //     ModelPatient(id: 10, fullName: 'Ahmad Bagheri',
@@ -88,10 +90,10 @@ class _MyAppState extends State<MyApp> {
       //       nationalCode: '4845154444', age: '34', gender: 'Female',
       //       timeOfAddToSystem: '14:30', dateOfAddToSystem: '1402/01/01',
       //       needToMRI: false, isNot724: false, needToCT: true, IsNIHSS: false, IsLab: false),context)
-        // home: ScreenFormNIHS((c){
-        //
-        //   print(c.toString());
-        // })
+      //   home: ScreenFormNIHS((c){
+      //
+      //
+      //   },false));
       // home: test(),
       // home: ExamForm(),
       // home: Scaffold(
@@ -114,14 +116,19 @@ class _MyAppState extends State<MyApp> {
       // ),
       // home: ScreenCodeOtp(),
       // home: scr(),
+      home: ScreenEms('jbjb','55',true));
+      // home: ScreenRigester());
       // home: ScreenEms(),
-      // home: ScreenEms(),
-      // home: Screen_Teriazh(),
+      // home: Screen_Teriazh());
+      // home: ScreenReception('Nima','+6+6',true));
+      // home: ScreenSickCarrier());
       // home: ScreenReception(),
-      // home: ScreenResident(),
+      // home: ScreenResident(context));
+      // home: ScreenLaboratory());
+      // home: ScreenAtend(context));
       // home: ScreenDetailPatient(),
       // home: ScreenSickCarrier(),
-    );
+
   }
 }
 

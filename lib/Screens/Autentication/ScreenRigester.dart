@@ -32,7 +32,12 @@ class _ScreenRigesterState extends State<ScreenRigester> {
   var items = [
     'فوریت های پزشکی',
     'تریاژ',
-    'پزیرش',
+    'پذیرش',
+    'بیماربر',
+    'دکتر متخصص',
+    'آزماشیگاه',
+    'رزیدنت',
+
   ];
 
 

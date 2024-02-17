@@ -192,7 +192,7 @@ class _ExamFormState extends State<ScreenFormNIHS> {
 
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 8),
-                                child: TextApp('NIHSS',16,Colors.white,true),
+                                child: TextAppfredoka('NIHSS',16,Colors.white,true),
                               ),
                               Spacer(),
                             ],
@@ -217,7 +217,7 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                                       Row(
                                         children: [
                                           Expanded(
-                                              child: TextApp(questions[index].question,14 , Colors.black54, true)),
+                                              child: TextAppStartfredoka(questions[index].question,14 , Colors.black54, true)),
                                         ],
                                       ),
 
@@ -227,7 +227,7 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                                           questions[index].options.length,
                                               (optionIndex) {
                                             return RadioListTile(
-                                              title: TextApp3(questions[index].options[optionIndex],14 , Colors.black87, true),
+                                              title: TextAppStartfredoka(questions[index].options[optionIndex],14 , Colors.black87, true),
                                               value: optionIndex,
                                               groupValue: questions[index].selectedAnswer,
                                               onChanged: (value) {

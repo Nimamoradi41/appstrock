@@ -104,7 +104,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
 
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 8),
-                                child: TextApp('Laboratory',16,Colors.white,true),
+                                child: TextAppfredoka('Laboratory',16,Colors.white,true),
                               ),
                               Spacer(),
                             ],

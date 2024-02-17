@@ -44,23 +44,41 @@ Future<bool>   ShowAllow(BuildContext context,String BodyText) async{
               ),
               child: Column(
                 children: [
-                  Container(
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                        color: ColorApp,
-                        borderRadius: BorderRadius.only(topRight: Radius.circular(8),topLeft: Radius.circular(8))
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: TextApp('مجوز',16,Colors.white,true),
-                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: TextApp('مجوز',18,Colors.black87,true),
                   ),
                   SizedBox(height: 16,),
-                  TextApp(BodyText,18,Colors.black87,true),
+                  TextApp(BodyText,14,Colors.black54,true),
                   SizedBox(height: 16,),
                   Row(
                     children: [
 
+                      Expanded(child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: ElevatedButton(onPressed: (){
+                          Navigator.pop(context);
+                          Flag=false;
+
+                        },
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(Colors.white),
+                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      side: const BorderSide(color: BtnColorgreen,width: 2)
+                                    )
+                                )
+                            ),
+                            child:const Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text('خیر',
+                                style: TextStyle(color:BtnColorgreen,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),),
+                            )),
+                      )),
                       Expanded(child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: ElevatedButton(
@@ -80,36 +98,12 @@ Future<bool>   ShowAllow(BuildContext context,String BodyText) async{
                             ),
                             child:Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Text('خیر',
-                                style: TextStyle(color:Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),),
-                            )),
-                      )),
-                      Expanded(child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: ElevatedButton(onPressed: (){
-                          Navigator.pop(context);
-                          Flag=true;
-
-                        },
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    )
-                                )
-                            ),
-                            child:Padding(
-                              padding: const EdgeInsets.all(10.0),
                               child: Text('بله',
                                 style: TextStyle(color:Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold),),
                             )),
-                      ))
+                      )),
                     ],
                   ),
                   SizedBox(height: 8,),

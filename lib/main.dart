@@ -11,8 +11,6 @@ import 'package:appstrock/scr.dart';
 import 'package:appstrock/test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-
 import 'Constants.dart';
 import 'Screens/Atend/ProviderAtend/ProviderAtend.dart';
 import 'Screens/Atend/ProviderAtend/ProviderAtendDetaile.dart';
@@ -29,6 +27,8 @@ import 'Screens/Reception/ProviderReception/ProviderReception.dart';
 import 'Screens/Resident/ProviderResident/ProviderResident.dart';
 import 'Screens/Resident/ProviderResident/ProviderResidentDetaile.dart';
 import 'Screens/Resident/ScreenDetailPatient.dart';
+import 'Screens/Resident/ScreenFormIs724.dart';
+import 'Screens/Resident/ScreenFormIsNot724.dart';
 import 'Screens/Resident/ScreenFormNIHS.dart';
 import 'Screens/Teriazh/ProviderTeraizh.dart';
 import 'Screens/sickcarrier/ProviderSickCarrier/ProviderSickCarrier.dart';
@@ -71,7 +71,7 @@ class _MyAppState extends State<MyApp> {
       // home: ScreenLogin(),
       // home: ScreenRigester(),
       // home: ScreenAtend(context),
-      // home: ScreenProfile(),
+      // home: ScreenProfile());
       // home: ScreenLaboratory(),
       // home: ScreenDetailPatientAtend(
       //     ModelPatient(id: 10, fullName: 'Ahmad Bagheri',
@@ -82,14 +82,25 @@ class _MyAppState extends State<MyApp> {
       //         needToMRI: false,
       //         isNot724: false,
       //         needToCT: false,
-      //         IsNIHSS: false, IsLab: false, timeOfAddLabotory: '', ResonNot: 'nxfnxfgn'), context),
+      //         IsNIHSS: false, IsLab: false, timeOfAddLabotory: '', ResonNot: 'nxfnxfgn', Is724: false), context));
 
-      // home: ScreenResident(context),
-      //   home: ScreenDetailPatient(
-      //       ModelPatient(id: 14, fullName: 'Ahmad bagheri',
-      //       nationalCode: '4845154444', age: '34', gender: 'Female',
-      //       timeOfAddToSystem: '14:30', dateOfAddToSystem: '1402/01/01',
-      //       needToMRI: false, isNot724: false, needToCT: true, IsNIHSS: false, IsLab: false),context)
+      // home: ScreenResident(context));
+      //   home: ScreenFormIs724((p){
+      //
+      //   }));
+        home: ScreenFormNIHS((p0) {},false));
+        // home: ScreenDetailPatient(
+        //     ModelPatient(id: 14, fullName: 'Ahmad bagheri',
+        //     nationalCode: '4845154444', age: '34', gender: 'Female',
+        //     timeOfAddToSystem: '14:30', dateOfAddToSystem: '1402/01/01',
+        //     needToMRI: false, isNot724: false,
+        //         needToCT: false, IsNIHSS: false,
+        //         IsLab: false, timeOfAddLabotory: '',
+        //         ResonNot: '', Is724: false,
+        //         AddReasonNot724: false,
+        //         timeOfAddResident: '',
+        //         TimeFss: '', TimeLKW: '',
+        //         DateFSS: '', DateLKW: '', IsUnknow: false, dateOfAddToStart: '', AtendSeen: false),context));
       //   home: ScreenFormNIHS((c){
       //
       //
@@ -116,7 +127,7 @@ class _MyAppState extends State<MyApp> {
       // ),
       // home: ScreenCodeOtp(),
       // home: scr(),
-      home: ScreenEms('jbjb','55',true));
+      // home: ScreenEms('jbjb','55',true));
       // home: ScreenRigester());
       // home: ScreenEms(),
       // home: Screen_Teriazh());

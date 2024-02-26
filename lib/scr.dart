@@ -29,8 +29,10 @@ class _scrState extends State<scr> {
   {
     connection=HubConnectionBuilder().withUrl(serverurl).build();
     connection.on('ReceivePatientUpdate', (arguments) {
+      print('c');
       Run();
     });
+    print('AAAA');
     Run();
   }
 
@@ -90,8 +92,8 @@ class _scrState extends State<scr> {
 
 
       try{
-        var ss=    await connection.start();
-        print('scscsc');
+        var sssc=    await connection.start();
+        print('Ok');
       }catch(w)
           {
             print(w.toString());

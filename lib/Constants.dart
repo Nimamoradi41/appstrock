@@ -84,6 +84,7 @@ Future<bool>   ShowAllow(BuildContext context,String BodyText) async{
                         child: ElevatedButton(
                             onPressed: (){
                               Navigator.pop(context);
+                              Flag=true;
                               // NeedToCT(context);
 
                             },

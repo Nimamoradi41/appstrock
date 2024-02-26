@@ -48,6 +48,30 @@ class TextAppStartfredoka extends StatelessWidget {
       ),);
   }
 }
+class TextAppStartfredokaCenter extends StatelessWidget {
+
+  String Title;
+  double Fontsize;
+  Color Mcolor;
+  bool Isbold=false;
+
+
+  TextAppStartfredokaCenter(this.Title, this.Fontsize, this.Mcolor, this.Isbold);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(Title,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+          color: Mcolor,
+          fontFamily: 'fredoka',
+          fontSize: Fontsize,
+          fontWeight: Isbold==true?
+          FontWeight.bold:FontWeight.normal
+      ),);
+  }
+}
 
 class TextAppfredoka extends StatelessWidget {
 

@@ -43,6 +43,7 @@ dependencies:
   shared_preferences: ^2.0.6
   shamsi_date: ^1.0.2
   flutter_datetime_picker_bdaya: ^3.0.2
+  persian_datetime_picker : any
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -16,26 +16,33 @@ import 'ScreenDetailPatient.dart';
 
 
 
-class ScreenResident extends StatelessWidget {
+class ScreenResident extends StatefulWidget {
 
 
+
+
+   BuildContext MainContext;
+
+
+   ScreenResident(this.MainContext);
+
+  @override
+  State<ScreenResident> createState() => _ScreenResidentState();
+}
+
+class _ScreenResidentState extends State<ScreenResident> {
   bool status=false;
 
-
   List<ModelPatient> ItemsP=[];
+
   var items = [
     'مرد',
     'زن',
   ];
+
   String dropdownvalue = 'مرد';
+
   late var Notifi=ProviderReception();
-
-  ScreenResident(this.MainContext){
-    RunListP(MainContext,false);
-  }
-
-  BuildContext MainContext;
-
 
   Future RunListP(BuildContext context,bool refresh) async
   {
@@ -83,6 +90,12 @@ class ScreenResident extends StatelessWidget {
   }
 
 
+  @override
+  void initState() {
+    super.initState();
+    RunListP(widget.MainContext,false);
+
+  }
   @override
   Widget build(BuildContext context) {
     Notifi=Provider.of<ProviderReception>(context);
@@ -235,5 +248,4 @@ class ScreenResident extends StatelessWidget {
       ),
     );
   }
-
 }

@@ -8,13 +8,23 @@ class ModelPatient {
   String gender;
   String timeOfAddToSystem;
   String? timeOfAddLabotory;
+  String? timeOfAddResident;
+  String? TimeFss;
+  String? TimeLKW;
+  String? DateFSS;
+  String? DateLKW;
   String? dateOfAddToSystem;
+  String? dateOfAddToStart;
   String? ResonNot;
   bool needToMRI;
   bool isNot724;
   bool needToCT;
   bool? IsNIHSS;
   bool?  IsLab;
+  bool?  IsUnknow;
+  bool?  Is724;
+  bool?  AddReasonNot724;
+  bool?  AtendSeen;
 
   ModelPatient({
     required this.id,
@@ -23,14 +33,24 @@ class ModelPatient {
     required this.age,
     required this.gender,
     required this.timeOfAddToSystem,
+    required this.TimeFss,
+    required this.TimeLKW,
+    required this.DateFSS,
+    required this.DateLKW,
+    required this.IsUnknow,
     required this.timeOfAddLabotory,
+    required this.timeOfAddResident,
     required this.dateOfAddToSystem,
+    required this.dateOfAddToStart,
     required this.ResonNot,
     required this.needToMRI,
     required this.isNot724,
     required this.needToCT,
     required this.IsNIHSS,
     required this.IsLab,
+    required this.Is724,
+    required this.AddReasonNot724,
+    required this.AtendSeen,
   });
 
   factory ModelPatient.fromJson(Map<String, dynamic> json) => ModelPatient(
@@ -40,7 +60,14 @@ class ModelPatient {
     age: json["age"],
     gender: json["gender"],
     timeOfAddToSystem: json["timeOfAddToSystem"],
+    TimeFss: json["TimeFss"],
+    TimeLKW: json["TimeLKW"],
+    DateFSS: json["DateFSS"],
+    DateLKW: json["DateLKW"],
+    IsUnknow: json["IsUnknow"],
     dateOfAddToSystem: json["dateOfAddToSystem"],
+    dateOfAddToStart: json["dateOfAddToStart"],
+    timeOfAddResident: json["timeOfAddResident"],
     timeOfAddLabotory: json["timeOfAddLabotory"],
     ResonNot: json["ResonNot"],
     needToMRI: json["needToMRI"],
@@ -48,6 +75,9 @@ class ModelPatient {
     needToCT: json["needToCT"],
     IsNIHSS: json["IsNIHSS"],
     IsLab: json["IsLab"],
+    Is724: json["Is724"],
+    AddReasonNot724: json["AddReasonNot724"],
+    AtendSeen: json["AtendSeen"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -65,5 +95,6 @@ class ModelPatient {
     "needToCT": needToCT,
     "IsNIHSS": IsNIHSS,
     "IsLab": IsLab,
+    "Is724": Is724,
   };
 }

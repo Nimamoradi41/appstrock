@@ -41,7 +41,11 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
     }
 
 
-    Notifi.ListItemsPatient.add(ModelPatient(id: 7445, fullName: 'NimaMorado', nationalCode: '1788484', age: '32', gender: 'مرد', timeOfAddToSystem: '', dateOfAddToSystem: '', needToMRI: false, isNot724: false, needToCT: false, IsNIHSS: false, IsLab: false, timeOfAddLabotory: '', ResonNot: ''));
+    Notifi.ListItemsPatient.add(ModelPatient(id: 7445, fullName: 'NimaMorado',
+        nationalCode: '1788484', age: '32', gender: 'مرد', timeOfAddToSystem: '',
+        dateOfAddToSystem: '', needToMRI: false, isNot724: false, needToCT: false,
+        IsNIHSS: false, IsLab: false, timeOfAddLabotory: '', ResonNot: '', Is724: false,
+        AddReasonNot724: false, timeOfAddResident: '', TimeFss: '', TimeLKW: '', DateFSS: '', DateLKW: '', IsUnknow: null, dateOfAddToStart: '', AtendSeen: false));
     // ignore: invalid_use_of_visible_for_testing_member
     Notifi.notifyListeners();
     // Notifi=Provider.of<ProviderReception>(context,listen: false);
@@ -245,7 +249,11 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
                                                needToMRI: false,
                                                isNot724: false,
                                                needToCT: false,
-                                           IsNIHSS: false, IsLab: false, timeOfAddLabotory: '', ResonNot: ''), context));
+                                           IsNIHSS: false, IsLab: false, timeOfAddLabotory: '', ResonNot: '',
+                                               Is724: false, AddReasonNot724: false,
+                                               timeOfAddResident: '', TimeFss: '', TimeLKW: '',
+                                               DateFSS: '', DateLKW: '',
+                                               IsUnknow: null, dateOfAddToStart: '', AtendSeen: false), context));
                                     },
                                     // child: ItemPatient(wid: wid, ItemsP: ItemsP[item],),
                                     child: ItemPatient(wid: wid),

@@ -218,10 +218,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
-                                              widget.modelPatient.needToCT ? ' اعلان CT' :
-                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
-
+                                              TextApp(widget.modelPatient.timeOfAddResident!.isEmpty ? 'نامشخص' :
+                                              widget.modelPatient.timeOfAddResident!
                                                   , 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
@@ -229,18 +227,19 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                             ],
                                           ),
                                         ),
+
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
-                                              widget.modelPatient.needToCT ? ' اعلان CT' :
-                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
-
-                                                  , 16, ColorTextbody, true),
-                                              Expanded(child: Align(
+                                              Expanded(
+                                                child: TextApp3( widget.modelPatient.Residents!.isEmpty ? 'نامشخص':
+                                                widget.modelPatient.Residents!
+                                                    , 16, ColorTextbody, true),
+                                              ),
+                                              Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  زمان تکمیل NIHSS ', 14, ColorTitleText, false))),
+                                                  child: TextApp(' :  رزیدنت ', 14, ColorTitleText, false)),
                                             ],
                                           ),
                                         ),
@@ -248,14 +247,14 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
-                                              widget.modelPatient.needToCT ? ' اعلان CT' :
-                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
-
-                                                  , 16, ColorTextbody, true),
-                                              Expanded(child: Align(
+                                              Expanded(
+                                                child: TextApp3( widget.modelPatient.Atends!.isEmpty ? 'نامشخص':
+                                                widget.modelPatient.Atends!
+                                                    , 16, ColorTextbody, true),
+                                              ),
+                                              Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  زمان تکمیل آزمایش ', 14, ColorTitleText, false))),
+                                                  child: TextApp(' :  دکتر متخصص ', 14, ColorTitleText, false)),
                                             ],
                                           ),
                                         ),
@@ -263,14 +262,20 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
-                                              widget.modelPatient.needToCT ? ' اعلان CT' :
-                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
-
-                                                  , 16, ColorTextbody, true),
+                                               Container(
+                                                 decoration: BoxDecoration(
+                                                   color: Colors.white,
+                                                   borderRadius: BorderRadius.circular(8),
+                                                   border: Border.all(color: ColorApp,width: 2)
+                                                 ),
+                                                 child: Padding(
+                                                   padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 4),
+                                                   child: TextApp(widget.modelPatient.IsNIHSS!? 'مشاهده': 'تکمیل نشده', 16, ColorApp, true),
+                                                 ),
+                                               ),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  زمان اعلان کد ', 14, ColorTitleText, false))),
+                                                  child: TextApp(' : NIHSS ', 14, ColorTitleText, false))),
                                             ],
                                           ),
                                         ),
@@ -278,14 +283,34 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
-                                              widget.modelPatient.needToCT ? ' اعلان CT' :
-                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius: BorderRadius.circular(8),
+                                                    border: Border.all(color: ColorApp,width: 2)
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 4),
+                                                  child: TextApp(widget.modelPatient.IsLab!? 'مشاهده': 'تکمیل نشده', 16, ColorApp, true),
+                                                ),
+                                              ),
+                                              Expanded(child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' : آزمایشگاه ', 14, ColorTitleText, false))),
+                                            ],
+                                          ),
+                                        ),
 
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              TextApp(widget.modelPatient.Fesharkhon!.isNotEmpty?
+                                              widget.modelPatient.Fesharkhon!.toString(): 'تکمیل نشده'
                                                   , 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  وضعیت بیمار ', 14, ColorTitleText, false))),
+                                                  child: TextApp(' :  فشارخون ', 14, ColorTitleText, false))),
                                             ],
                                           ),
                                         ),
@@ -293,17 +318,17 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
-                                              widget.modelPatient.needToCT ? ' اعلان CT' :
-                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
-
+                                              TextApp(widget.modelPatient.Ghandkhon!.isNotEmpty?
+                                              widget.modelPatient.Ghandkhon!.toString(): 'تکمیل نشده'
                                                   , 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  وضعیت بیمار ', 14, ColorTitleText, false))),
+                                                  child: TextApp(' :  قند خون ', 14, ColorTitleText, false))),
                                             ],
                                           ),
                                         ),
+
+
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(

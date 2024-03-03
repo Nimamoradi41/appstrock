@@ -16,6 +16,10 @@ class ModelPatient {
   String? dateOfAddToSystem;
   String? dateOfAddToStart;
   String? ResonNot;
+  String? Residents;
+  String? Atends;
+  String? Fesharkhon;
+  String? Ghandkhon;
   bool needToMRI;
   bool isNot724;
   bool needToCT;
@@ -36,14 +40,18 @@ class ModelPatient {
     required this.TimeFss,
     required this.TimeLKW,
     required this.DateFSS,
+    required this.Atends,
+    required this.Fesharkhon,
     required this.DateLKW,
     required this.IsUnknow,
     required this.timeOfAddLabotory,
+    required this.Ghandkhon,
     required this.timeOfAddResident,
     required this.dateOfAddToSystem,
     required this.dateOfAddToStart,
     required this.ResonNot,
     required this.needToMRI,
+    required this.Residents,
     required this.isNot724,
     required this.needToCT,
     required this.IsNIHSS,
@@ -61,10 +69,14 @@ class ModelPatient {
     gender: json["gender"],
     timeOfAddToSystem: json["timeOfAddToSystem"],
     TimeFss: json["TimeFss"],
+    Residents: json["Residents"],
     TimeLKW: json["TimeLKW"],
     DateFSS: json["DateFSS"],
     DateLKW: json["DateLKW"],
     IsUnknow: json["IsUnknow"],
+    Atends: json["Atends"],
+    Fesharkhon: json["Fesharkhon"],
+    Ghandkhon: json["Ghandkhon"],
     dateOfAddToSystem: json["dateOfAddToSystem"],
     dateOfAddToStart: json["dateOfAddToStart"],
     timeOfAddResident: json["timeOfAddResident"],

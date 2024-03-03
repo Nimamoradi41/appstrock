@@ -628,7 +628,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
                                 ):Container(),
 
                                 SizedBox(height: 8,),
-                                !widget.modelPatient.needToCT && !widget.modelPatient.isNot724 && !widget.modelPatient.needToMRI ?
+                                widget.modelPatient.Is724! ?
                                 Row(
                                   children: [
 
@@ -688,7 +688,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
 
 
 
-                                // widget.modelPatient.needToCT || widget.modelPatient.needToMRI  ?
+                                widget.modelPatient.Is724!  ?
                                 Container(
                                   width: wid,
                                   margin: const EdgeInsets.all(8),
@@ -734,7 +734,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),),
                                       )),
-                                ),
+                                ):Container(),
                                 SizedBox(height: 8,),
 
 
@@ -784,6 +784,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
                                               fontWeight: FontWeight.bold),),
                                       )),
                                 ):Container(),
+
+
 
 
 

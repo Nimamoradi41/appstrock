@@ -20,12 +20,10 @@ class ScreenReception extends StatefulWidget {
 
 
 
-  String  Name='';
-  String Code='';
-  bool IsRigester;
 
 
-  ScreenReception(this.Name, this.Code, this.IsRigester);
+
+  ScreenReception( );
 
   @override
   State<ScreenReception> createState() => _ScreenReceptionState();

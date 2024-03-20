@@ -17,7 +17,8 @@ class ProviderResidentDetaile extends ChangeNotifier{
       AddReasonNot724: false,
       timeOfAddResident: '',
       TimeFss: '', TimeLKW: '',
-      DateFSS: '', DateLKW: '', IsUnknow: false, dateOfAddToStart: '', AtendSeen: false, Residents: '', Atends: '');
+      DateFSS: '', DateLKW: '', IsUnknow: false,
+      dateOfAddToStart: '', AtendSeen: false, Residents: '', Atends: '', Fesharkhon: '', Ghandkhon: '');
   bool status=false;
    void setItems(ModelPatient newitem)
    {

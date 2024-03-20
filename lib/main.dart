@@ -31,6 +31,7 @@ import 'Screens/Resident/ScreenFormImage724.dart';
 import 'Screens/Resident/ScreenFormIs724.dart';
 import 'Screens/Resident/ScreenFormIsNot724.dart';
 import 'Screens/Resident/ScreenFormNIHS.dart';
+import 'Screens/SplashScreen.dart';
 import 'Screens/Teriazh/ProviderTeraizh.dart';
 import 'Screens/sickcarrier/ProviderSickCarrier/ProviderSickCarrier.dart';
 import 'Screens/sickcarrier/screen_sickcarrier.dart';
@@ -69,24 +70,26 @@ class _MyAppState extends State<MyApp> {
           fontFamily: 'iransans'
       ),
       debugShowCheckedModeBanner: false,
-      // home: ScreenLogin(),
+      home: ScreenLogin());
       // home: ScreenRigester(),
       // home: ScreenAtend(context));
       // home: ScreenProfile());
-      // home: ScreenLaboratory(),
-      home: ScreenDetailPatientAtend(
-          ModelPatient(id: 10, fullName: 'Ahmad Bagheri',
-              nationalCode: '548548548484', age: '45',
-              gender: 'مرد',
-              timeOfAddToSystem: '14:20',
-              dateOfAddToSystem: '1402/02/02',
-              needToMRI: false,
-              isNot724: false,
-              needToCT: false,
-              IsNIHSS: false, IsLab: false, timeOfAddLabotory: '', ResonNot: 'nxfnxfgn', Is724: false, TimeFss: '',
-              TimeLKW: '', DateFSS: '', DateLKW: '',
-              IsUnknow: false, timeOfAddResident: '', dateOfAddToStart: '', AddReasonNot724: false,
-              AtendSeen: false, Residents: '', Atends: ''), context));
+      // home: SplashScreen());
+      // home: ScreenCodeOtp('','','',1,'',''));
+      // home: ScreenEms());
+      // home: ScreenDetailPatientAtend(
+      //     ModelPatient(id: 10, fullName: 'Ahmad Bagheri',
+      //         nationalCode: '548548548484', age: '45',
+      //         gender: 'مرد',
+      //         timeOfAddToSystem: '14:20',
+      //         dateOfAddToSystem: '1402/02/02',
+      //         needToMRI: false,
+      //         isNot724: false,
+      //         needToCT: false,
+      //         IsNIHSS: false, IsLab: false, timeOfAddLabotory: '', ResonNot: 'nxfnxfgn', Is724: false, TimeFss: '',
+      //         TimeLKW: '', DateFSS: '', DateLKW: '',
+      //         IsUnknow: false, timeOfAddResident: '', dateOfAddToStart: '', AddReasonNot724: false,
+      //         AtendSeen: false, Residents: '', Atends: '', Fesharkhon: '', Ghandkhon: ''), context));
 
       // home: ScreenResident(context));
       //   home: ScreenFormIs724((p){

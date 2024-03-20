@@ -45,7 +45,8 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
         nationalCode: '1788484', age: '32', gender: 'مرد', timeOfAddToSystem: '',
         dateOfAddToSystem: '', needToMRI: false, isNot724: false, needToCT: false,
         IsNIHSS: false, IsLab: false, timeOfAddLabotory: '', ResonNot: '', Is724: false,
-        AddReasonNot724: false, timeOfAddResident: '', TimeFss: '', TimeLKW: '', DateFSS: '', DateLKW: '', IsUnknow: null, dateOfAddToStart: '', AtendSeen: false, Residents: '', Atends: ''));
+        AddReasonNot724: false, timeOfAddResident: '', TimeFss: '', TimeLKW: '', DateFSS: '', DateLKW: '', IsUnknow: null, dateOfAddToStart: '',
+        AtendSeen: false, Residents: '', Atends: '', Fesharkhon: '', Ghandkhon: ''));
     // ignore: invalid_use_of_visible_for_testing_member
     Notifi.notifyListeners();
     // Notifi=Provider.of<ProviderReception>(context,listen: false);
@@ -253,7 +254,9 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
                                                Is724: false, AddReasonNot724: false,
                                                timeOfAddResident: '', TimeFss: '', TimeLKW: '',
                                                DateFSS: '', DateLKW: '',
-                                               IsUnknow: null, dateOfAddToStart: '', AtendSeen: false, Residents: '', Atends: ''), context));
+                                               IsUnknow: null, dateOfAddToStart: '', AtendSeen: false, Residents: '',
+                                               Atends: '', Fesharkhon: '',
+                                               Ghandkhon: ''), context));
                                     },
                                     // child: ItemPatient(wid: wid, ItemsP: ItemsP[item],),
                                     child: ItemPatient(wid: wid),

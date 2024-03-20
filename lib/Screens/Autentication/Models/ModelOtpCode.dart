@@ -1,4 +1,37 @@
+// To parse this JSON data, do
+//
+//     final modelOtpCode = modelOtpCodeFromJson(jsonString);
 
-class ModelOtpCode{
+import 'dart:convert';
 
+ModelOtpCode modelOtpCodeFromJson(String str) => ModelOtpCode.fromJson(json.decode(str));
+
+String modelOtpCodeToJson(ModelOtpCode data) => json.encode(data.toJson());
+
+class ModelOtpCode {
+  dynamic data;
+  bool success;
+  String message;
+  dynamic errors;
+
+  ModelOtpCode({
+    required this.data,
+    required this.success,
+    required this.message,
+    required this.errors,
+  });
+
+  factory ModelOtpCode.fromJson(Map<String, dynamic> json) => ModelOtpCode(
+    data: json["data"],
+    success: json["success"],
+    message: json["message"],
+    errors: json["errors"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "data": data,
+    "success": success,
+    "message": message,
+    "errors": errors,
+  };
 }

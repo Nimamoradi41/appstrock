@@ -2,6 +2,7 @@
 import 'package:appstrock/Screens/Ems/ApiServiceEms.dart';
 import 'package:appstrock/Widgets/TextApp.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
@@ -11,13 +12,9 @@ import '../Reception/screen_reception.dart';
 import 'ProviderEms/ProviderEms.dart';
 
  class ScreenEms extends StatefulWidget {
-   String  Name='';
-   String Code='';
-   bool IsRigester;
 
 
 
-   ScreenEms(this.Name, this.Code, this.IsRigester);
 
    @override
   State<ScreenEms> createState() => _ScreenEmsState();
@@ -50,6 +47,7 @@ class _ScreenEmsState extends State<ScreenEms> {
      print('تاریخ جلالی فعلی: $formattedDate');
      var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
          TextConAge.text.toString(),Notifi.dropdownvalue=='مرد'?2:1,context);
+
 
 
      ShowLoadingApp(context);
@@ -125,7 +123,7 @@ class _ScreenEmsState extends State<ScreenEms> {
                    width: wid,
                    height: wid*0.25,
                    color: ColorApp,
-                   child: const Column(
+                   child:   Column(
                      crossAxisAlignment: CrossAxisAlignment.start,
                      children: [
                        SizedBox(width: 16,),
@@ -134,21 +132,26 @@ class _ScreenEmsState extends State<ScreenEms> {
                            crossAxisAlignment: CrossAxisAlignment.start,
                            mainAxisAlignment: MainAxisAlignment.end,
                            children:   [
-                             RotatedBox(
-                               quarterTurns: 90,
-                               child: Padding(
-                                 padding: EdgeInsets.all(16.0),
-                                 child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
+                             InkWell(
+                               onTap: () {
+                                 SystemNavigator.pop();
+                               } ,
+                               child: const RotatedBox(
+                                 quarterTurns: 90,
+                                 child: Padding(
+                                   padding: EdgeInsets.all(16.0),
+                                   child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
+                                 ),
                                ),
                              ),
-                             RotatedBox(
+                             const RotatedBox(
                                quarterTurns: 0,
                                child: Padding(
                                  padding: EdgeInsets.all(16.0),
                                  child: Icon(Icons.person,color: Colors.white,size: 30,),
                                ),
                              ),
-                             Expanded(child:
+                             const Expanded(child:
                              Padding(
                                  padding: EdgeInsets.all(16.0),
                                  child: Text(
@@ -359,7 +362,7 @@ class _ScreenEmsState extends State<ScreenEms> {
                                            ),
                                            child:Padding(
                                              padding: const EdgeInsets.all(10.0),
-                                             child: Text('اعلان کد',
+                                             child: Text('ثبت بیمار',
                                                style: TextStyle(color:Colors.white,
                                                    fontSize: 16,
                                                    fontWeight: FontWeight.bold),),

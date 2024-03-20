@@ -41,12 +41,14 @@ class Data {
   String name;
   String nationalCode;
   int departmentId;
+  bool isOnline;
 
   Data({
     required this.id,
     required this.name,
     required this.nationalCode,
     required this.departmentId,
+    required this.isOnline,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -54,6 +56,7 @@ class Data {
     name: json["name"],
     nationalCode: json["nationalCode"],
     departmentId: json["departmentId"],
+    isOnline: json["isOnline"],
   );
 
   Map<String, dynamic> toJson() => {

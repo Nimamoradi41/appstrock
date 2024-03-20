@@ -9,13 +9,18 @@ import '../Ems/screen_ems.dart';
 import '../Reception/screen_reception.dart';
 import 'ApiServiceAutentication.dart';
 
-class ScreenLogin extends StatelessWidget {
+class ScreenLogin extends StatefulWidget {
 
 
 
 
 
 
+  @override
+  State<ScreenLogin> createState() => _ScreenLoginState();
+}
+
+class _ScreenLoginState extends State<ScreenLogin> {
   String dropdownvalue = 'فوریت های پزشکی';
 
   // List of items in our dropdown menu
@@ -31,11 +36,8 @@ class ScreenLogin extends StatelessWidget {
     // 'دکتر متخصص',
   ];
 
-
-
-
-
   bool IsLoading=false;
+
   Future RunLogin(BuildContext context)async{
     if(textControllerName.text.isEmpty)
     {
@@ -64,7 +66,8 @@ class ScreenLogin extends StatelessWidget {
 
 
     ShowLoadingApp(context);
-    var Data=await ApiServiceAutentication.Login(textControllerName.text,textControllerNationalCode.text, context);
+    var Data=await ApiServiceAutentication.
+    Login(textControllerName.text,textControllerNationalCode.text,context);
     if(Data!=null)
     {
       if(Data.success)
@@ -72,7 +75,7 @@ class ScreenLogin extends StatelessWidget {
         if(Data.data.departmentId==1)
         {
           // ignore: use_build_context_synchronously
-          GoNextPage(context,ScreenEms(Data.data.name,Data.data.nationalCode,false));
+          GoNextPage(context,ScreenEms());
         }
 
         if(Data.data.departmentId==2)
@@ -84,7 +87,7 @@ class ScreenLogin extends StatelessWidget {
         if(Data.data.departmentId==3)
         {
           // ignore: use_build_context_synchronously
-          GoNextPage(context,ScreenReception(Data.data.name,Data.data.nationalCode,false));
+          GoNextPage(context,ScreenReception());
         }
 
       }else{
@@ -94,9 +97,16 @@ class ScreenLogin extends StatelessWidget {
     }
   }
 
-
   var textControllerName=TextEditingController();
+
   var textControllerNationalCode=TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    textControllerName.text="فرامرز میرزاوند";
+    textControllerNationalCode.text="1920180001";
+  }
 
   @override
   Widget build(BuildContext context) {

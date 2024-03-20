@@ -37,7 +37,6 @@ class _ScreenRigesterState extends State<ScreenRigester> {
     'دکتر متخصص',
     'آزماشیگاه',
     'رزیدنت',
-
   ];
 
 
@@ -98,41 +97,35 @@ class _ScreenRigesterState extends State<ScreenRigester> {
     int TypUser= await GetTypeUser(dropdownvalue);
     ShowLoadingApp(context);
 
-    await Future.delayed(Duration(seconds: 3));
-    Navigator.pop(context);
 
-    GoNextPage(context,ScreenCodeOtp(textControllerPhoneNumber.text.toString(),textControllerName.text.toString(),textControllerNationalCode.text.toString(),TypUser));
+
+    // GoNextPage(context,ScreenCodeOtp(textControllerPhoneNumber.text.toString(),textControllerName.text.toString(),textControllerNationalCode.text.toString(),TypUser));
+
 
     // ignore: use_build_context_synchronously
-    // var Data=await ApiServiceAutentication.Rigester(textControllerName.text, TypUser.toString(), textControllerNationalCode.text, textControllerPhoneNumber.text,textControllerPassWord.text, context);
+    var Data=await ApiServiceAutentication.Rigester(textControllerName.text, TypUser.toString(), textControllerNationalCode.text, textControllerPhoneNumber.text,textControllerPassWord.text, context);
 
 
-     // if(Data!=null)
-     //  {
-     //    if(Data.success)
-     //      {
-     //
-     //
-     //
-     //
-     //
-     //
-     //         // if(TypUser==1)
-     //         //  {
-     //         //    // ignore: use_build_context_synchronously
-     //         //    await  LoginInApp(Data.data.name,Data.data.nationalCode,1,true);
-     //         //    GoNextPage(context,ScreenEms(true,context,Data.data.name,Data.data.nationalCode));
-     //         //  }
-     //         // if(TypUser==2)
-     //         // {
-     //         //   // ignore: use_build_context_synchronously
-     //         //   await  LoginInApp(Data.data.name,Data.data.nationalCode,2,true);
-     //         //   GoNextPage(context,Screen_Teriazh());
-     //         // }
-     //      }else{
-     //      ShowErrorMsg(context,Data.message);
-     //    }
-     //  }
+
+    Navigator.pop(context);
+
+     if(Data!=null)
+      {
+        if(Data.success)
+          {
+
+            // ignore: use_build_context_synchronously
+            GoNextPage(context,ScreenCodeOtp(
+                textControllerPhoneNumber.text.toString()
+                ,textControllerName.text.toString()
+                ,textControllerNationalCode.text.toString()
+                ,TypUser
+                ,textControllerPassWord.text.toString()
+                ,Data.data.id.toString()));
+          }else{
+          ShowErrorMsg(context,Data.message);
+        }
+      }
 
 
 

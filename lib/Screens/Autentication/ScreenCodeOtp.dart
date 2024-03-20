@@ -19,9 +19,11 @@ class ScreenCodeOtp extends StatefulWidget {
   String Name ;
   String NatiCode ;
   int TypUser ;
+  String Pass ;
+  String Id ;
 
 
-  ScreenCodeOtp(this.Number,this.Name,this.NatiCode,this.TypUser);
+  ScreenCodeOtp(this.Number,this.Name,this.NatiCode,this.TypUser,this.Pass,this.Id);
 
   @override
   State<ScreenCodeOtp> createState() => _ScreenCodeOtpState();
@@ -43,26 +45,50 @@ class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
 
 
     ShowLoadingApp(context);
-    await Future.delayed(Duration(seconds: 3));
 
 
-    if(widget.TypUser==1)
+
+
+
+
+
+
+    // ignore: use_build_context_synchronously
+    var Data=await  ApiServiceAutentication.CheckConfirmCode(widget.Id,CodeInput, context);
+
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context);
+
+    if(Data!=null)
       {
-        await  LoginInApp(widget.Name,widget.NatiCode,1,true);
-        GoNextPage(context,ScreenEms(widget.Name,widget.NatiCode,true));
-      }
+        if(Data.success)
+          {
+            if(widget.TypUser==1)
+            {
+              await  LoginInApp(widget.Name,widget.NatiCode,1,true,
+                  widget.Pass,widget.Id);
+              // ignore: use_build_context_synchronously
+              GoNextPageGameOver(context,ScreenEms());
 
-    if(widget.TypUser==2)
-    {
-      await  LoginInApp(widget.Name,widget.NatiCode,1,true);
-      GoNextPage(context,Screen_Teriazh());
+
+            }
+            if(widget.TypUser==2)
+            {
+
+              await  LoginInApp(widget.Name,widget.NatiCode,2,true,
+                  widget.Pass,widget.Id);
+
+
+              // ignore: use_build_context_synchronously
+              GoNextPageGameOver(context,Screen_Teriazh());
+            }
+          }else{
+          ShowErrorMsg(context,Data.message);
+        }
+      }else{
+      // ignore: use_build_context_synchronously
+      ShowErrorMsg(context,ErrorConnection);
     }
-
-
-
-
-    // var Data=ApiServiceAutentication.CodeOtp(CodeInput, context);
-
 
 
   }
@@ -102,7 +128,7 @@ class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
                             SizedBox(height: 32,),
 
                             Container(
-                              width: wid*0.6,
+                              width: wid*0.8,
                               child: OtpTextField(
                                 numberOfFields: 5,
                                 borderWidth: 3,

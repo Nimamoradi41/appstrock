@@ -24,6 +24,11 @@ void GoNextPage(BuildContext context,dynamic Screen) {
 }
 
 
+void GoNextPageGameOver(BuildContext context,dynamic Screen) {
+  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+      Screen), (Route<dynamic> route) => false);
+}
+
 Future<bool>   ShowAllow(BuildContext context,String BodyText) async{
 
   bool Flag=false;
@@ -212,16 +217,21 @@ void ShowSuccesMsg(BuildContext context,String Msg)
 
 
   // todo Login Or Rigester User
- Future LoginInApp(String Name,String Code,int TypeUser,bool Login)async {
+ Future LoginInApp(String Name,String Code,int TypeUser,bool Login,String Pass,String Id)async {
    SharedPreferences prefs = await SharedPreferences.getInstance();
    await prefs.setString('Name',Name);
    await prefs.setString('Code',Code);
    await prefs.setBool('Login',Login);
    await prefs.setInt('TypeUser',TypeUser);
+   await prefs.setString('Pass',Pass);
+   await prefs.setString('UserId',Id);
  }
  // todo  Login Or Rigester User
 
 
+
+
+  String ErrorConnection="مشکلی در ارتباط با سرور به وجود آمده";
 
 
 Future<int> GetTypeUser(String Type)async{

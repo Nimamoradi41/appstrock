@@ -22,7 +22,8 @@ class ModelOtpCode {
   });
 
   factory ModelOtpCode.fromJson(Map<String, dynamic> json) => ModelOtpCode(
-    data: json["data"],
+    // ignore: prefer_if_null_operators
+    data: json['data'] != null ? json['data'] : null,
     success: json["success"],
     message: json["message"],
     errors: json["errors"],

@@ -94,7 +94,6 @@ class _ScreenResidentState extends State<ScreenResident> {
   void initState() {
     super.initState();
     RunListP(widget.MainContext,false);
-
   }
   @override
   Widget build(BuildContext context) {
@@ -219,7 +218,7 @@ class _ScreenResidentState extends State<ScreenResident> {
                                       onTap: (){
                                         GoNextPage(context,ScreenDetailPatient(ItemsP[item],context));
                                       },
-                                      child: ItemPatient(wid: wid));
+                                      child: ItemPatientNew(wid: wid,ItemsP: ItemsP[item],));
                                 },
                               );
                             },

@@ -32,7 +32,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if(prefs.getBool("Login")!=null)
       {
+        print('test');
         Login=prefs.getBool("Login")!;
+        print(Login.toString());
         TypeUser=prefs.getInt("TypeUser")!;
       }
 
@@ -43,32 +45,39 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if(Login)
       {
-        var Name=prefs.getString("Name");
+        var Name=  prefs.getString("Name");
         var Code=prefs.getString("Code");
+
+        print(Name);
+        print(Code);
+        print('Code');
+        print('Name');
        // ignore: use_build_context_synchronously
        var LoginUser= await ApiServiceAutentication.Login(Name!, Code!, context);
        if(LoginUser!=null)
          {
            if(LoginUser.success)
-             {
-               prefs.setBool("isOnline", LoginUser.data.isOnline);
-               if(LoginUser.data.departmentId==1)
+           {
+               prefs.setBool("isOnline", LoginUser.data!.isOnline);
+               if(LoginUser.data?.departmentId==1)
                  {
                    // ignore: use_build_context_synchronously
                    GoNextPageGameOver(context,ScreenEms());
                  }
-               if(LoginUser.data.departmentId==2)
+               if(LoginUser.data?.departmentId==2)
                {
                  // ignore: use_build_context_synchronously
                  GoNextPageGameOver(context,Screen_Teriazh());
                }
-               if(LoginUser.data.departmentId==3)
+               if(LoginUser.data?.departmentId==3)
                {
                  // ignore: use_build_context_synchronously
                  GoNextPageGameOver(context,ScreenReception());
                }
 
-             }else{
+             }
+           else
+           {
              // ignore: use_build_context_synchronously
              ShowErrorMsg(context, LoginUser.message);
            }

@@ -4,33 +4,29 @@
 
 import 'dart:convert';
 
-ModelLogin modelLoginFromJson(String str) => ModelLogin.fromJson(json.decode(str));
+ModelConst modelLoginFromJsonModelConst(String str) => ModelConst.fromJson(json.decode(str));
 
-String modelLoginToJson(ModelLogin data) => json.encode(data.toJson());
+String modelLoginToJson(ModelConst data) => json.encode(data.toJson());
 
-class ModelLogin {
-  Data? data;
+class ModelConst {
   bool success;
   String message;
   dynamic errors;
 
-  ModelLogin({
-    required this.data,
+  ModelConst({
     required this.success,
     required this.message,
     required this.errors,
   });
 
-  factory ModelLogin.fromJson(Map<String, dynamic> json) => ModelLogin(
-    data:  json["data"]!=null? Data.fromJson(json["data"]):
-        Data(id: -1,departmentId: -1,isOnline: false,name: '',nationalCode: ''),
-    success: json["success"]??false,
+  factory ModelConst.fromJson(Map<String, dynamic> json) => ModelConst(
+     success: json["success"]??false,
     message: json["message"]??'',
     errors: json["errors"]??false,
   );
 
   Map<String, dynamic> toJson() => {
-    "data": data?.toJson(),
+
     "success": success,
     "message": message,
     "errors": errors,
@@ -53,10 +49,10 @@ class Data {
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    id: json["id"]??'',
-    name: json["name"]??'',
-    nationalCode: json["nationalCode"]??'',
-    departmentId: json["departmentId"]??'',
+    id: json["id"],
+    name: json["name"],
+    nationalCode: json["nationalCode"],
+    departmentId: json["departmentId"],
     isOnline: json["isOnline"],
   );
 

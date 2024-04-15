@@ -70,10 +70,11 @@ class _MyAppState extends State<MyApp> {
           fontFamily: 'iransans'
       ),
       debugShowCheckedModeBanner: false,
-      home: ScreenLogin());
-      // home: ScreenRigester(),
-      // home: ScreenAtend(context));
+      // home: ScreenLogin());
+      // home: ScreenRigester());
+      home: ScreenAtend(context));
       // home: ScreenProfile());
+      // home: SplashScreen());
       // home: SplashScreen());
       // home: ScreenCodeOtp('','','',1,'',''));
       // home: ScreenEms());

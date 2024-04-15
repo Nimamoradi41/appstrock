@@ -76,6 +76,9 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
     }
 
 
+    print(answers.toString());
+
+
 
 
 

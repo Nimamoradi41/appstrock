@@ -78,6 +78,14 @@ class _ScreenRigesterState extends State<ScreenRigester> {
       return;
     }
 
+
+    if(textControllerNationalCode.text.length<10||textControllerNationalCode.text.length>10)
+    {
+
+      ShowErrorMsg(context,'کد ملی اشتباه است');
+      return;
+    }
+
     if(textControllerPhoneNumber.text.length<11)
     {
 
@@ -85,10 +93,19 @@ class _ScreenRigesterState extends State<ScreenRigester> {
       return;
     }
 
+    if(!textControllerPhoneNumber.text.startsWith("09"))
+    {
+
+      ShowErrorMsg(context,'شماره تلفن اشتباه است');
+      return;
+    }
+
+
+
+
 
     if(textControllerPassWord.text.isEmpty)
     {
-
       ShowErrorMsg(context,'رمز عبور را وارد کنید');
       return;
     }
@@ -103,17 +120,18 @@ class _ScreenRigesterState extends State<ScreenRigester> {
 
 
     // ignore: use_build_context_synchronously
-    var Data=await ApiServiceAutentication.Rigester(textControllerName.text, TypUser.toString(), textControllerNationalCode.text, textControllerPhoneNumber.text,textControllerPassWord.text, context);
+    var Data=await ApiServiceAutentication.Rigester(textControllerName.text,
+        TypUser.toString(), textControllerNationalCode.text,
+        textControllerPhoneNumber.text,textControllerPassWord.text, context);
 
 
 
-    Navigator.pop(context);
+
 
      if(Data!=null)
       {
         if(Data.success)
           {
-
             // ignore: use_build_context_synchronously
             GoNextPage(context,ScreenCodeOtp(
                 textControllerPhoneNumber.text.toString()
@@ -121,8 +139,9 @@ class _ScreenRigesterState extends State<ScreenRigester> {
                 ,textControllerNationalCode.text.toString()
                 ,TypUser
                 ,textControllerPassWord.text.toString()
-                ,Data.data.id.toString()));
+                ,Data.data!.id.toString()));
           }else{
+          // ignore: use_build_context_synchronously
           ShowErrorMsg(context,Data.message);
         }
       }
@@ -136,6 +155,17 @@ class _ScreenRigesterState extends State<ScreenRigester> {
   var textControllerNationalCode=TextEditingController();
   var textControllerPhoneNumber=TextEditingController();
   var textControllerPassWord=TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    textControllerName.text="Nimaa";
+    textControllerNationalCode.text="1747474747";
+    textControllerPhoneNumber.text="09909865595";
+    textControllerPassWord.text="1234";
+
+
+  }
   @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;

@@ -68,23 +68,26 @@ class _ScreenLoginState extends State<ScreenLogin> {
     ShowLoadingApp(context);
     var Data=await ApiServiceAutentication.
     Login(textControllerName.text,textControllerNationalCode.text,context);
+    // Login('Nimaa','111111111',context);
     if(Data!=null)
     {
       if(Data.success)
       {
-        if(Data.data.departmentId==1)
+        // if(Data.data.departmentId==1)
+        if(Data.data!.departmentId==36)
         {
           // ignore: use_build_context_synchronously
           GoNextPage(context,ScreenEms());
         }
 
-        if(Data.data.departmentId==2)
+        if(Data.data?.departmentId==2)
+        // if(Data.data.departmentId==36)
         {
           // ignore: use_build_context_synchronously
           GoNextPage(context,Screen_Teriazh());
         }
 
-        if(Data.data.departmentId==3)
+        if(Data.data?.departmentId==3)
         {
           // ignore: use_build_context_synchronously
           GoNextPage(context,ScreenReception());
@@ -104,8 +107,8 @@ class _ScreenLoginState extends State<ScreenLogin> {
   @override
   void initState() {
     super.initState();
-    textControllerName.text="فرامرز میرزاوند";
-    textControllerNationalCode.text="1920180001";
+    textControllerName.text="test";
+    textControllerNationalCode.text="8888888888";
   }
 
   @override

@@ -29,7 +29,6 @@ class _ScreenEmsState extends State<ScreenEms> {
    ];
 
    late var Notifi=ProviderEms();
-
    Future RunAddP(BuildContext context)async{
      if(TextConName.text.isEmpty)
      {
@@ -45,12 +44,13 @@ class _ScreenEmsState extends State<ScreenEms> {
          '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
      // چاپ تاریخ جلالی با فرمت مورد نظر
      print('تاریخ جلالی فعلی: $formattedDate');
+     ShowLoadingApp(context);
      var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
          TextConAge.text.toString(),Notifi.dropdownvalue=='مرد'?2:1,context);
 
 
 
-     ShowLoadingApp(context);
+
      if(Data!=null)
      {
        if(Data.success)
@@ -88,13 +88,24 @@ class _ScreenEmsState extends State<ScreenEms> {
     if(Flag)
       {
         ShowLoadingApp(context);
-        await Future.delayed(Duration(seconds: 3));
-        Notifi.setstatus(StatusNew);
-        Navigator.pop(context);
+        var Data=await ApiServiceEms.ChangeShiftStatus(context);
+        if(Data!=null)
+        {
+          if(Data.success)
+          {
+            Notifi.setstatus(StatusNew);
+            ShowSuccesMsg(context,'بیمار با موفقیت ثبت شد');
+          }else{
+            ShowErrorMsg(context, Data.message);
+          }
+        }
+
+
+
+
+
       }
    }
-
-
    @override
   void initState() {
     super.initState();

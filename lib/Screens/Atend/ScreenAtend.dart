@@ -61,7 +61,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
 
 
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatient(formattedDate,context,refresh);
+    var Data= await ApiServiceReception.PatientForAttend(formattedDate,context,refresh);
 
 
 
@@ -144,7 +144,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
                             Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Text(
-                                  'رزیدنت',
+                                  'دکتر متخصص',
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                       color: Colors.white,
@@ -210,8 +210,6 @@ class _ScreenAtendState extends State<ScreenAtend> {
                           height:  hei*0.68,
                           child: Consumer<ProviderReception>(
                             builder: (context,newstate,child){
-                              print('Data');
-                              print(newstate.ListItemsPatient.toString());
                               ItemsP=newstate.ListItemsPatient;
                               return Consumer<ProviderAtend>(
                                 builder: (context,newstate,child){
@@ -224,7 +222,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
                                           onTap: (){
                                             GoNextPage(context,ScreenDetailPatientAtend(ItemsP[item],context));
                                           },
-                                          child: ItemPatient(wid: wid));
+                                          child: ItemPatientNew(wid: wid,ItemsP: ItemsP[item],));
                                     },
                                   );
                                 },

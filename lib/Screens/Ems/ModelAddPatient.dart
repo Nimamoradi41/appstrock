@@ -9,27 +9,26 @@ ModelAddPatient modelAddPatientFromJson(String str) => ModelAddPatient.fromJson(
 String modelAddPatientToJson(ModelAddPatient data) => json.encode(data.toJson());
 
 class ModelAddPatient {
-  bool data;
+  // dynamic data;
   bool success;
   String message;
   dynamic errors;
 
   ModelAddPatient({
-    required this.data,
+    // required this.data,
     required this.success,
     required this.message,
     required this.errors,
   });
-
   factory ModelAddPatient.fromJson(Map<String, dynamic> json) => ModelAddPatient(
-    data: json["data"],
-    success: json["success"],
-    message: json["message"],
-    errors: json["errors"],
+    // data: json['data'] != null ? json['data'] : null,
+    success:json['success'] ?? false,
+    message: json['message'] ?? '',
+    errors: json['message'] ?? false,
   );
 
   Map<String, dynamic> toJson() => {
-    "data": data,
+    // "data": data,
     "success": success,
     "message": message,
     "errors": errors,

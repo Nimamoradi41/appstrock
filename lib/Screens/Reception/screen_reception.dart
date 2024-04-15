@@ -417,8 +417,8 @@ class _ScreenReceptionState extends State<ScreenReception> {
                                     onTap: (){
                                       _showAlertDialog(context);
                                     },
-                                    // child: ItemPatient(wid: wid, ItemsP: ItemsP[item],),
-                                    child: ItemPatient(wid: wid),
+                                    child: ItemPatient(wid: wid,),
+                                    // child: ItemPatient(wid: wid),
                                   );
                                 },
                               );

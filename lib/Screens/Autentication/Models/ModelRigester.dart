@@ -9,7 +9,7 @@ ModelRigester modelRigesterFromJson(String str) => ModelRigester.fromJson(json.d
 String modelRigesterToJson(ModelRigester data) => json.encode(data.toJson());
 
 class ModelRigester {
-  Data data;
+  Data? data;
   bool success;
   String message;
   dynamic errors;
@@ -22,14 +22,14 @@ class ModelRigester {
   });
 
   factory ModelRigester.fromJson(Map<String, dynamic> json) => ModelRigester(
-    data: Data.fromJson(json["data"]),
+    data: json['data'] != null ? Data.fromJson(json['data']) : null,
     success: json["success"],
     message: json["message"],
     errors: json["errors"],
   );
 
   Map<String, dynamic> toJson() => {
-    "data": data.toJson(),
+    "data": data!.toJson(),
     "success": success,
     "message": message,
     "errors": errors,

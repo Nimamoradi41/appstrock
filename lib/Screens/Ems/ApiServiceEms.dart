@@ -11,6 +11,7 @@ import 'package:appstrock/Screens/Autentication/Models/ModelRigester.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
+import '../Autentication/Models/ModelLogin.dart';
 import 'ModelAddPatient.dart';
 
 
@@ -40,7 +41,8 @@ class ApiServiceEms{
       'NationalCode': NationalCode,
       'Age': Age,
       'GenderId': GenderId.toString(),
-      'InsertBy': UserId.toString()
+      // 'InsertBy': UserId.toString()
+      'InsertBy': '33'
     });
 
     try{
@@ -56,7 +58,17 @@ class ApiServiceEms{
         String str= await response.stream.bytesToString();
         ModelAddPatient data= await  modelAddPatientFromJson(str);
         login=data;
-      }else{
+      }
+
+      if(response.statusCode==400)
+      {
+        String? strw= await response.reasonPhrase;
+        String str= await response.stream.bytesToString();
+        ModelAddPatient data= await  modelAddPatientFromJson(str);
+        login=data;
+      }
+
+      else{
 
         ShowErrorMsg(context,response.reasonPhrase.toString());
 
@@ -84,5 +96,79 @@ class ApiServiceEms{
     Navigator.pop(context);
     return login;
   }
+
+
+  static Future<ModelLogin> ChangeShiftStatus(
+      BuildContext context) async {
+    var login;
+
+
+    var request = http.MultipartRequest('POST',
+        Uri.parse('https://fmirzavand.ir/Users/ChangeShiftStatus'));
+
+
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? UserId=   prefs.getString('UserId');
+
+    // UserId
+
+    request.fields.addAll({
+      'id': '33',
+    });
+
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        ModelLogin data= await  modelLoginFromJson(str);
+        login=data;
+      }
+
+      if(response.statusCode==400)
+      {
+        String? strw= await response.reasonPhrase;
+        String str= await response.stream.bytesToString();
+        ModelLogin data= await  modelLoginFromJson(str);
+        login=data;
+      }
+
+      else{
+
+        ShowErrorMsg(context,response.reasonPhrase.toString());
+
+      }
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    Navigator.pop(context);
+    return login;
+  }
+
+
 
 }

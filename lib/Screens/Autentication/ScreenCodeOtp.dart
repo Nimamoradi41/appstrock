@@ -57,7 +57,7 @@ class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
     var Data=await  ApiServiceAutentication.CheckConfirmCode(widget.Id,CodeInput, context);
 
     // ignore: use_build_context_synchronously
-    Navigator.pop(context);
+
 
     if(Data!=null)
       {

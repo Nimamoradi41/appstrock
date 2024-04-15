@@ -8,11 +8,12 @@ class ModelPatient {
   String gender;
   String timeOfAddToSystem;
   String? timeOfAddLabotory;
-  String? timeOfAddResident;
-  String? TimeFss;
-  String? TimeLKW;
-  String? DateFSS;
-  String? DateLKW;
+  String? signsStartTime;
+  String? signsStartDate;
+  String? fssTime;
+  String? lkwTime;
+  String? fssDate;
+  String? lkwDate;
   String? dateOfAddToSystem;
   String? dateOfAddToStart;
   String? ResonNot;
@@ -23,12 +24,12 @@ class ModelPatient {
   bool needToMRI;
   bool isNot724;
   bool needToCT;
-  bool? IsNIHSS;
+  bool? nihsIsComplete;
   bool?  IsLab;
-  bool?  IsUnknow;
-  bool?  Is724;
+  bool?  is724IsComplete;
   bool?  AddReasonNot724;
   bool?  AtendSeen;
+  bool?  signsStartIsUnknown;
 
   ModelPatient({
     required this.id,
@@ -37,59 +38,63 @@ class ModelPatient {
     required this.age,
     required this.gender,
     required this.timeOfAddToSystem,
-    required this.TimeFss,
-    required this.TimeLKW,
-    required this.DateFSS,
-    required this.Atends,
-    required this.Fesharkhon,
-    required this.DateLKW,
-    required this.IsUnknow,
-    required this.timeOfAddLabotory,
-    required this.Ghandkhon,
-    required this.timeOfAddResident,
+    required this.signsStartTime,
+    required this.signsStartDate,
     required this.dateOfAddToSystem,
     required this.dateOfAddToStart,
+    required this.timeOfAddLabotory,
+    required this.Ghandkhon,
+    required this.fssTime,
+    required this.lkwTime,
+    required this.fssDate,
+    required this.Atends,
+    required this.Fesharkhon,
+    required this.lkwDate,
+
     required this.ResonNot,
     required this.needToMRI,
     required this.Residents,
     required this.isNot724,
     required this.needToCT,
-    required this.IsNIHSS,
+    required this.nihsIsComplete,
     required this.IsLab,
-    required this.Is724,
+    required this.is724IsComplete,
     required this.AddReasonNot724,
     required this.AtendSeen,
+    required this.signsStartIsUnknown,
   });
 
   factory ModelPatient.fromJson(Map<String, dynamic> json) => ModelPatient(
-    id: json["id"],
-    fullName: json["fullName"],
-    nationalCode: json["nationalCode"],
-    age: json["age"],
-    gender: json["gender"],
-    timeOfAddToSystem: json["timeOfAddToSystem"],
-    TimeFss: json["TimeFss"],
-    Residents: json["Residents"],
-    TimeLKW: json["TimeLKW"],
-    DateFSS: json["DateFSS"],
-    DateLKW: json["DateLKW"],
-    IsUnknow: json["IsUnknow"],
-    Atends: json["Atends"],
-    Fesharkhon: json["Fesharkhon"],
-    Ghandkhon: json["Ghandkhon"],
-    dateOfAddToSystem: json["dateOfAddToSystem"],
-    dateOfAddToStart: json["dateOfAddToStart"],
-    timeOfAddResident: json["timeOfAddResident"],
-    timeOfAddLabotory: json["timeOfAddLabotory"],
-    ResonNot: json["ResonNot"],
-    needToMRI: json["needToMRI"],
-    isNot724: json["isNot724"],
-    needToCT: json["needToCT"],
-    IsNIHSS: json["IsNIHSS"],
-    IsLab: json["IsLab"],
-    Is724: json["Is724"],
-    AddReasonNot724: json["AddReasonNot724"],
-    AtendSeen: json["AtendSeen"],
+    id: json["id"]?? '',
+    fullName: json["fullName"]?? '',
+    nationalCode: json["nationalCode"]?? '',
+    age: json["age"]?? '',
+    gender: json["gender"]?? '',
+    timeOfAddToSystem: json["timeOfAddToSystem"]?? '',
+    fssTime: json["fssTime"]?? '',
+    signsStartDate: json["signsStartDate"]?? '',
+    Residents: json["Residents"]?? '',
+    lkwTime: json["lkwTime"]?? '',
+    fssDate: json["fssDate"]?? '',
+    lkwDate: json["lkwDate"]?? '',
+
+    Atends: json["Atends"]?? '',
+    Fesharkhon: json["Fesharkhon"]?? '',
+    Ghandkhon: json["Ghandkhon"]?? '',
+    dateOfAddToSystem: json["dateOfAddToSystem"]?? '',
+    dateOfAddToStart: json["dateOfAddToStart"]?? '',
+    signsStartTime: json["signsStartTime"]?? '',
+    timeOfAddLabotory: json["timeOfAddLabotory"]?? '',
+    ResonNot: json["ResonNot"]??'',
+    needToMRI: json["needToMRI"]??false,
+    isNot724: json["isNot724"]??false,
+    needToCT: json["needToCT"]??false,
+    nihsIsComplete: json["nihsIsComplete"],
+    IsLab: json["IsLab"]??false,
+    is724IsComplete: json["is724IsComplete"]??false,
+    AddReasonNot724: json["AddReasonNot724"]??false,
+    AtendSeen: json["AtendSeen"]??false,
+    signsStartIsUnknown: json["signsStartIsUnknown"]??false,
   );
 
   Map<String, dynamic> toJson() => {
@@ -102,11 +107,13 @@ class ModelPatient {
     "timeOfAddLabotory": timeOfAddLabotory,
     "dateOfAddToSystem": dateOfAddToSystem,
     "ResonNot": ResonNot,
+    "signsStartIsUnknown": signsStartIsUnknown,
     "needToMRI": needToMRI,
     "isNot724": isNot724,
     "needToCT": needToCT,
-    "IsNIHSS": IsNIHSS,
+    "IsNIHSS": nihsIsComplete,
     "IsLab": IsLab,
-    "Is724": Is724,
+    "Is724": is724IsComplete,
+    "dateOfAddToSystem": dateOfAddToSystem,
   };
 }

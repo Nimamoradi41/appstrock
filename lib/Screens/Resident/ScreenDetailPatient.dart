@@ -42,124 +42,106 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
     if(Flag)
       {
 
+
+
         ShowLoadingApp(context);
-        await Future.delayed(Duration(seconds: 2));
+        Future.delayed(Duration(seconds: 3),(){
+              widget.modelPatient.needToCT=true;
+              Notifi.setItems(widget.modelPatient);
+              Navigator.pop(context);
+              // ignore: use_build_context_synchronously
+              ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
+        });
 
 
-        widget.modelPatient.needToCT=true;
+
+        // ShowLoadingApp(context);
+        // // ignore: use_build_context_synchronously
+        // var Data= await ApiServiceResident.NeedToCT(widget.modelPatient.id.toString(),context);
+        //
+        // if(Data!=null)
+        // {
+        //   if(Data.success)
+        //   {
+        //     widget.modelPatient.needToCT=true;
+        //     Notifi.setItems(widget.modelPatient);
+        //     Navigator.pop(context);
+        //     // ignore: use_build_context_synchronously
+        //     ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
+        //   }else{
+        //     // ignore: use_build_context_synchronously
+        //     ShowErrorMsg(context, Data.message);
+        //   }
+        // }
+
+
+      }
+
+      }
+  Future NeedToMRI(BuildContext context)async{
+
+    var Res=await ShowAllow(context,'آیا از تصمیم خود مطمئن هستید ؟');
+    if(Res)
+    {
+      ShowLoadingApp(context);
+      Future.delayed(Duration(seconds: 3),(){
+        widget.modelPatient.needToMRI=true;
         Notifi.setItems(widget.modelPatient);
         Navigator.pop(context);
         // ignore: use_build_context_synchronously
         ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
-      }
-        // // ignore: use_build_context_synchronously
-        // await   DatePickerBdaya.showTimePicker(widget.MainCtx,
-        //     showTitleActions: true,
-        //     onConfirm: (date) {
-        //       TimeStart=date;
-        //     }, currentTime: DateTime.now(), locale: LocaleType.fa);
-        //
-        //
-        //
-        // if(TimeStart!=null)
-        //   {
-        //     var Data= await ApiServiceResident.NeedToCT(widget.modelPatient.id.toString(), widget.MainCtx, TimeStart!.millisecondsSinceEpoch.toString());
-        //     if(Data!=null)
-        //       {
-        //         if(Data.success)
-        //           {
-        //             widget.modelPatient.needToCT=true;
-        //             Notifi.setItems(widget.modelPatient);
-        //             // ignore: use_build_context_synchronously
-        //             ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
-        //           }else
-        //             {
-        //               // ignore: use_build_context_synchronously
-        //               ShowErrorMsg(widget.MainCtx, Data.message);
-        //             }
-        //       }else{
-        //       // ignore: use_build_context_synchronously
-        //       ShowErrorMsg(widget.MainCtx, 'مشکلی در ارتباط با سرور به وچود آمده');
-        //     }
-        //   }
-        //
-        // }
-      }
-
-  Future NeedToMRI(BuildContext context)async{
-
-
-    DateTime? TimeStart;
-    var Flag= await   ShowAllow(context,'آیا از MRI مطمئن هستید ؟ ');
-
-
-    if(Flag)
-    {
-
-      ShowLoadingApp(context);
-      await Future.delayed(Duration(seconds: 2));
-
-
-      widget.modelPatient.needToCT=true;
-      Notifi.setItems(widget.modelPatient);
-      Navigator.pop(context);
-      // ignore: use_build_context_synchronously
-      ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
-
+      });
 
       // ignore: use_build_context_synchronously
-      // await   DatePickerBdaya.showTimePicker(widget.MainCtx,
-      //     showTitleActions: true,
-      //     onConfirm: (date) {
-      //       TimeStart=date;
-      //     }, currentTime: DateTime.now(), locale: LocaleType.fa);
+      // var Data= await ApiServiceResident.NeedToMRI(widget.modelPatient.id.toString(),context);
       //
-      //
-      //
-      // if(TimeStart!=null)
+      // if(Data!=null)
       // {
-      //   var Data= await ApiServiceResident.NeedToMRI(widget.modelPatient.id.toString(), widget.MainCtx, TimeStart!.millisecondsSinceEpoch.toString());
-      //   if(Data!=null)
+      //   if(Data.success)
       //   {
-      //     if(Data.success)
-      //     {
-      //       widget.modelPatient.needToMRI=true;
-      //       Notifi.setItems(widget.modelPatient);
-      //       // ignore: use_build_context_synchronously
-      //       ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
-      //     }else
-      //     {
-      //       // ignore: use_build_context_synchronously
-      //       ShowErrorMsg(widget.MainCtx, Data.message);
-      //     }
+      //     widget.modelPatient.needToMRI=true;
+      //     Notifi.setItems(widget.modelPatient);
+      //     Navigator.pop(context);
+      //     // ignore: use_build_context_synchronously
+      //     ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
       //   }else{
       //     // ignore: use_build_context_synchronously
-      //     ShowErrorMsg(widget.MainCtx, 'مشکلی در ارتباط با سرور به وچود آمده');
+      //     ShowErrorMsg(context, Data.message);
       //   }
       // }
 
+
+
     }
   }
-
-
-
-  Future AddNIHS()async{
-
+  Future AddNIHS(List<Map<String, dynamic>> Str)async{
 
     ShowLoadingApp(context);
-   await Future.delayed(Duration(seconds: 2));
-    widget.modelPatient.IsNIHSS=true;
-    Notifi.setItems(widget.modelPatient);
-    Navigator.pop(context);
-    // ignore: use_build_context_synchronously
-    ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+    var Data= await ApiServiceResident.AddNihs(widget.modelPatient.id.toString(),context,Str);
+
+
+
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        widget.modelPatient.nihsIsComplete=true;
+        Notifi.setItems(widget.modelPatient);
+        // ignore: use_build_context_synchronously
+        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+
 
   }
-
-
 
 
   Future IsNot724()async{
+
+
 
 
 
@@ -167,17 +149,32 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
     if(Res)
     {
       ShowLoadingApp(context);
-      await Future.delayed(Duration(seconds: 2));
-      widget.modelPatient.isNot724=true;
-      Notifi.setItems(widget.modelPatient);
-      Navigator.pop(context);
       // ignore: use_build_context_synchronously
-      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      var Data= await ApiServiceResident.Set724(widget.modelPatient.id.toString(),
+          context,false,'','','','','','',false);
+      Navigator.pop(context);
+      if(Data!=null)
+      {
+        if(Data.success)
+        {
+          widget.modelPatient.isNot724=true;
+          widget.modelPatient.is724IsComplete=true;
+          Notifi.setItems(widget.modelPatient);
+          // ignore: use_build_context_synchronously
+          ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+        }else{
+          // ignore: use_build_context_synchronously
+          ShowErrorMsg(context, Data.message);
+        }
+      }
+
+
+
+
     }
 
 
   }
-
 
   AddReasonNot724(){
     showModalBottomSheet(context: context,
@@ -208,6 +205,46 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
   }
 
 
+Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
+    ,String TimeFssStart,String DateFSSStart,String TimeLKWStart,String DateLKWStart)async{
+
+
+  ShowLoadingApp(context);
+  // ignore: use_build_context_synchronously
+  var Data= await ApiServiceResident.Set724(widget.modelPatient.id.toString(),
+  context,IsUnkown,TimeStart,DateStart,TimeFssStart,DateFSSStart,TimeLKWStart,DateLKWStart,true);
+  Navigator.pop(context);
+  if(Data!=null)
+  {
+    if(Data.success)
+    {
+      widget.modelPatient.is724IsComplete=true;
+      widget.modelPatient.isNot724=false;
+      if(IsUnkown)
+        {
+          widget.modelPatient.signsStartIsUnknown=true;
+          widget.modelPatient.fssTime=TimeFssStart;
+          widget.modelPatient.lkwTime=TimeLKWStart;
+          widget.modelPatient.fssDate=DateFSSStart;
+          widget.modelPatient.lkwDate=DateLKWStart;
+        }else{
+        widget.modelPatient.signsStartIsUnknown=false;
+        widget.modelPatient.signsStartTime=TimeStart;
+        widget.modelPatient.signsStartDate=DateStart;
+      }
+
+      Notifi.setItems(widget.modelPatient);
+
+
+      // ignore: use_build_context_synchronously
+      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+    }else{
+      // ignore: use_build_context_synchronously
+      ShowErrorMsg(context, Data.message);
+    }
+  }
+
+}
 
   Add724(){
     showModalBottomSheet(context: context,
@@ -233,23 +270,18 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
                   {
                       Time=p[1]['Time']!;
                       Date=p[2]['Date']!;
-                      widget.modelPatient.Is724=true;
-                      widget.modelPatient.IsUnknow=false;
-                      widget.modelPatient.timeOfAddResident=Time;
-                      widget.modelPatient.dateOfAddToStart=Date;
-                      Notifi.setItems(widget.modelPatient);
+                      print(Time);
+                      print(Date);
+                      AddRequestIs724(false, Time, Date, '', '', '', '');
                   }else{
                   TimeFss=p[3]['TimeFss']!;
                   TimeLKW=p[1]['TimeLKW']!;
-                  DateFSS=p[4]['DateFSS']!;
+                  DateFSS=p[4]['DateFss']!;
                   DateLKW=p[2]['DateLKW']!;
-                  widget.modelPatient.Is724=true;
-                  widget.modelPatient.IsUnknow=true;
-                  widget.modelPatient.TimeFss=TimeFss;
-                  widget.modelPatient.TimeLKW=TimeLKW;
-                  widget.modelPatient.DateFSS=DateFSS;
-                  widget.modelPatient.DateLKW=DateLKW;
-                  Notifi.setItems(widget.modelPatient);
+
+                  AddRequestIs724(true, '', '', TimeFss, DateFSS, TimeLKW, DateLKW);
+
+
 
 
 
@@ -275,11 +307,9 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
     _controller.dispose(); // رها کردن منابع انیمیشن کنترلر
     super.dispose();
   }
-
   late AnimationController _controller;
   late Animation<Color?> _colorAnimationRed;
   late Animation<Color?> _colorAnimationGreen;
-
   @override
   void initState() {
     super.initState();
@@ -299,10 +329,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
       begin: Colors.green,
       end: Colors.black12,
     ).animate(_controller);
-
-
-
-
   }
   @override
   Widget build(BuildContext context) {
@@ -332,18 +358,23 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children:   [
-                            Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Icon(Icons.arrow_back,color: Colors.white,size: 30,),
+                            InkWell(
+                              onTap: (){
+                                Navigator.pop(context);
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Icon(Icons.arrow_back,color: Colors.white,size: 30,),
+                              ),
                             ),
                             Spacer(),
                             Container(
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Notifi.PatientItem!.Is724 == null   ?
+                                  Notifi.PatientItem!.is724IsComplete == null   ?
                                   Container() :
-                                  Notifi.PatientItem!.Is724! ?
+                                  Notifi.PatientItem!.is724IsComplete! ?
                                   Container(
                                     margin: EdgeInsets.only(top: 8),
                                     decoration: BoxDecoration(
@@ -540,9 +571,9 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
                                           child: Row(
                                             children: [
                                               TextApp(
-                                                  widget.modelPatient.IsNIHSS== null ?
+                                                  widget.modelPatient.nihsIsComplete== null ?
                                                   'تکمیل نشده است':
-                                                  widget.modelPatient.IsNIHSS!?
+                                                  widget.modelPatient.nihsIsComplete!?
                                                    'تکمیل شده است':
                                                   'تکمیل نشده است'
 
@@ -573,7 +604,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
                                      ),
                                    ),
                                  ),
-                                !widget.modelPatient.isNot724 && !widget.modelPatient.Is724! ?
+                                !widget.modelPatient.is724IsComplete! && !widget.modelPatient.isNot724!  ?
                                 Row(
                                   children: [
 
@@ -628,7 +659,10 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
                                 ):Container(),
 
                                 SizedBox(height: 8,),
-                                widget.modelPatient.Is724! ?
+                                widget.modelPatient.is724IsComplete! &&
+                                    !widget.modelPatient.isNot724!  &&
+                                    !widget.modelPatient.needToMRI!  &&
+                                    !widget.modelPatient.needToCT! ?
                                 Row(
                                   children: [
 
@@ -688,7 +722,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
 
 
 
-                                widget.modelPatient.Is724!  ?
+                                widget.modelPatient.is724IsComplete! &&
+                                    !widget.modelPatient.isNot724!  ?
                                 Container(
                                   width: wid,
                                   margin: const EdgeInsets.all(8),
@@ -696,20 +731,21 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
                                       onPressed: (){
                                        GoNextPage(context, ScreenFormNIHS((p0) {
                                          Navigator.pop(context);
-                                         AddNIHS();
-                                       },widget.modelPatient.IsNIHSS==null? false:widget.modelPatient.IsNIHSS!));
+
+                                         AddNIHS(p0);
+                                       },widget.modelPatient.nihsIsComplete==null? false:widget.modelPatient.nihsIsComplete!));
                                       },
                                       style: ButtonStyle(
-                                          backgroundColor: widget.modelPatient.IsNIHSS == null ?
+                                          backgroundColor: widget.modelPatient.nihsIsComplete==true?
                                           MaterialStateProperty.all(Colors.white):
                                           MaterialStateProperty.all(ColorApp),
                                           padding: MaterialStateProperty.all(EdgeInsets.all(8)),
                                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                              widget.modelPatient.IsNIHSS == null ?
+                                              widget.modelPatient.nihsIsComplete ==true ?
                                               RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(8.0),
                                               ):
-                                              widget.modelPatient.IsNIHSS! ?
+                                              widget.modelPatient.nihsIsComplete==true ?
                                               RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.circular(8.0),
                                                   side:  const BorderSide(color: ColorApp,width: 2)
@@ -721,16 +757,13 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
                                       ),
                                       child:Padding(
                                         padding: const EdgeInsets.all(10.0),
-                                        child: Text( widget.modelPatient.IsNIHSS ==null?
+                                        child: Text( widget.modelPatient.nihsIsComplete ==false?
                                         'تکمیل فرم NIHSS':
-                                        widget.modelPatient.IsNIHSS!
-
-                                            ?'نمایش فرم NIHSS':'تکمیل فرم NIHSS',
+                                        'نمایش فرم NIHSS',
                                           style: TextStyle(
                                               color:
-                                              widget.modelPatient.IsNIHSS==null ?Colors.white:
-                                              widget.modelPatient.IsNIHSS!?
-                                              ColorApp : Colors.white,
+                                              widget.modelPatient.nihsIsComplete==false ?Colors.white:
+                                              ColorApp ,
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),),
                                       )),
@@ -738,7 +771,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
                                 SizedBox(height: 8,),
 
 
-                                widget.modelPatient.isNot724! ?
+                                widget.modelPatient.is724IsComplete! && widget.modelPatient.isNot724!  ?
                                 Container(
                                   width: wid,
                                   margin: const EdgeInsets.all(8),

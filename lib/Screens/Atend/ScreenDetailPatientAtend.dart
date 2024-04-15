@@ -44,6 +44,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
 
 
 
+
+
   @override
   Widget build(BuildContext context) {
     Notifi=Provider.of<ProviderAtendDetaile>(context);
@@ -63,20 +65,25 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                   width: wid,
                   height: wid*0.25,
                   color: ColorApp,
-                  child: Column(
+                  child:   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(width: 16,),
+                      const SizedBox(width: 16,),
                       Expanded(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
-                          children: const [
-                            Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Icon(Icons.arrow_back,color: Colors.white,size: 30,),
+                          children: [
+                            InkWell(
+                              onTap: (){
+                                Navigator.pop(context);
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Icon(Icons.arrow_back,color: Colors.white,size: 30,),
+                              ),
                             ),
-                            Expanded(child:
+                            const Expanded(child:
                             Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Text(
@@ -214,50 +221,105 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                           color: Colors.black12,
                                           margin: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
                                         ),
+
+                                        !widget.modelPatient.signsStartIsUnknown! ?
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.timeOfAddResident!.isEmpty ? 'نامشخص' :
-                                              widget.modelPatient.timeOfAddResident!
+                                              TextApp(widget.modelPatient.signsStartDate.toString()+ " - "+
+                                                  widget.modelPatient.signsStartTime.toString()
                                                   , 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
                                                   child: TextApp(' :  زمان شروع علائم ', 14, ColorTitleText, false))),
                                             ],
                                           ),
-                                        ),
+                                        ):
 
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: TextApp3( widget.modelPatient.Residents!.isEmpty ? 'نامشخص':
-                                                widget.modelPatient.Residents!
-                                                    , 16, ColorTextbody, true),
+                                        Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                              child: Row(
+                                                children: [
+                                                  TextApp(widget.modelPatient.fssTime.toString()
+                                                      , 16, ColorTextbody, true),
+                                                  Expanded(child: Align(
+                                                      alignment: Alignment.centerRight,
+                                                      child: TextApp(' :  FSS Time', 14, ColorTitleText, false))),
+                                                ],
                                               ),
-                                              Align(
-                                                  alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  رزیدنت ', 14, ColorTitleText, false)),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: TextApp3( widget.modelPatient.Atends!.isEmpty ? 'نامشخص':
-                                                widget.modelPatient.Atends!
-                                                    , 16, ColorTextbody, true),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                              child: Row(
+                                                children: [
+                                                  TextApp(widget.modelPatient.fssDate.toString()
+                                                      , 16, ColorTextbody, true),
+                                                  Expanded(child: Align(
+                                                      alignment: Alignment.centerRight,
+                                                      child: TextApp(' :  FSS Date', 14, ColorTitleText, false))),
+                                                ],
                                               ),
-                                              Align(
-                                                  alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  دکتر متخصص ', 14, ColorTitleText, false)),
-                                            ],
-                                          ),
-                                        ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                              child: Row(
+                                                children: [
+                                                  TextApp(widget.modelPatient.lkwTime.toString()
+                                                      , 16, ColorTextbody, true),
+                                                  Expanded(child: Align(
+                                                      alignment: Alignment.centerRight,
+                                                      child: TextApp(' :  LKW Time', 14, ColorTitleText, false))),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                              child: Row(
+                                                children: [
+                                                  TextApp(widget.modelPatient.lkwDate.toString()
+                                                      , 16, ColorTextbody, true),
+                                                  Expanded(child: Align(
+                                                      alignment: Alignment.centerRight,
+                                                      child: TextApp(' :  LKW Date', 14, ColorTitleText, false))),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                        ,
+                                        // Padding(
+                                        //   padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                        //   child: Row(
+                                        //     children: [
+                                        //       Expanded(
+                                        //         child: TextApp3( widget.modelPatient.Residents!.isEmpty ? 'نامشخص':
+                                        //         widget.modelPatient.Residents!
+                                        //             , 16, ColorTextbody, true),
+                                        //       ),
+                                        //       Align(
+                                        //           alignment: Alignment.centerRight,
+                                        //           child: TextApp(' :  رزیدنت ', 14, ColorTitleText, false)),
+                                        //     ],
+                                        //   ),
+                                        // ),
+                                        // Padding(
+                                        //   padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                        //   child: Row(
+                                        //     children: [
+                                        //       Expanded(
+                                        //         child: TextApp3( widget.modelPatient.Atends!.isEmpty ? 'نامشخص':
+                                        //         widget.modelPatient.Atends!
+                                        //             , 16, ColorTextbody, true),
+                                        //       ),
+                                        //       Align(
+                                        //           alignment: Alignment.centerRight,
+                                        //           child: TextApp(' :  دکتر متخصص ', 14, ColorTitleText, false)),
+                                        //     ],
+                                        //   ),
+                                        // ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
@@ -270,7 +332,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                                  ),
                                                  child: Padding(
                                                    padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 4),
-                                                   child: TextApp(widget.modelPatient.IsNIHSS!? 'مشاهده': 'تکمیل نشده', 16, ColorApp, true),
+                                                   child: TextApp(widget.modelPatient.nihsIsComplete!? 'مشاهده': 'تکمیل نشده', 16, ColorApp, true),
                                                  ),
                                                ),
                                               Expanded(child: Align(
@@ -319,7 +381,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                           child: Row(
                                             children: [
                                               TextApp(widget.modelPatient.Ghandkhon!.isNotEmpty?
-                                              widget.modelPatient.Ghandkhon!.toString(): 'تکمیل نشده'
+                                              widget.modelPatient.Ghandkhon!.toString():'تکمیل نشده'
                                                   , 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
@@ -349,7 +411,9 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                      ),
                                    ),
                                  ),
-                                !widget.modelPatient.needToCT && !widget.modelPatient.isNot724 && !widget.modelPatient.needToMRI ?
+                                !widget.modelPatient.needToCT &&
+                                    !widget.modelPatient.isNot724
+                                    && !widget.modelPatient.needToMRI ?
                                 Row(
                                   children: [
                                     Expanded(child: Padding(
@@ -414,13 +478,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                     ))
                                   ],
                                 ) :Container(),
-
-
-
-
-
-
-
                                 widget.modelPatient.ResonNot == null ?Container():
                                 widget.modelPatient.ResonNot!.isNotEmpty?
                                 Container(
@@ -449,9 +506,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                               fontWeight: FontWeight.bold),),
                                       )),
                                 ):Container(),
-                                
-
-
                                 widget.modelPatient.ResonNot == null ?Container():
                                 widget.modelPatient.ResonNot!.isNotEmpty?
                                 Container(

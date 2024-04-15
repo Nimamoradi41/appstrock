@@ -38,6 +38,10 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
 
 
 
+
+
+
+
   late var Notifi=ProviderTeraizh();
   @override
   Widget build(BuildContext context) {
@@ -281,7 +285,9 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                                 Container(
                                   width: wid,
                                   margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
-                                  child: ElevatedButton(onPressed: (){},
+                                  child: ElevatedButton(onPressed: (){
+
+                                  },
                                       style: ButtonStyle(
                                           backgroundColor: MaterialStateProperty.all(ColorApp),
                                           padding: MaterialStateProperty.all(EdgeInsets.all(8)),

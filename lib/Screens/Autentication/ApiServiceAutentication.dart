@@ -17,11 +17,21 @@ import 'Models/ModelLogin.dart';
 import 'Models/ModelOtpCode.dart';
 
 class ApiServiceAutentication{
-  static Future<ModelRigester> Rigester(String Name,String Typeuser,String NationalCode,String PhoneNumber,String Password,BuildContext context) async {
-    var login;
+  static Future<ModelRigester?> Rigester(String Name,String Typeuser,
+      String NationalCode,String PhoneNumber,String Password,BuildContext context) async {
+    ModelRigester? login ;
 
 
-    var request = http.MultipartRequest('POST', Uri.parse('https://fmirzavand.ir/Users/Register'));
+    var request = http.MultipartRequest('POST',
+        Uri.parse('https://fmirzavand.ir/Users/Register'));
+
+
+
+    // request.headers.addAll({
+    //   'Content-Type': 'multipart/form-data',
+    //   'Accept': '*/*',
+    // });
+    request.headers['Content-Type'] = 'application/json", "Accept": "application/json';
     request.fields.addAll({
       'Name': Name,
       'NationalCode': NationalCode,
@@ -37,16 +47,87 @@ class ApiServiceAutentication{
         ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
       }) ;
 
+
+
+      print(response.statusCode.toString());
+
       if(response.statusCode==200)
       {
         String str= await response.stream.bytesToString();
-        ModelRigester data= modelRigesterFromJson(str);
-       login=data;
-      }else{
-        ShowErrorMsg(context,response.reasonPhrase.toString());
-
-
+        print(str);
+        if(str != null && str.isNotEmpty) {
+          ModelRigester data = modelRigesterFromJson(str);
+          login = data;
+        } else {
+          // Handle the case where response is empty or null
+          ShowErrorMsg(context, 'مشکلی در دریافت اطلاعات از سرور به وجود آمده');
+        }
       }
+
+      if(response.statusCode==400)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        if(str != null && str.isNotEmpty) {
+          ModelRigester data = modelRigesterFromJson(str);
+          login = data;
+        } else {
+          // Handle the case where response is empty or null
+          ShowErrorMsg(context, 'مشکلی در دریافت اطلاعات از سرور به وجود آمده');
+        }
+      }
+
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+    }
+
+
+
+
+    Navigator.pop(context);
+    return login;
+  }
+
+  static Future<ModelLogin?> Login(String Name,
+      String NationalCode,BuildContext context) async {
+    ModelLogin? login;
+    var request = http.MultipartRequest('POST', Uri.parse('https://fmirzavand.ir/Users/Login'));
+    request.headers.addAll({"content-type":"application/json; charset=utf-8"});
+    request.fields.addAll({
+      'Name': Name,
+      // 'Name': 'Nimaa',
+      'NationalCode': NationalCode,
+      // 'NationalCode': '111111112',
+    });
+
+
+    print('Nima');
+    print(Name);
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+      print(response.statusCode.toString());
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        ModelLogin data= await  modelLoginFromJson(str);
+        login=data;
+      }
+
+      if(response.statusCode==400)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelLogin data= await  modelLoginFromJson(str);
+        login=data;
+      }
+
     }  on SocketException catch (e) {
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
 
@@ -67,107 +148,21 @@ class ApiServiceAutentication{
 
 
 
-    Navigator.pop(context);
-    return login;
-  }
-
-  static Future<ModelLogin> Login(String Name,
-      String NationalCode,BuildContext context) async {
-    var login;
-
-
-    // var request = http.MultipartRequest('POST', Uri.parse('https://fmirzavand.ir/Users/Login'));
-    // request.fields.addAll({
-    //   'Name': Name,
-    //   'NationalCode': NationalCode,
-    // });
-    //
-    // try{
-    //   http.StreamedResponse response = await request.send().timeout(
-    //     Duration(seconds: 15),
-    //   ).catchError((error) {
-    //     ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-    //
-    //   }) ;
-    //
-    //   if(response.statusCode==200)
-    //   {
-    //     String str= await response.stream.bytesToString();
-    //     ModelLogin data= await  modelLoginFromJson(str);
-    //     login=data;
-    //   }else{
-    //     ShowErrorMsg(context,response.reasonPhrase.toString());
-    //
-    //
-    //   }
-    // }  on SocketException catch (e) {
-    //   ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-    //
-    // } on TimeoutException catch (e) {
-    //   ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-    //
-    //
-    // }
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    // Navigator.pop(context);
-
-    var request = http.MultipartRequest('POST', Uri.parse('https://fmirzavand.ir/Users/Login'));
-    request.fields.addAll({
-      'Name': 'فرامرز میرزاوند',
-      'NationalCode': '1920180001',
-      'Password': '123'
-    });
-
-
-    var data = FormData.fromMap({
-      'Name': 'فرامرز میرزاوند',
-      'NationalCode': '1920180001',
-      'Password': '123'
-    });
-
-    var dio = Dio();
-    var response = await dio.request(
-      'https://fmirzavand.ir/Users/Login',
-      options: Options(
-        method: 'POST',
-      ),
-      data: data,
-    );
-
-    if (response.statusCode == 200) {
-      print(json.encode(response.data));
-    }
-    else {
-      print(response.statusMessage);
-    }
 
     Navigator.pop(context);
     return login;
   }
 
 
-
-
-
-  static Future<ModelOtpCode>
+  static Future<ModelOtpCode?>
   CheckConfirmCode(String Id,String Code,BuildContext context) async {
-    var login;
-
-
-    var request = http.MultipartRequest('POST', Uri.parse('https://fmirzavand.ir/Users/CheckConfirmCode'));
+    ModelOtpCode? login;
+    var request = http.MultipartRequest('POST',
+        Uri.parse('https://fmirzavand.ir/Users/CheckConfirmCode'));
+    request.headers['Content-Type'] = 'application/json", "Accept": "application/json';
     request.fields.addAll({
       'id': Id,
+      // 'id': '31',
       'code': Code,
     });
 
@@ -178,15 +173,36 @@ class ApiServiceAutentication{
         ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
       }) ;
 
+      print(response.statusCode.toString());
       if(response.statusCode==200)
       {
         String str= await response.stream.bytesToString();
+        print(str);
         ModelOtpCode data=   modelOtpCodeFromJson(str);
         login=data;
-      }else{
-        ShowErrorMsg(context,response.reasonPhrase.toString());
+      }
+      if(response.statusCode==400)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelOtpCode data=   modelOtpCodeFromJson(str);
+        login=data;
+      }
 
+      if(response.statusCode==404)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelOtpCode data=   modelOtpCodeFromJson(str);
+        login=data;
+      }
 
+      if(response.statusCode==403)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelOtpCode data=   modelOtpCodeFromJson(str);
+        login=data;
       }
     }  on SocketException catch (e) {
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
@@ -196,11 +212,6 @@ class ApiServiceAutentication{
 
 
     }
-
-
-
-
-
 
 
 

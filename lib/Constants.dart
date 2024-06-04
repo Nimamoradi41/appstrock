@@ -34,89 +34,96 @@ Future<bool>   ShowAllow(BuildContext context,String BodyText) async{
   bool Flag=false;
   await  showDialog(context: context, builder:
       (ctx){
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              margin: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: TextApp('مجوز',18,Colors.black87,true),
+        double wid=MediaQuery.of(context).size.width;
+        wid=wid>600?600:wid;
+    return Container(
+      width: wid,
+      child: Center(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  SizedBox(height: 16,),
-                  TextApp(BodyText,14,Colors.black54,true),
-                  SizedBox(height: 16,),
-                  Row(
+                  child: Column(
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: TextApp('مجوز',18,Colors.black87,true),
+                      ),
+                      SizedBox(height: 16,),
+                      TextApp(BodyText,14,Colors.black54,true),
+                      SizedBox(height: 16,),
+                      Row(
+                        children: [
 
-                      Expanded(child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: ElevatedButton(onPressed: (){
-                          Navigator.pop(context);
-                          Flag=false;
-
-                        },
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(Colors.white),
-                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      side: const BorderSide(color: BtnColorgreen,width: 2)
-                                    )
-                                )
-                            ),
-                            child:const Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Text('خیر',
-                                style: TextStyle(color:BtnColorgreen,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),),
-                            )),
-                      )),
-                      Expanded(child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: ElevatedButton(
-                            onPressed: (){
+                          Expanded(child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: ElevatedButton(onPressed: (){
                               Navigator.pop(context);
-                              Flag=true;
-                              // NeedToCT(context);
+                              Flag=false;
 
                             },
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(BtnColorgreen),
-                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(Colors.white),
+                                    padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          side: const BorderSide(color: BtnColorgreen,width: 2)
+                                        )
                                     )
-                                )
-                            ),
-                            child:Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Text('بله',
-                                style: TextStyle(color:Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),),
-                            )),
-                      )),
+                                ),
+                                child:const Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Text('خیر',
+                                    style: TextStyle(color:BtnColorgreen,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),),
+                                )),
+                          )),
+                          Expanded(child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: ElevatedButton(
+                                onPressed: (){
+                                  Navigator.pop(context);
+                                  Flag=true;
+                                  // NeedToCT(context);
+
+                                },
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(BtnColorgreen),
+                                    padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                        )
+                                    )
+                                ),
+                                child:Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text('بله',
+                                    style: TextStyle(color:Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),),
+                                )),
+                          )),
+                        ],
+                      ),
+                      SizedBox(height: 8,),
                     ],
                   ),
-                  SizedBox(height: 8,),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -217,11 +224,12 @@ void ShowSuccesMsg(BuildContext context,String Msg)
 
 
   // todo Login Or Rigester User
- Future LoginInApp(String Name,String Code,int TypeUser,bool Login,String Pass,String Id)async {
+ Future LoginInApp(String Name,String Code,int TypeUser,bool Login,String Pass,String Id,bool isOnline)async {
    SharedPreferences prefs = await SharedPreferences.getInstance();
    await prefs.setString('Name',Name);
    await prefs.setString('Code',Code);
    await prefs.setBool('Login',Login);
+   await prefs.setBool('isOnline',isOnline);
    await prefs.setInt('TypeUser',TypeUser);
    await prefs.setString('Pass',Pass);
    await prefs.setString('UserId',Id);
@@ -243,25 +251,25 @@ Future<int> GetTypeUser(String Type)async{
   {
     return 2;
   }
-  if(Type=='پزیرش')
+  if(Type=='پذیرش')
   {
     return 3;
   }
   if(Type=='رزیدنت')
   {
-    return 4;
+    return 7;
   }
   if(Type=='بیماربر')
   {
-    return 5;
+    return 4;
   }
   if(Type=='آزمایشگاه')
   {
     return 6;
   }
-  if(Type=='آزمایشگاه')
+  if(Type=='دکتر متخصص')
   {
-    return 7;
+    return 5;
   }
   if(Type=='استروک')
   {

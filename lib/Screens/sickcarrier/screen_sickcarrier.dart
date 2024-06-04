@@ -1,12 +1,20 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
 import '../../Widgets/TextApp.dart';
+import '../Autentication/screen_EditProfile.dart';
+import '../Reception/ApiServiceReception.dart';
 import '../Reception/Model/ModelPatient.dart';
+import '../SplashScreen.dart';
 import 'ProviderSickCarrier/ProviderSickCarrier.dart';
 
 
@@ -33,6 +41,120 @@ class _ScreenSickCarrierState extends State<ScreenSickCarrier> {
   String dropdownvalue = 'مرد';
 
   late var Notifi=ProviderSickCarrier();
+
+  Future   ChangShift(bool StatusNew,BuildContext context) async
+  {
+
+
+    var Flag=await ShowAllow(context,'آیا از تغییر شیفت خود مطمئن هستید ؟');
+    if(Flag)
+    {
+      ShowLoadingApp(context);
+      // ignore: use_build_context_synchronously
+      var Data= await ApiServiceReception.ChangeShiftStatus(context);
+      print(Data.toJson());
+
+      if(Data!=null)
+      {
+        if(Data.success)
+        {
+          Notifi.setstatus(Data.data!.isOnline);
+        }else{
+          // ignore: use_build_context_synchronously
+          ShowErrorMsg(context, Data.message);
+        }
+      }
+
+      Navigator.pop(context);
+    }
+
+
+
+
+
+
+
+
+
+  }
+
+
+  Future RunListP(BuildContext context) async
+  {
+    Jalali date=Jalali.now();
+    String formattedDate =
+        '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+    // چاپ تاریخ جلالی با فرمت مورد نظر
+    print('تاریخ جلالی فعلی: $formattedDate');
+
+
+
+
+
+
+
+
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceReception.ListPatient(formattedDate,context);
+
+
+
+
+
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        Notifi.setItems(Data.data);
+      }else{
+        showToast(Data.message,
+            position: StyledToastPosition.top,
+            context:context);
+      }
+    }
+  }
+
+
+  Future GetInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(prefs.getBool('isOnline')!=null)
+    {
+      status=prefs.getBool('isOnline')!;
+      Notifi.setstatus(status);
+    }
+
+
+  }
+  late Timer _timer;
+  void startTimer() {
+    const oneSec =   Duration(seconds: 20);
+    _timer = Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        RunListP(context);
+      },
+    );
+
+    GetInfo();
+    RunListP(context);
+
+  }
+  Future ClearAllDate()async{
+    var Flag=await ShowAllow(context,'آیا میخواهید از حساب کاربری خود خارج شوید ؟');
+    if(Flag)
+    {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.clear();
+      GoNextPageGameOver(context, SplashScreen());
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,19 +183,29 @@ class _ScreenSickCarrierState extends State<ScreenSickCarrier> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
-                          children: const [
-                            RotatedBox(
-                              quarterTurns: 90,
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
+                          children:   [
+                            InkWell(
+                              onTap: (){
+                                ClearAllDate();
+                              },
+                              child: RotatedBox(
+                                quarterTurns: 90,
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
+                                ),
                               ),
                             ),
                             RotatedBox(
                               quarterTurns: 0,
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Icon(Icons.person,color: Colors.white,size: 30,),
+                              child: InkWell(
+                                onTap: (){
+                                  GoNextPage(context, screen_EditProfile());
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Icon(Icons.person,color: Colors.white,size: 30,),
+                                ),
                               ),
                             ),
                             Expanded(child:
@@ -154,8 +286,8 @@ class _ScreenSickCarrierState extends State<ScreenSickCarrier> {
                               return ListView.builder(
                                 itemCount: ItemsP.length,
                                 itemBuilder: (ctx,item){
-                                  // return ItemPatient(wid: wid, ItemsP: ItemsP[item],);
-                                  return Container();
+                                  return ItemPatientNew(wid: wid, ItemsP: ItemsP[item],);
+                                  // return Container();
                                 },
                               );
                             },

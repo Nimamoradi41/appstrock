@@ -124,6 +124,7 @@ class ItemPatientNew extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(ItemsP.nationalCode.toString());
     return Container(
       width: wid,
       margin: EdgeInsets.all(6),

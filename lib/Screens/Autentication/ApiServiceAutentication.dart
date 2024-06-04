@@ -16,6 +16,7 @@ import '../../Constants.dart';
 import 'Models/ModelLogin.dart';
 import 'Models/ModelOtpCode.dart';
 
+
 class ApiServiceAutentication{
   static Future<ModelRigester?> Rigester(String Name,String Typeuser,
       String NationalCode,String PhoneNumber,String Password,BuildContext context) async {
@@ -23,7 +24,7 @@ class ApiServiceAutentication{
 
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://fmirzavand.ir/Users/Register'));
+        Uri.parse('https://api.appstrok.ir/Users/Register'));
 
 
 
@@ -44,6 +45,7 @@ class ApiServiceAutentication{
       http.StreamedResponse response = await request.send().timeout(
         Duration(seconds: 15),
       ).catchError((error) {
+        Navigator.pop(context);
         ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
       }) ;
 
@@ -89,26 +91,24 @@ class ApiServiceAutentication{
     Navigator.pop(context);
     return login;
   }
-
   static Future<ModelLogin?> Login(String Name,
-      String NationalCode,BuildContext context) async {
+      String NationalCode,String Pass,BuildContext context) async {
     ModelLogin? login;
-    var request = http.MultipartRequest('POST', Uri.parse('https://fmirzavand.ir/Users/Login'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Users/Login'));
     request.headers.addAll({"content-type":"application/json; charset=utf-8"});
     request.fields.addAll({
       'Name': Name,
-      // 'Name': 'Nimaa',
       'NationalCode': NationalCode,
-      // 'NationalCode': '111111112',
+      'Password': Pass,
     });
 
 
-    print('Nima');
-    print(Name);
+
     try{
       http.StreamedResponse response = await request.send().timeout(
         Duration(seconds: 15),
       ).catchError((error) {
+        Navigator.pop(context);
         ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
       }) ;
 
@@ -129,9 +129,11 @@ class ApiServiceAutentication{
       }
 
     }  on SocketException catch (e) {
+      Navigator.pop(context);
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
 
     } on TimeoutException catch (e) {
+      Navigator.pop(context);
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
 
 
@@ -152,13 +154,11 @@ class ApiServiceAutentication{
     Navigator.pop(context);
     return login;
   }
-
-
   static Future<ModelOtpCode?>
   CheckConfirmCode(String Id,String Code,BuildContext context) async {
     ModelOtpCode? login;
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://fmirzavand.ir/Users/CheckConfirmCode'));
+        Uri.parse('https://api.appstrok.ir/Users/CheckConfirmCode'));
     request.headers['Content-Type'] = 'application/json", "Accept": "application/json';
     request.fields.addAll({
       'id': Id,
@@ -170,6 +170,7 @@ class ApiServiceAutentication{
       http.StreamedResponse response = await request.send().timeout(
         Duration(seconds: 15),
       ).catchError((error) {
+        Navigator.pop(context);
         ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
       }) ;
 

@@ -23,4 +23,9 @@ class ProviderTeraizh extends ChangeNotifier{
     notifyListeners();
   }
 
+  void Refrsh()
+  {
+    notifyListeners();
+  }
+
 }

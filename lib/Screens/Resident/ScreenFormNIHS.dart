@@ -24,141 +24,267 @@ class QuestionAnswer {
 
 class ScreenFormNIHS extends StatefulWidget {
   late void Function(List<Map<String, dynamic>>) onClose;
+  ScreenFormNIHS(
+      this.onClose,
+      this.ISEdit,
+      this.n_1_a,
+      this.n_1_b,
+      this.n_1_c,
+      this.n_2,
+      this.n_3,
+      this.n_4,
+      this.n_5_a,
+      this.n_5_b,
+      this.n_6_a,
+      this.n_6_b,
+      this.n_7,
+      this.n_8,
+      this.n_9,
+      this.n_10,
+      this.n_11); // ScreenFormNIHS(this.onClose,this.ISEdit,this.DataEdit);
 
 
-  ScreenFormNIHS(this.onClose,this.ISEdit);
 
 
   bool ISEdit;
+  String n_1_a;
+  String n_1_b;
+  String n_1_c;
+  String n_2;
+  String n_3;
+  String n_4;
+  String n_5_a;
+  String n_5_b;
+  String n_6_a;
+  String n_6_b;
+  String n_7;
+  String n_8;
+  String n_9;
+  String n_10;
+  String n_11;
   @override
   _ExamFormState createState() => _ExamFormState();
 }
 
 class _ExamFormState extends State<ScreenFormNIHS> {
-  List<QuestionAnswer> questions = [
-    QuestionAnswer(
-      question: 'Level of Consciousness',
-      options: ['Alert', 'Drowsy', 'Stuporous', 'coma'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
-    QuestionAnswer(
-      question: 'LOC Questions',
-      options: ['Answers both correctly', 'Answers one correctly', 'Answers neither correctly'],
-      correctIndex: 0,
-      selectedAnswer: 0
-    ),
-    QuestionAnswer(
-      question: 'LOC commands',
-      options: ['Performs both tasks correctly', 'Performs one task correctly', 'Performs neither task correctly'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
-    QuestionAnswer(
-      question: 'Best Gaze',
-      options: ['Normal', 'Partial gaze palsy', 'Forced deviation'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
-    QuestionAnswer(
-      question: 'Visual',
-      options: ['No visual loss', 'Partial hemianopia', 'Complete hemianopia','Bilateral hemianopia'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
-    QuestionAnswer(
-      question: 'Facial Palsy',
-      options: ['Normal', 'Minor paralysis', 'Partial paralysis','Complete paralysis'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
-    QuestionAnswer(
-      question: 'Motor Arm-left',
-      options: ['No drift', 'Drift', 'Some effort against gravity','No effort against gravity','No movement'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
 
-    QuestionAnswer(
-      question: 'Motor Arm-right',
-      options: ['No drift', 'Drift', 'Some effort against gravity','No effort against gravity','No movement'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
-
-    QuestionAnswer(
-      question: 'Motor Leg-left',
-      options: ['No drift', 'Drift', 'Some effort against gravity','No effort against gravity','No movement'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
-
-
-    QuestionAnswer(
-      question: 'Motor Leg- right',
-      options: ['No drift', 'Drift', 'Some effort against gravity','No effort against gravity','No movement'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
-
-
-
-    QuestionAnswer(
-      question: 'Limb Ataxia',
-      options: ['Absent', 'Present in one limb','Present in two limbs'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
-
-    QuestionAnswer(
-      question: 'Sensory',
-      options: ['Normal', 'Mild-to-moderate sensory loss','Severe or total sensory loss'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
-
-
-    QuestionAnswer(
-      question: 'Best Language',
-      options: ['No aphasia', 'Mild-to-moderate aphasia','Severe aphasia','Mute, global aphasia'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
-
-
-    QuestionAnswer(
-      question: 'Dysarthria',
-      options: ['No aphasia', 'Mild-to-moderate aphasia','Severe aphasia'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
-
-    QuestionAnswer(
-      question: 'Extinction and Inattention (formerly Neglect)',
-      options: ['No neglect', 'Partial neglect','Complete neglect'],
-      correctIndex: 0,
-        selectedAnswer: 0
-    ),
-
-
-
-
-
-  ];
+  List<QuestionAnswer> questions=[];
   @override
   void initState() {
     super.initState();
+    int n_1_aNumber=0;
+    int n_1_bNumber=0;
+    int n_1_cNumber=0;
+    int n_2Number=0;
+    int n_3Number=0;
+    int n_4Number=0;
+    int n_5_aNumber=0;
+    int n_5_bNumber=0;
+    int n_6_aNumber=0;
+    int n_6_bNumber=0;
+    int n_7Number=0;
+    int n_8Number=0;
+    int n_9Number=0;
+    int n_10Number=0;
+    int n_11Number=0;
+    if(widget.ISEdit)
+      {
+          n_1_aNumber=int.parse(widget.n_1_a);
+          n_1_bNumber=int.parse(widget.n_1_b);
+          n_1_cNumber=int.parse(widget.n_1_c);
+          n_2Number=int.parse(widget.n_2);
+          n_3Number=int.parse(widget.n_3);
+          n_4Number=int.parse(widget.n_4);
+          n_5_aNumber=int.parse(widget.n_5_a);
+          n_5_bNumber=int.parse(widget.n_5_b);
+          n_6_aNumber=int.parse(widget.n_6_a);
+          n_6_bNumber=int.parse(widget.n_6_b);
+          n_7Number=int.parse(widget.n_7);
+          n_8Number=int.parse(widget.n_8);
+          n_9Number=int.parse(widget.n_9);
+          n_10Number=int.parse(widget.n_10);
+          n_11Number=int.parse(widget.n_11);
+      }
 
+
+
+
+
+    questions.add(  QuestionAnswer(
+        question: 'Level of Consciousness',
+        options: ['Alert', 'Drowsy', 'Stuporous', 'coma'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_1_aNumber:
+        0
+    ));
+
+    questions.add(   QuestionAnswer(
+        question: 'LOC Questions',
+        options: ['Answers both correctly', 'Answers one correctly', 'Answers neither correctly'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_1_bNumber:
+        0
+    ));
+
+    questions.add(   QuestionAnswer(
+        question: 'LOC commands',
+        options: ['Performs both tasks correctly', 'Performs one task correctly', 'Performs neither task correctly'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_1_cNumber:
+        0
+    ));
+
+
+
+
+    questions.add(    QuestionAnswer(
+        question: 'Best Gaze',
+        options: ['Normal', 'Partial gaze palsy', 'Forced deviation'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_2Number:
+        0
+    ));
+
+
+
+
+    questions.add(     QuestionAnswer(
+        question: 'Visual',
+        options: ['No visual loss', 'Partial hemianopia', 'Complete hemianopia','Bilateral hemianopia'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_3Number:
+        0
+    ));
+
+
+
+    questions.add(     QuestionAnswer(
+        question: 'Facial Palsy',
+        options: ['Normal', 'Minor paralysis', 'Partial paralysis','Complete paralysis'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_4Number:
+        0
+    ));
+
+
+
+    questions.add(     QuestionAnswer(
+        question: 'Motor Arm-left',
+        options: ['No drift', 'Drift', 'Some effort against gravity','No effort against gravity','No movement'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_5_aNumber:
+        0
+    ));
+
+    questions.add(     QuestionAnswer(
+        question: 'Motor Arm-right',
+        options: ['No drift', 'Drift', 'Some effort against gravity','No effort against gravity','No movement'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_5_bNumber:
+        0
+    ));
+
+    questions.add(     QuestionAnswer(
+        question: 'Motor Leg-left',
+        options: ['No drift', 'Drift', 'Some effort against gravity','No effort against gravity','No movement'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_6_aNumber:
+        0
+    ));
+
+
+
+    questions.add(     QuestionAnswer(
+        question: 'Motor Leg- right',
+        options: ['No drift', 'Drift', 'Some effort against gravity','No effort against gravity','No movement'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_6_bNumber:
+        0
+    ));
+    //
+
+    questions.add(     QuestionAnswer(
+        question: 'Limb Ataxia',
+        options: ['Absent', 'Present in one limb','Present in two limbs'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_7Number:
+        0
+    ));
+
+    questions.add(     QuestionAnswer(
+        question: 'Sensory',
+        options: ['Normal', 'Mild-to-moderate sensory loss','Severe or total sensory loss'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_8Number:
+        0
+    ));
+    questions.add(      QuestionAnswer(
+        question: 'Best Language',
+        options: ['No aphasia', 'Mild-to-moderate aphasia','Severe aphasia','Mute, global aphasia'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_9Number:
+        0
+    ));
+
+
+    questions.add(     QuestionAnswer(
+        question: 'Dysarthria',
+        options: ['No aphasia', 'Mild-to-moderate aphasia','Severe aphasia'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_10Number:
+        0
+    ));
+
+    questions.add(     QuestionAnswer(
+        question: 'Extinction and Inattention (formerly Neglect)',
+        options: ['No neglect', 'Partial neglect','Complete neglect'],
+        correctIndex: 0,
+        selectedAnswer:
+        widget.ISEdit?
+        n_11Number:
+        0
+    ));
+
+
+    setState(() {
+
+    });
   }
 
 
   Future Run()async{
-
     var Res=await ShowAllow(context,'آیا از تکمیل فرم مطمئن هستید ؟');
      if(Res)
        {
          _submitForm();
-         // ignore: use_build_context_synchronously
        }
   }
 
@@ -231,10 +357,6 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                         ),
 
 
-
-
-
-
                         SizedBox(height: 8,),
                         Expanded(
                           child: ListView.builder(
@@ -242,65 +364,12 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                             itemBuilder: (context, index) {
                               return  ItemNIHS(index,questions[index]);
                             },
-                            // itemBuilder: (context, index) {
-                            //   return Container(
-                            //     margin: EdgeInsets.all(8),
-                            //     decoration: BoxDecoration(
-                            //         color: Colors.white,
-                            //         borderRadius: BorderRadius.circular(16),
-                            //         border: Border.all( color: Colors.black45,width: 3)
-                            //     ),
-                            //     child: Padding(
-                            //       padding: EdgeInsets.all(16.0),
-                            //       child: Column(
-                            //         crossAxisAlignment: CrossAxisAlignment.start,
-                            //         children: [
-                            //           Row(
-                            //             children: [
-                            //               Expanded(
-                            //                   child: TextAppStartfredoka(questions[index].question,14 , Colors.black54, true)),
-                            //             ],
-                            //           ),
-                            //
-                            //           SizedBox(height: 10),
-                            //           Column(
-                            //             children: List.generate(
-                            //               questions[index].options.length,
-                            //                   (optionIndex) {
-                            //                 return RadioListTile(
-                            //                   title: TextAppStartfredoka(questions[index].options[optionIndex],14 , Colors.black87, true),
-                            //                   value: optionIndex,
-                            //                   groupValue: questions[index].selectedAnswer,
-                            //                   onChanged: (value) {
-                            //                     setState(() {
-                            //                       questions[index].selectedAnswer = value;
-                            //                     });
-                            //                   },
-                            //                 );
-                            //               },
-                            //             ),
-                            //           ),
-                            //         ],
-                            //       ),
-                            //     ),
-                            //   );
-                            // },
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                // InkWell(
-                //   onTap: (){
-                //     _submitForm();
-                //   },
-                //   child: Container(
-                //     width: 100,
-                //     height: 100,
-                //     color: Colors.red,
-                //   ),
-                // ),
 
                 SizedBox(height: 8,),
 

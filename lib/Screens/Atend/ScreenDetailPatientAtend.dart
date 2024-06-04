@@ -200,7 +200,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                               TextApp(widget.modelPatient.timeOfAddToSystem.isEmpty  ? 'نامشخص':widget.modelPatient.timeOfAddToSystem, 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  زمان ثبت در سیسیتم', 14, ColorTitleText, false))),
+                                                  child: TextApp(' :  زمان ثبت در سیستم', 14, ColorTitleText, false))),
                                             ],
                                           ),
                                         ),
@@ -211,7 +211,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                               TextApp(widget.modelPatient.dateOfAddToSystem == null ? 'نامشخص' : widget.modelPatient.dateOfAddToSystem!, 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  تاریخ ثبت در سیسیتم', 14, ColorTitleText, false))),
+                                                  child: TextApp(' :  تاریخ ثبت در سیستم', 14, ColorTitleText, false))),
                                             ],
                                           ),
                                         ),
@@ -353,7 +353,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                                 ),
                                                 child: Padding(
                                                   padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 4),
-                                                  child: TextApp(widget.modelPatient.IsLab!? 'مشاهده': 'تکمیل نشده', 16, ColorApp, true),
+                                                  child: TextApp(widget.modelPatient.labIsComplete!? 'مشاهده': 'تکمیل نشده', 16, ColorApp, true),
                                                 ),
                                               ),
                                               Expanded(child: Align(

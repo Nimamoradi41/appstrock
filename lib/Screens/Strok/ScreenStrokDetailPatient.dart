@@ -8,14 +8,15 @@ import '../../Constants.dart';
 import '../../Widgets/TextApp.dart';
 import '../../test.dart';
 import '../Reception/Model/ModelPatient.dart';
-import 'ProviderLaboratory/ProviderLaboratoryDetail.dart';
+import 'ProviderStrok/ProviderStrok.dart';
+import 'ScreenFormAddTimeInjection.dart';
 import 'ScreenFormLaboratory.dart';
 
 
 
-class ScreenLaboratoryDetailPatient extends StatefulWidget {
+class ScreenStrokDetailPatient extends StatefulWidget {
 
-  ScreenLaboratoryDetailPatient(this.modelPatient,this.MainCtx);
+  ScreenStrokDetailPatient(this.modelPatient,this.MainCtx);
   
 
 
@@ -26,37 +27,21 @@ class ScreenLaboratoryDetailPatient extends StatefulWidget {
   BuildContext MainCtx;
 
   @override
-  State<ScreenLaboratoryDetailPatient> createState() => _ScreenDetailPatientState();
+  State<ScreenStrokDetailPatient> createState() => _ScreenDetailPatientState();
 }
 
-class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
-  late var Notifi=ProviderLaboratoryDetail();
+class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
+  late var Notifi=ProviderStrok();
 
-  // Future NeedToCT(BuildContext context)async{
-
-
-
-
-
-
-
-
-
-
-
-
-  Future AddLab(List<Map<String, dynamic>> Str)async{
-
-
-
+  Future AddTime(String Time)async{
     ShowLoadingApp(context);
-    var Data= await ApiServiceResident.AddLab(widget.modelPatient.id.toString(),context,Str);
+    var Data= await ApiServiceResident.AddTimeinjection(widget.modelPatient.id.toString(),context,Time);
     if(Data!=null)
     {
       if(Data.success)
       {
-        widget.modelPatient.labIsComplete=true;
-        Notifi.setItems(widget.modelPatient);
+        widget.modelPatient.TimeOfInjection=Time;
+        Notifi.setItem(widget.modelPatient);
         // ignore: use_build_context_synchronously
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
         Navigator.pop(context);
@@ -67,13 +52,9 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
   }
 
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
-    Notifi=Provider.of<ProviderLaboratoryDetail>(context);
+    Notifi=Provider.of<ProviderStrok>(context);
     double wid=MediaQuery.of(context).size.width;
     double hei=MediaQuery.of(context).size.height;
     wid=wid>600?600:wid;
@@ -258,16 +239,11 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                   margin: const EdgeInsets.all(8),
                                   child: ElevatedButton(
                                       onPressed: (){
-                                       GoNextPage(context, ScreenFormLaboratory((p0) {
-                                         Navigator.pop(context);
-                                         AddLab(p0);
-                                       },widget.modelPatient.labIsComplete==null? false:widget.modelPatient.labIsComplete!,
-                                           widget.modelPatient.bun.toString(),
-                                         widget.modelPatient.bun.toString(),
-                                         widget.modelPatient.cr.toString(),
-                                         widget.modelPatient.plt.toString(),
-                                         widget.modelPatient.inr.toString(),
-                                         widget.modelPatient.trop.toString()));
+                                        GoNextPage(context, ScreenFormAddTimeInjection((p0) {
+                                          var Time=p0[0]['Time'];
+                                          AddTime(Time.toString());
+                                        }
+                                        ));
                                       },
                                       style: ButtonStyle(
                                           backgroundColor: widget.modelPatient.labIsComplete ==null?
@@ -294,11 +270,11 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                       child:Padding(
                                         padding: const EdgeInsets.all(10.0),
                                         child: Text(
-                                          widget.modelPatient.labIsComplete == null ?
-                                          'تکمیل فرم':
-                                          widget.modelPatient.labIsComplete! ?
-                                          'نمایش فرم':
-                                          'تکمیل فرم',
+                                          widget.modelPatient.TimeOfInjection == null ?
+                                          'تکمیل زمان تزریق':
+                                          widget.modelPatient.TimeOfInjection!.isNotEmpty ?
+                                          'نمایش زمان تزریق':
+                                          'تکمیل زمان تزریق',
                                           style: TextStyle(
                                               color:
                                               widget.modelPatient.labIsComplete == null ?

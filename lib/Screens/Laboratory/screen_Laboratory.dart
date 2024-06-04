@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:appstrock/Screens/Laboratory/ScreenLaboratoryDetailPatient.dart';
 import 'package:appstrock/Screens/Reception/ApiServiceReception.dart';
 import 'package:flutter/material.dart';
@@ -5,14 +7,17 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'package:shamsi_date/shamsi_date.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signalr_netcore/hub_connection.dart';
 import 'package:signalr_netcore/hub_connection_builder.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
 import '../../Widgets/TextApp.dart';
+import '../Autentication/screen_EditProfile.dart';
 import '../Reception/Model/ModelPatient.dart';
 import '../Reception/ProviderReception/ProviderReception.dart';
+import '../SplashScreen.dart';
 
 
 
@@ -33,40 +38,6 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
 
   late HubConnection connection;
 
-  ScreenReception(bool IsRigester,BuildContext context,String NewName,String CodeNew){
-    if(IsRigester)
-    {
-      ShowSuccesMsg(context, 'ثبت نام با موفقیت انجام شد');
-      //Set an animation
-    }
-
-
-    Notifi.ListItemsPatient.add(ModelPatient(id: 7445, fullName: 'NimaMorado',
-        nationalCode: '1788484', age: '32', gender: 'مرد', timeOfAddToSystem: '',
-        dateOfAddToSystem: '', needToMRI: false, isNot724: false, needToCT: false,
-        nihsIsComplete: false, IsLab: false, timeOfAddLabotory: '', ResonNot: '', is724IsComplete: false,
-        AddReasonNot724: false, signsStartTime: '', fssTime: '', lkwTime: '', fssDate: '', lkwDate: '', signsStartIsUnknown: null, dateOfAddToStart: '',
-        AtendSeen: false, Residents: '', Atends: '', Fesharkhon: '', Ghandkhon: '', signsStartDate: ''));
-    // ignore: invalid_use_of_visible_for_testing_member
-    Notifi.notifyListeners();
-    // Notifi=Provider.of<ProviderReception>(context,listen: false);
-
-    Name=NewName;
-    Code=CodeNew;
-
-    // try{
-    //   connection=HubConnectionBuilder().withUrl('https://fmirzavand.ir/patientHub').build();
-    //   connection.on('ReceivePatientUpdate', (arguments) {
-    //     RunListP(context,false);
-    //   });
-    //   connection.start();
-    // }catch (E)
-    // {
-    //   print(E.toString());
-    // }
-
-    // RunListP(context, true);
-  }
 
   bool status=false;
 
@@ -83,7 +54,8 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
 
   late var Notifi=ProviderReception();
 
-  Future RunListP(BuildContext context,bool refresh) async
+
+  Future RunListP(BuildContext context) async
   {
     Jalali date=Jalali.now();
     String formattedDate =
@@ -99,7 +71,7 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
 
 
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatient(formattedDate,context,refresh);
+    var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
 
 
 
@@ -109,6 +81,8 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
     {
       if(Data.success)
       {
+        print('object3');
+        print(Data.data.length.toString());
         Notifi.setItems(Data.data);
       }else{
         showToast(Data.message,
@@ -120,9 +94,87 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
 
 
 
+  Future   ChangShift(bool StatusNew,BuildContext context) async
+  {
+
+
+    var Flag=await ShowAllow(context,'آیا از تغییر شیفت خود مطمئن هستید ؟');
+    if(Flag)
+    {
+      ShowLoadingApp(context);
+      // ignore: use_build_context_synchronously
+      var Data= await ApiServiceReception.ChangeShiftStatus(context);
+      print(Data.toJson());
+
+      if(Data!=null)
+      {
+        if(Data.success)
+        {
+          Notifi.setstatus(Data.data!.isOnline);
+        }else{
+          // ignore: use_build_context_synchronously
+          ShowErrorMsg(context, Data.message);
+        }
+      }
+
+      Navigator.pop(context);
+    }
+
+
+
+
+
+
+
+
+
+  }
+
+
+  Future GetInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(prefs.getBool('isOnline')!=null)
+    {
+      status=prefs.getBool('isOnline')!;
+      Notifi.setstatus(status);
+    }
+  }
+
+  late Timer _timer;
+  void startTimer() {
+    const oneSec =   Duration(seconds: 20);
+    _timer = Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        RunListP(context);
+      },
+    );
+
+    GetInfo();
+    RunListP(context);
+
+  }
+
+  Future ClearAllDate()async{
+    var Flag=await ShowAllow(context,'آیا میخواهید از حساب کاربری خود خارج شوید ؟');
+    if(Flag)
+    {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.clear();
+      GoNextPageGameOver(context, SplashScreen());
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    Notifi=Provider.of<ProviderReception>(context);
     double wid=MediaQuery.of(context).size.width;
     double hei=MediaQuery.of(context).size.height;
     wid=wid>600?600:wid;
@@ -139,30 +191,40 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
                   width: wid,
                   height: wid*0.25,
                   color: ColorApp,
-                  child: const Column(
+                  child:   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(width: 16,),
+                      const SizedBox(width: 16,),
                       Expanded(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            RotatedBox(
-                              quarterTurns: 90,
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
+                            InkWell(
+                              onTap: (){
+                                ClearAllDate();
+                              },
+                              child: const RotatedBox(
+                                quarterTurns: 90,
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
+                                ),
                               ),
                             ),
-                            RotatedBox(
+                              RotatedBox(
                               quarterTurns: 0,
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Icon(Icons.person,color: Colors.white,size: 30,),
+                              child: InkWell(
+                                onTap: (){
+                                  GoNextPage(context, screen_EditProfile());
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Icon(Icons.person,color: Colors.white,size: 30,),
+                                ),
                               ),
                             ),
-                            Expanded(child:
+                            const Expanded(child:
                             Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Text(
@@ -181,7 +243,6 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
                         ),
                       )
                     ],
-
                   ),
                 ),
                 Positioned(
@@ -210,7 +271,7 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
                                             value: status,
                                             activeColor: Color(0xff38b000),
                                             onToggle: (val) {
-                                              Notifi.setstatus(!status);
+                                              ChangShift(val,context);
                                               // setState(() {
                                               //   status = val;
                                               // });
@@ -233,33 +294,20 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
                           height:  hei*0.68,
                           child: Consumer<ProviderReception>(
                             builder: (context,newstate,child){
-                              // ItemsP=newstate.ListItemsPatient;
+                              ItemsP=newstate.ListItemsPatient;
+                              print(ItemsP.toString());
+                              print('Count');
+                              print(ItemsP.length.toString());
                               return ListView.builder(
-                                // itemCount: ItemsP.length,
-                                itemCount: 2,
+                                itemCount: ItemsP.length,
                                 itemBuilder: (ctx,item){
                                   return InkWell(
                                     onTap: (){
                                        GoNextPage(context,
                                            ScreenLaboratoryDetailPatient(
-                                           ModelPatient(id: 10, fullName: 'Ahmad Bagheri',
-                                               nationalCode: '548548548484', age: '45',
-                                               gender: 'مرد',
-                                               timeOfAddToSystem: '14:20',
-                                               dateOfAddToSystem: '1402/02/02',
-                                               needToMRI: false,
-                                               isNot724: false,
-                                               needToCT: false,
-                                               nihsIsComplete: false, IsLab: false, timeOfAddLabotory: '', ResonNot: '',
-                                               is724IsComplete: false, AddReasonNot724: false,
-                                               signsStartTime: '', fssTime: '', lkwTime: '',
-                                               fssDate: '', lkwDate: '',
-                                               signsStartIsUnknown: null, dateOfAddToStart: '', AtendSeen: false, Residents: '',
-                                               Atends: '', Fesharkhon: '',
-                                               Ghandkhon: '', signsStartDate: ''), context));
+                                               ItemsP[item],context));
                                     },
-                                    // child: ItemPatient(wid: wid, ItemsP: ItemsP[item],),
-                                    child: ItemPatient(wid: wid),
+                                      child: ItemPatientNew(wid: wid,ItemsP: ItemsP[item],)
                                   );
                                 },
                               );
@@ -267,7 +315,6 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
 
                           ),
                         ),
-
                       ],
                     ),
                   ),

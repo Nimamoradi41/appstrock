@@ -1,3 +1,6 @@
+import 'package:appstrock/Screens/Autentication/ScreenRigester.dart';
+import 'package:appstrock/Screens/Resident/screen_resident.dart';
+import 'package:appstrock/Screens/Strok/ScreenStrock.dart';
 import 'package:appstrock/Screens/Teriazh/screen_teriazh.dart';
 import 'package:appstrock/Widgets/TextApp.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../Constants.dart';
 import '../Ems/screen_ems.dart';
+import '../Laboratory/screen_Laboratory.dart';
 import '../Reception/screen_reception.dart';
 import 'ApiServiceAutentication.dart';
 
@@ -30,7 +34,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
     'پذیرش',
     'بیماربر',
     'دکتر متخصص',
-    'آزماشیگاه',
+    'آزمایشگاه',
     'رزیدنت',
     // 'رزیدنت',
     // 'دکتر متخصص',
@@ -67,15 +71,22 @@ class _ScreenLoginState extends State<ScreenLogin> {
 
     ShowLoadingApp(context);
     var Data=await ApiServiceAutentication.
-    Login(textControllerName.text,textControllerNationalCode.text,context);
-    // Login('Nimaa','111111111',context);
+    Login(textControllerName.text,
+        textControllerNationalCode.text,
+        textControllerNationalPass.text,context);
+
     if(Data!=null)
     {
       if(Data.success)
       {
-        // if(Data.data.departmentId==1)
-        if(Data.data!.departmentId==36)
+
+        await  LoginInApp(textControllerName.text,
+            textControllerNationalCode.text,Data.data!.departmentId,
+            true,
+            textControllerNationalPass.text,Data.data!.id.toString(),Data.data!.isOnline);
+        if(Data.data!.departmentId==1)
         {
+
           // ignore: use_build_context_synchronously
           GoNextPage(context,ScreenEms());
         }
@@ -93,6 +104,22 @@ class _ScreenLoginState extends State<ScreenLogin> {
           GoNextPage(context,ScreenReception());
         }
 
+        if(Data.data?.departmentId==7)
+        {
+          GoNextPage(context,ScreenResident(context));
+        }
+        if(Data.data?.departmentId==6)
+        {
+          // ignore: use_build_context_synchronously
+          GoNextPageGameOver(context,ScreenLaboratory());
+        }
+
+        if(Data.data?.departmentId==8)
+        {
+          // ignore: use_build_context_synchronously
+          GoNextPageGameOver(context,ScreenStrock());
+        }
+
       }else{
         // ignore: use_build_context_synchronously
         ShowErrorMsg(context,Data.message);
@@ -103,12 +130,11 @@ class _ScreenLoginState extends State<ScreenLogin> {
   var textControllerName=TextEditingController();
 
   var textControllerNationalCode=TextEditingController();
+  var textControllerNationalPass=TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    textControllerName.text="test";
-    textControllerNationalCode.text="8888888888";
   }
 
   @override
@@ -146,7 +172,6 @@ class _ScreenLoginState extends State<ScreenLogin> {
                               child: Directionality(
                                 textDirection: TextDirection.rtl,
                                 child: TextField(
-                                  maxLines: 1,
                                   keyboardType: TextInputType.text,
                                   controller: textControllerName,
                                   decoration: InputDecoration(
@@ -176,6 +201,27 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                   controller: textControllerNationalCode,
                                   decoration: InputDecoration(
                                     labelText: 'کد ملی',
+                                    labelStyle: TextStyle(
+                                        color: ColorApp
+                                    ),
+                                    counterText: "",
+                                    enabledBorder: outlinedBorderBlack,
+                                    focusedBorder: outlinedBorderPurple,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: TextField(
+                                  maxLines: 1,
+                                  maxLength: 10,
+                                  keyboardType: TextInputType.name,
+                                  controller: textControllerNationalPass,
+                                  decoration: InputDecoration(
+                                    labelText: 'رمز عبور',
                                     labelStyle: TextStyle(
                                         color: ColorApp
                                     ),
@@ -229,6 +275,12 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                   fontWeight: FontWeight.bold),),
                           )),
                     ),
+                    SizedBox(height: 16,),
+                    InkWell(
+                        onTap: (){
+                          GoNextPage(context, ScreenRigester());
+                        },
+                        child: TextApp('ثبت نام نکرده اید ؟', 16, Colors.black54, true)),
                     SizedBox(height: 32,),
                     TextApp(VersionApp,12, Colors.black54, true),
                     SizedBox(height: 8,),

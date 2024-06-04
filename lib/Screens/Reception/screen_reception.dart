@@ -270,15 +270,8 @@ class _ScreenReceptionState extends State<ScreenReception> {
 
 
 
-
-
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatient(formattedDate,context,refresh);
-
-
-
-
-
+    var Data= await ApiServiceReception.ListPatient(formattedDate,context);
     if(Data!=null)
     {
       if(Data.success)

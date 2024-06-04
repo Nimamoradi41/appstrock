@@ -13,15 +13,8 @@ import '../Resident/ScreenFormNIHS.dart';
 
 class ScreenFormLaboratory extends StatefulWidget {
   late void Function(List<Map<String, dynamic>>) onClose;
-  ScreenFormLaboratory(this.onClose,
-      this.ISEdit,this.Bun,this.Cr,this.PLT,this.PT,this.INR,this.Trop);
+  ScreenFormLaboratory(this.onClose,this.ISEdit);
   bool ISEdit;
-  String Bun;
-  String Cr;
-  String PLT;
-  String PT;
-  String INR;
-  String Trop;
   @override
   _ExamFormState createState() => _ExamFormState();
 }
@@ -31,12 +24,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
   @override
   void initState() {
     super.initState();
-    textControllerBun.text=widget.Bun.toString();
-    textControllerCr.text=widget.Cr.toString();
-    textControllerPLT.text=widget.PLT.toString();
-    textControllerPT.text=widget.PT.toString();
-    textControllerINR.text=widget.INR.toString();
-    textControllerTrop.text=widget.Trop.toString();
+
   }
 
   Future Run()async{

@@ -1,3 +1,6 @@
+import 'package:appstrock/Screens/Laboratory/screen_Laboratory.dart';
+import 'package:appstrock/Screens/Resident/screen_resident.dart';
+import 'package:appstrock/Screens/Strok/ScreenStrock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
@@ -63,24 +66,34 @@ class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
       {
         if(Data.success)
           {
+
+            await  LoginInApp(widget.Name,widget.NatiCode,widget.TypUser
+                ,true,
+                widget.Pass,widget.Id,false);
             if(widget.TypUser==1)
             {
-              await  LoginInApp(widget.Name,widget.NatiCode,1,true,
-                  widget.Pass,widget.Id);
               // ignore: use_build_context_synchronously
               GoNextPageGameOver(context,ScreenEms());
-
-
             }
             if(widget.TypUser==2)
             {
-
-              await  LoginInApp(widget.Name,widget.NatiCode,2,true,
-                  widget.Pass,widget.Id);
-
-
               // ignore: use_build_context_synchronously
               GoNextPageGameOver(context,Screen_Teriazh());
+            }
+            if(widget.TypUser==7)
+            {
+              // ignore: use_build_context_synchronously
+              GoNextPageGameOver(context,ScreenResident(context));
+            }
+            if(widget.TypUser==6)
+            {
+              // ignore: use_build_context_synchronously
+              GoNextPageGameOver(context,ScreenLaboratory());
+            }
+            if(widget.TypUser==8)
+            {
+              // ignore: use_build_context_synchronously
+              GoNextPageGameOver(context,ScreenStrock());
             }
           }else{
           ShowErrorMsg(context,Data.message);

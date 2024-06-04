@@ -4,9 +4,9 @@ import '../../Reception/Model/ModelPatient.dart';
 
 
 
-class ProviderResidentDetaile extends ChangeNotifier{
+class ProviderStrok extends ChangeNotifier{
 
-
+  List<ModelPatient> ListItemsPatient=[];
   late ModelPatient? PatientItem= ModelPatient(id: 14, fullName: 'Ahmad bagheri',
       nationalCode: '4845154444', age: '34', gender: 'Female',
       timeOfAddToSystem: '14:30', dateOfAddToSystem: '1402/01/01',
@@ -28,11 +28,19 @@ class ProviderResidentDetaile extends ChangeNotifier{
       bun: '', cr: '', plt: '', pt: '',
       ptt: '', inr: '', trop: false);
   bool status=false;
-   void setItems(ModelPatient newitem)
+  void setItem(ModelPatient newitem)
+  {
+    PatientItem=newitem;
+    notifyListeners();
+  }
+
+   void setItems(List<ModelPatient> newitem)
    {
-     PatientItem=newitem;
+     ListItemsPatient=newitem;
      notifyListeners();
    }
+
+
 
   void setstatus(bool newst)
   {

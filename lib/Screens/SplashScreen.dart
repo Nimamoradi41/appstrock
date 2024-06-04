@@ -1,7 +1,9 @@
 import 'package:appstrock/Screens/Autentication/ApiServiceAutentication.dart';
+import 'package:appstrock/Screens/Autentication/ScreenLogin.dart';
 import 'package:appstrock/Screens/Autentication/ScreenRigester.dart';
 import 'package:appstrock/Screens/Ems/screen_ems.dart';
 import 'package:appstrock/Screens/Reception/screen_reception.dart';
+import 'package:appstrock/Screens/Resident/screen_resident.dart';
 import 'package:appstrock/Screens/Teriazh/screen_teriazh.dart';
 import 'package:appstrock/Widgets/TextApp.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Constants.dart';
+import 'Laboratory/screen_Laboratory.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -23,37 +26,27 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future Run()async{
      // اول چک بکنه که قبلا لاگین کرده با نه اگر بلگین کرده بود رکوست لاگین بزنه در غیر این صورت بعد یک تاخیر 2 ثانیه ببرش توی صفحه ثبت نام
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-
     var Login=false;
     var TypeUser=1;
-
     if(prefs.getBool("Login")!=null)
       {
-        print('test');
         Login=prefs.getBool("Login")!;
         print(Login.toString());
         TypeUser=prefs.getInt("TypeUser")!;
       }
-
-
-
-
-
-
     if(Login)
       {
         var Name=  prefs.getString("Name");
         var Code=prefs.getString("Code");
+        var Pass=prefs.getString("Pass");
 
         print(Name);
         print(Code);
         print('Code');
         print('Name');
        // ignore: use_build_context_synchronously
-       var LoginUser= await ApiServiceAutentication.Login(Name!, Code!, context);
+       var LoginUser= await ApiServiceAutentication.Login(Name!, Code!,Pass!, context);
        if(LoginUser!=null)
          {
            if(LoginUser.success)
@@ -75,6 +68,18 @@ class _SplashScreenState extends State<SplashScreen> {
                  GoNextPageGameOver(context,ScreenReception());
                }
 
+               if(LoginUser.data?.departmentId==7)
+               {
+                 // ignore: use_build_context_synchronously
+                 GoNextPageGameOver(context,ScreenResident(context));
+               }
+
+               if(LoginUser.data?.departmentId==6)
+               {
+                 // ignore: use_build_context_synchronously
+                 GoNextPageGameOver(context,ScreenLaboratory());
+               }
+
              }
            else
            {
@@ -84,11 +89,16 @@ class _SplashScreenState extends State<SplashScreen> {
          }
       }else{
       Future.delayed(const Duration(seconds: 2), () {
-        GoNextPageGameOver(context, ScreenRigester());
+        GoNextPageGameOver(context, ScreenLogin());
       });
     }
 
   }
+
+
+
+
+
   @override
   void initState() {
     super.initState();

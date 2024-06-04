@@ -1,5 +1,7 @@
+import 'package:appstrock/Screens/Laboratory/ScreenFormLaboratory.dart';
 import 'package:appstrock/Screens/Resident/ApiServiceResident.dart';
 import 'package:appstrock/Screens/Resident/ScreenFormNIHS.dart';
+import 'package:appstrock/Screens/Resident/ScreenFormTimeInjection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_bdaya/flutter_datetime_picker_bdaya.dart';
 import 'package:provider/provider.dart';
@@ -17,15 +19,8 @@ import 'ScreenFormIsNot724.dart';
 class ScreenDetailPatient extends StatefulWidget {
 
   ScreenDetailPatient(this.modelPatient,this.MainCtx);
-  
-
-
-
-
-
   ModelPatient modelPatient;
   BuildContext MainCtx;
-
   @override
   State<ScreenDetailPatient> createState() => _ScreenDetailPatientState();
 }
@@ -38,41 +33,34 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
 
 
     DateTime? TimeStart;
-    var Flag= await   ShowAllow(context,'آیا از CT مطمئن هستید ؟ ');
+    var Flag= await  ShowAllow(context,'آیا از CT مطمئن هستید ؟ ');
     if(Flag)
       {
 
 
 
+
+
+
+
         ShowLoadingApp(context);
-        Future.delayed(Duration(seconds: 3),(){
-              widget.modelPatient.needToCT=true;
-              Notifi.setItems(widget.modelPatient);
-              Navigator.pop(context);
-              // ignore: use_build_context_synchronously
-              ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
-        });
+        // ignore: use_build_context_synchronously
+        var Data= await ApiServiceResident.NeedToCT(widget.modelPatient.id.toString(),context);
 
-
-
-        // ShowLoadingApp(context);
-        // // ignore: use_build_context_synchronously
-        // var Data= await ApiServiceResident.NeedToCT(widget.modelPatient.id.toString(),context);
-        //
-        // if(Data!=null)
-        // {
-        //   if(Data.success)
-        //   {
-        //     widget.modelPatient.needToCT=true;
-        //     Notifi.setItems(widget.modelPatient);
-        //     Navigator.pop(context);
-        //     // ignore: use_build_context_synchronously
-        //     ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
-        //   }else{
-        //     // ignore: use_build_context_synchronously
-        //     ShowErrorMsg(context, Data.message);
-        //   }
-        // }
+        if(Data!=null)
+        {
+          if(Data.success)
+          {
+            widget.modelPatient.needToCT=true;
+            Notifi.setItems(widget.modelPatient);
+            Navigator.pop(context);
+            // ignore: use_build_context_synchronously
+            ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
+          }else{
+            // ignore: use_build_context_synchronously
+            ShowErrorMsg(context, Data.message);
+          }
+        }
 
 
       }
@@ -84,31 +72,31 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
     if(Res)
     {
       ShowLoadingApp(context);
-      Future.delayed(Duration(seconds: 3),(){
-        widget.modelPatient.needToMRI=true;
-        Notifi.setItems(widget.modelPatient);
-        Navigator.pop(context);
-        // ignore: use_build_context_synchronously
-        ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
-      });
+      // Future.delayed(Duration(seconds: 3),(){
+      //   widget.modelPatient.needToMRI=true;
+      //   Notifi.setItems(widget.modelPatient);
+      //   Navigator.pop(context);
+      //   // ignore: use_build_context_synchronously
+      //   ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
+      // });
 
       // ignore: use_build_context_synchronously
-      // var Data= await ApiServiceResident.NeedToMRI(widget.modelPatient.id.toString(),context);
-      //
-      // if(Data!=null)
-      // {
-      //   if(Data.success)
-      //   {
-      //     widget.modelPatient.needToMRI=true;
-      //     Notifi.setItems(widget.modelPatient);
-      //     Navigator.pop(context);
-      //     // ignore: use_build_context_synchronously
-      //     ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
-      //   }else{
-      //     // ignore: use_build_context_synchronously
-      //     ShowErrorMsg(context, Data.message);
-      //   }
-      // }
+      var Data= await ApiServiceResident.NeedToMRI(widget.modelPatient.id.toString(),context);
+
+      if(Data!=null)
+      {
+        if(Data.success)
+        {
+          widget.modelPatient.needToMRI=true;
+          Notifi.setItems(widget.modelPatient);
+          Navigator.pop(context);
+          // ignore: use_build_context_synchronously
+          ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
+        }else{
+          // ignore: use_build_context_synchronously
+          ShowErrorMsg(context, Data.message);
+        }
+      }
 
 
 
@@ -137,8 +125,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
 
 
   }
-
-
   Future IsNot724()async{
 
 
@@ -175,7 +161,31 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
 
 
   }
+  Future AddResean(bool MisdiagnosisOfTriage,bool MisdiagnosisOfEms,bool OverTime)async{
+    ShowLoadingApp(context);
+    // ignore: use_build_context_synchronously
 
+    var Data= await ApiServiceResident.ReasonsForIsNot724(
+      widget.modelPatient.id.toString(),
+        context,MisdiagnosisOfTriage,MisdiagnosisOfEms,OverTime);
+
+    Navigator.pop(context);
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        widget.modelPatient.isNot724=true;
+        widget.modelPatient.is724IsComplete=true;
+        Notifi.setItems(widget.modelPatient);
+        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+
+
+  }
   AddReasonNot724(){
     showModalBottomSheet(context: context,
         shape: RoundedRectangleBorder(
@@ -187,22 +197,69 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
         children: [
           Container(
               margin: EdgeInsets.only(top: 16),
-              child:   ScreenFormIsNot724((pa) async{
-                Navigator.pop(context);
-                ShowLoadingApp(context);
-                await Future.delayed(Duration(seconds: 2));
-                widget.modelPatient.AddReasonNot724=true;
-                Notifi.setItems(widget.modelPatient);
-                Navigator.pop(context);
-                // ignore: use_build_context_synchronously
-                ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-
+              child:   ScreenFormIsNot724((pa)
+              async{
+                AddResean(pa[0]['selected_answer']!,
+                    pa[1]['selected_answer']!,
+                    pa[2]['selected_answer']!);
               })),
         ],
       );
 
     });
   }
+
+  AddTimeInjection(){
+    showModalBottomSheet(context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+        ),
+        builder: (ctx){
+          return  Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                  margin: EdgeInsets.only(top: 16),
+                  child:   ScreenFormTimeInjection((pa)
+                  async{
+
+                    RequestAddTimeInjection(pa[0]['selected_answer'].toString());
+
+                  })),
+            ],
+          );
+
+        });
+  }
+
+  Future  RequestAddTimeInjection(String Time)async{
+
+
+    ShowLoadingApp(context);
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceResident.TimeOfInjection(widget.modelPatient.id.toString(),context,Time);
+    Navigator.pop(context);
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+
+        widget.modelPatient.TimeOfInjection=Time;
+
+
+        Notifi.setItems(widget.modelPatient);
+
+
+        // ignore: use_build_context_synchronously
+        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+
+  }
+
 
 
 Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
@@ -243,8 +300,9 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
       ShowErrorMsg(context, Data.message);
     }
   }
-
 }
+
+
 
   Add724(){
     showModalBottomSheet(context: context,
@@ -300,8 +358,6 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
 
         });
   }
-
-
   @override
   void dispose() {
     _controller.dispose(); // رها کردن منابع انیمیشن کنترلر
@@ -343,7 +399,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
             width: wid,
             height: double.infinity,
             color: BackGroundApp,
-            child:   Stack(
+            child: Stack(
               children: [
                 Container(
                   width: wid,
@@ -431,7 +487,6 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                 ],
                               ),
                             ),
-
                           ],
                         ),
                       )
@@ -511,7 +566,6 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                   ],
                                 ),
                               ),
-
                             ],
                           ),
                         ),
@@ -521,10 +575,6 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                             decoration: MainDecoration,
                             child: Column(
                               children: [
-
-
-
-
                                  Expanded(
                                    child: SingleChildScrollView(
                                      child: Column(
@@ -536,7 +586,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                               TextApp(widget.modelPatient.timeOfAddToSystem.isEmpty  ? 'نامشخص':widget.modelPatient.timeOfAddToSystem, 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  زمان ثبت در سیسیتم', 14, ColorTitleText, false))),
+                                                  child: TextApp(' :  زمان ثبت در سیستم', 14, ColorTitleText, false))),
                                             ],
                                           ),
                                         ),
@@ -547,25 +597,22 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                               TextApp(widget.modelPatient.dateOfAddToSystem == null ? 'نامشخص' : widget.modelPatient.dateOfAddToSystem!, 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  تاریخ ثبت در سیسیتم', 14, ColorTitleText, false))),
+                                                  child: TextApp(' :  تاریخ ثبت در سیستم', 14, ColorTitleText, false))),
                                             ],
                                           ),
                                         ),
+                                        widget.modelPatient.signsStartTime!.isNotEmpty?
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.needToMRI ? ' اعلان MRI':
-                                              widget.modelPatient.needToCT ? ' اعلان CT' :
-                                              widget.modelPatient.isNot724 ? 'کد 724 نیست' : 'نامشخص'
-
-                                                  , 16, ColorTextbody, true),
+                                              TextApp("${widget.modelPatient.signsStartTime} ${widget.modelPatient.signsStartDate} ", 14, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  وضعیت بیمار', 14, ColorTitleText, false))),
+                                                  child: TextApp(' :  زمان و شروع تاریخ علائم ', 14, ColorTitleText, false))),
                                             ],
                                           ),
-                                        ),
+                                        ):Container(),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
@@ -588,15 +635,51 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.IsLab == null  ?'تکمیل نشده است' :
-                                              widget.modelPatient.IsLab! ?
-                                              'تکمیل شده است':
-                                              'تکمیل نشده است'
+                                              InkWell(
+                                                onTap: (){
+                                                  GoNextPage(context, ScreenFormLaboratory((p0){
+                                                    // AddLab(p0);
+                                                  },false,
+                                                      widget.modelPatient.bun.toString(),
+                                                      widget.modelPatient.bun.toString(),
+                                                      widget.modelPatient.cr.toString(),
+                                                      widget.modelPatient.plt.toString(),
+                                                      widget.modelPatient.inr.toString(),
+                                                      widget.modelPatient.trop.toString()
+                                                  ));
+                                                },
+                                                child: TextApp(widget.modelPatient.labIsComplete == null  ?'تکمیل نشده است' :
+                                                widget.modelPatient.labIsComplete! ?
+                                                'تکمیل شده است':
+                                                'تکمیل نشده است'
 
-                                                  , 16, ColorTextbody, true),
-                                              Expanded(child: Align(
+                                                    , 16, ColorTextbody, true),
+                                              ),
+                                              Expanded(child:
+                                              Align(
                                                   alignment: Alignment.centerRight,
                                                   child: TextApp(' :  فرم آزمایشگاه', 14, ColorTitleText, false))),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              InkWell(
+                                                onTap: (){
+                                                  AddTimeInjection();
+                                                },
+                                                child: TextApp(widget.modelPatient.TimeOfInjection == null  ?'تکمیل نشده است' :
+                                                widget.modelPatient.TimeOfInjection.toString().isEmpty ?
+                                                'تکمیل شده است':
+                                                widget.modelPatient.TimeOfInjection.toString()
+
+                                                    , 16, ColorTextbody, true),
+                                              ),
+                                              Expanded(child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' :  زمان تزریق', 14, ColorTitleText, false))),
                                             ],
                                           ),
                                         )
@@ -611,10 +694,8 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                     Expanded(child: Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                       child: ElevatedButton(
-
                                           onPressed: (){
                                             IsNot724();
-
                                           },
                                           style: ButtonStyle(
                                               backgroundColor: MaterialStateProperty.all(BtnColorgreen),
@@ -733,7 +814,24 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                          Navigator.pop(context);
 
                                          AddNIHS(p0);
-                                       },widget.modelPatient.nihsIsComplete==null? false:widget.modelPatient.nihsIsComplete!));
+                                       },widget.modelPatient.nihsIsComplete!,
+                                           widget.modelPatient.n_1_a!,
+                                           widget.modelPatient.n_1_b!,
+                                           widget.modelPatient.n_1_c!,
+                                           widget.modelPatient.n_2!,
+                                           widget.modelPatient.n_3!,
+                                           widget.modelPatient.n_4!,
+                                           widget.modelPatient.n_5_a!,
+                                           widget.modelPatient.n_5_b!,
+                                           widget.modelPatient.n_6_a!,
+                                           widget.modelPatient.n_6_b!,
+                                           widget.modelPatient.n_7!,
+                                           widget.modelPatient.n_8!,
+                                           widget.modelPatient.n_9!,
+                                           widget.modelPatient.n_10!,
+                                           widget.modelPatient.n_11!,
+
+                                       ));
                                       },
                                       style: ButtonStyle(
                                           backgroundColor: widget.modelPatient.nihsIsComplete==true?
@@ -769,9 +867,8 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                       )),
                                 ):Container(),
                                 SizedBox(height: 8,),
-
-
-                                widget.modelPatient.is724IsComplete! && widget.modelPatient.isNot724!  ?
+                                widget.modelPatient.is724IsComplete!
+                                    && widget.modelPatient.isNot724!  ?
                                 Container(
                                   width: wid,
                                   margin: const EdgeInsets.all(8),
@@ -816,13 +913,35 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),),
                                       )),
-                                ):Container(),
-
-
-
-
-
-                                    // :Container(),
+                                ):
+                                Container(),
+                                Container(
+                                  width: wid,
+                                  margin: const EdgeInsets.all(8),
+                                  child: ElevatedButton(
+                                      onPressed: (){
+                                        AddReasonNot724();
+                                      },
+                                      style: ButtonStyle(
+                                          backgroundColor:  MaterialStateProperty.all(ColorApp),
+                                          padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8.0),
+                                              )
+                                          )
+                                      ),
+                                      child:const Padding(
+                                        padding: EdgeInsets.all(10.0),
+                                        child: Text(
+                                             'ارسال عکس',
+                                          style: TextStyle(
+                                              color:
+                                              Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),),
+                                      )),
+                                ),
                                 SizedBox(height: 16,),
 
                               ],
@@ -837,7 +956,10 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                     bottom: 4,
                     right: 8,
                     left: 8,
-                    child: TextApp(VersionApp, 12, Colors.black54, true))
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextApp(VersionApp, 12, Colors.black54, true),
+                    ))
               ],
             ),
           ),

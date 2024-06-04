@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:appstrock/Screens/Reception/ApiServiceReception.dart';
 import 'package:appstrock/Screens/Reception/ProviderReception/ProviderReception.dart';
 
@@ -5,11 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'package:shamsi_date/shamsi_date.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
 import '../../Widgets/TextApp.dart';
+import '../Autentication/screen_EditProfile.dart';
 import '../Reception/Model/ModelPatient.dart';
+import '../SplashScreen.dart';
 import 'ScreenDetailPatient.dart';
 
 
@@ -44,26 +49,16 @@ class _ScreenResidentState extends State<ScreenResident> {
 
   late var Notifi=ProviderReception();
 
-  Future RunListP(BuildContext context,bool refresh) async
+
+  Future RunListP(BuildContext context) async
   {
     Jalali date=Jalali.now();
     String formattedDate =
         '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
 
-
-
-
-
-
-
-
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatient(formattedDate,context,refresh);
+    var Data= await ApiServiceReception.ListPatient(formattedDate,context);
 
-
-
-
-    print(Data.toJson());
 
     if(Data!=null)
     {
@@ -77,24 +72,99 @@ class _ScreenResidentState extends State<ScreenResident> {
     }
   }
 
+
+
+
+
+
+
+
+  late Timer _timer;
+
+
+  double FinalTime=0;
+  void startTimer() {
+    const oneSec =   Duration(seconds: 20);
+    _timer = Timer.periodic(
+      oneSec,
+          (Timer timer) {
+            RunListP(widget.MainContext);
+      },
+    );
+
+    GetInfo();
+    RunListP(widget.MainContext);
+
+  }
+
+
+
   Future   ChangShift(bool StatusNew,BuildContext context) async
   {
+
+
     var Flag=await ShowAllow(context,'آیا از تغییر شیفت خود مطمئن هستید ؟');
     if(Flag)
     {
       ShowLoadingApp(context);
-      await Future.delayed(Duration(seconds: 3));
-      Notifi.setstatus(StatusNew);
+      // ignore: use_build_context_synchronously
+      var Data= await ApiServiceReception.ChangeShiftStatus(context);
+      print(Data.toJson());
+
+      if(Data!=null)
+      {
+        if(Data.success)
+        {
+          Notifi.setstatus(Data.data!.isOnline);
+        }else{
+          // ignore: use_build_context_synchronously
+          ShowErrorMsg(context, Data.message);
+        }
+      }
+
       Navigator.pop(context);
+    }
+
+
+
+
+
+
+
+
+
+  }
+
+
+  Future GetInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(prefs.getBool('isOnline')!=null)
+    {
+      status=prefs.getBool('isOnline')!;
+      Notifi.setstatus(status);
+    }
+
+
+  }
+
+
+  Future ClearAllDate()async{
+    var Flag=await ShowAllow(context,'آیا میخواهید از حساب کاربری خود خارج شوید ؟');
+    if(Flag)
+    {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.clear();
+      GoNextPageGameOver(context, SplashScreen());
     }
   }
 
-
-  @override
+    @override
   void initState() {
     super.initState();
-    RunListP(widget.MainContext,false);
+    startTimer();
   }
+
+
   @override
   Widget build(BuildContext context) {
     Notifi=Provider.of<ProviderReception>(context);
@@ -114,7 +184,7 @@ class _ScreenResidentState extends State<ScreenResident> {
                   width: wid,
                   height: wid*0.25,
                   color: ColorApp,
-                  child: const Column(
+                  child:   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(width: 16,),
@@ -123,21 +193,31 @@ class _ScreenResidentState extends State<ScreenResident> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            RotatedBox(
-                              quarterTurns: 90,
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
+                            InkWell(
+                              onTap: (){
+                                ClearAllDate();
+                              },
+                              child: const RotatedBox(
+                                quarterTurns: 90,
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
+                                ),
                               ),
                             ),
-                            RotatedBox(
+                              RotatedBox(
                               quarterTurns: 0,
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Icon(Icons.person,color: Colors.white,size: 30,),
+                              child: InkWell(
+                                onTap: (){
+                                  GoNextPage(context, screen_EditProfile());
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Icon(Icons.person,color: Colors.white,size: 30,),
+                                ),
                               ),
                             ),
-                            Expanded(child:
+                            const Expanded(child:
                             Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Text(
@@ -210,10 +290,11 @@ class _ScreenResidentState extends State<ScreenResident> {
                           child: Consumer<ProviderReception>(
                             builder: (context,newstate,child){
                               ItemsP=newstate.ListItemsPatient;
+                              print('Count ');
+                              print(ItemsP.length.toString());
                               return ListView.builder(
                                 itemCount: ItemsP.length,
                                 itemBuilder: (ctx,item){
-                                  // return ItemPatient(wid: wid, ItemsP: ItemsP[item],);
                                   return InkWell(
                                       onTap: (){
                                         GoNextPage(context,ScreenDetailPatient(ItemsP[item],context));

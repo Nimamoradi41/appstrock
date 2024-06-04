@@ -20,6 +20,7 @@ import 'Screens/Autentication/ScreenCodeOtp.dart';
 import 'Screens/Autentication/ScreenLogin.dart';
 import 'Screens/Ems/screen_ems.dart';
 import 'Screens/Laboratory/ProviderLaboratory/ProviderLaboratoryDetail.dart';
+import 'Screens/Laboratory/ScreenFormLaboratory.dart';
 import 'Screens/Laboratory/ScreenLaboratoryDetailPatient.dart';
 import 'Screens/Laboratory/screen_Laboratory.dart';
 import 'Screens/Reception/ProviderReception/ProviderReception.dart';
@@ -32,6 +33,7 @@ import 'Screens/Resident/ScreenFormIs724.dart';
 import 'Screens/Resident/ScreenFormIsNot724.dart';
 import 'Screens/Resident/ScreenFormNIHS.dart';
 import 'Screens/SplashScreen.dart';
+import 'Screens/Strok/ProviderStrok/ProviderStrok.dart';
 import 'Screens/Teriazh/ProviderTeraizh.dart';
 import 'Screens/sickcarrier/ProviderSickCarrier/ProviderSickCarrier.dart';
 import 'Screens/sickcarrier/screen_sickcarrier.dart';
@@ -49,20 +51,17 @@ void main() {
         ChangeNotifierProvider(create: (context) => ProviderAtend()),
         ChangeNotifierProvider(create: (context) => ProviderAtendDetaile()),
         ChangeNotifierProvider(create: (context) => ProviderTeraizh()),
+        ChangeNotifierProvider(create: (context) => ProviderStrok()),
       ],
       child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
-
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -72,7 +71,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       // home: ScreenLogin());
       // home: ScreenRigester());
-      home: ScreenAtend(context));
+      // home: ScreenAtend(context));
       // home: ScreenProfile());
       // home: SplashScreen());
       // home: SplashScreen());
@@ -93,6 +92,14 @@ class _MyAppState extends State<MyApp> {
       //         AtendSeen: false, Residents: '', Atends: '', Fesharkhon: '', Ghandkhon: ''), context));
 
       // home: ScreenResident(context));
+      // home: ScreenResident(context));
+      // home: ScreenFormImage724());
+      home: SplashScreen());
+      // home: ScreenFormImage724());
+      // home: ScreenEms());
+      // home: ScreenFormLaboratory((p0){
+      //   print('AA');
+      // },false));
       //   home: ScreenFormIs724((p){
       //
       //   }));

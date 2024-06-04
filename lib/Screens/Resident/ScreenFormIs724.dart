@@ -204,7 +204,8 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
   }
 
   @override
-  void initState() {
+  void initState()
+  {
     super.initState();
     DateNowKnow=Jalali.now();
     DateNowKnowStr=Convert_DATE(DateNowKnow.day.toString()
@@ -235,229 +236,51 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
     wid=wid>600?600:wid;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextApp('ثبت کد 724',18,Colors.black87,true),
-            ],
-          ),
-          SizedBox(height: 16,),
-          Row(
-            children: [
-              SizedBox(width: 8,),
-              Expanded(child: TextApp2('زمان شروع  علائم مشخص نیست',16,Colors.black87,true)),
-              SizedBox(width: 8,),
-              Checkbox(
-                value: _checkBox1,
-                fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                onChanged: (value) {
-                  setState(() {
-                    _checkBox1 = value!;
-                  });
-                },
-              ),
-              SizedBox(width: 4,)
-            ],
-          ),
-          SizedBox(height: 16,),
-          Container(
-            width: wid,
-            height: 2,
-            color: Colors.black12,
-            margin: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
-          ),
-          SizedBox(height: 16,),
-
-          !_checkBox1 ?
-          Row(
-            children: [
-              Expanded(child: InkWell(
-                onTap: (){
-                  PersianDateCalender(!_checkBox1,false);
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    TextApp2('تاریخ شروع علائم',14,Colors.black54,true),
-
-                    SizedBox(height: 8,),
-
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.black12,width: 2)
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Column(
-                          children: <Widget>[
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(width: 8,),
-                                Expanded(child: TextApp(DateNowKnowStr,16,Colors.black87,true)),
-                                SizedBox(width: 8,),
-                                Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
-                                SizedBox(width: 4,)
-                              ],
-                            ),
-
-
-
-
-
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )),
-              SizedBox(width: 16,),
-              Expanded(child: InkWell(
-                onTap: (){
-                  PersianTimeCalender(!_checkBox1,false);
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    TextApp2('زمان شروع علائم',14,Colors.black54,true),
-                    SizedBox(height: 8,),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.black12,width: 2)
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              children: [
-                                SizedBox(width: 8,),
-                                Expanded(child: TextApp(TimeNowKnowStr,16,Colors.black87,true)),
-                                SizedBox(width: 8,),
-                                Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
-                                SizedBox(width: 4,)
-                              ],
-                            ),
-
-
-
-
-
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )),
-            ],
-          ):
-          Column(
-            children: [
+    return Center(
+      child: Container(
+        width: wid,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(child: InkWell(
-                    onTap: (){
-                      PersianDateCalender(!_checkBox1,true);
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        TextApp2('LKW Date',14,Colors.black54,true),
-
-                        SizedBox(height: 8,),
-
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.black12,width: 2)
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: Column(
-                              children: <Widget>[
-
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(width: 8,),
-                                    Expanded(child: TextApp(DateNowUnKnowLKWStr,16,Colors.black87,true)),
-                                    SizedBox(width: 8,),
-                                    Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
-                                    SizedBox(width: 4,)
-                                  ],
-                                ),
-
-
-
-
-
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )),
-                  SizedBox(width: 16,),
-                  Expanded(child: InkWell(
-                    onTap: (){
-                      PersianTimeCalender(!_checkBox1,true);
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        TextApp2('LKW Time',14,Colors.black54,true),
-                        SizedBox(height: 8,),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.black12,width: 2)
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: [
-                                    SizedBox(width: 8,),
-                                    Expanded(child: TextApp(TimeNowUnKnowLKWStr,16,Colors.black87,true)),
-                                    SizedBox(width: 8,),
-                                    Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
-                                    SizedBox(width: 4,)
-                                  ],
-                                ),
-
-
-
-
-
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )),
+                  TextApp('ثبت کد 724',18,Colors.black87,true),
                 ],
               ),
-              SizedBox(height: 8,),
+              SizedBox(height: 16,),
+              Row(
+                children: [
+                  SizedBox(width: 8,),
+                  Expanded(child: TextApp2('زمان شروع  علائم مشخص نیست',16,Colors.black87,true)),
+                  SizedBox(width: 8,),
+                  Checkbox(
+                    value: _checkBox1,
+                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                    onChanged: (value) {
+                      setState(() {
+                        _checkBox1 = value!;
+                      });
+                    },
+                  ),
+                  SizedBox(width: 4,)
+                ],
+              ),
+              SizedBox(height: 16,),
+              Container(
+                width: wid,
+                height: 2,
+                color: Colors.black12,
+                margin: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+              ),
+              SizedBox(height: 16,),
+
+              !_checkBox1 ?
               Row(
                 children: [
                   Expanded(child: InkWell(
@@ -467,7 +290,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        TextApp2('FSS Date',14,Colors.black54,true),
+                        TextApp2('تاریخ شروع علائم',14,Colors.black54,true),
 
                         SizedBox(height: 8,),
 
@@ -486,7 +309,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     SizedBox(width: 8,),
-                                    Expanded(child: TextApp(DateNowUnKnowFssStr,16,Colors.black87,true)),
+                                    Expanded(child: TextApp(DateNowKnowStr,16,Colors.black87,true)),
                                     SizedBox(width: 8,),
                                     Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
                                     SizedBox(width: 4,)
@@ -512,7 +335,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        TextApp2('FSS Time',14,Colors.black54,true),
+                        TextApp2('زمان شروع علائم',14,Colors.black54,true),
                         SizedBox(height: 8,),
                         Container(
                           decoration: BoxDecoration(
@@ -524,11 +347,10 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
                             padding: const EdgeInsets.all(6.0),
                             child: Column(
                               children: <Widget>[
-
                                 Row(
                                   children: [
                                     SizedBox(width: 8,),
-                                    Expanded(child: TextApp(TimeNowUnKnowFssStr,16,Colors.black87,true)),
+                                    Expanded(child: TextApp(TimeNowKnowStr,16,Colors.black87,true)),
                                     SizedBox(width: 8,),
                                     Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
                                     SizedBox(width: 4,)
@@ -547,65 +369,249 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
                     ),
                   )),
                 ],
+              ):
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(child: InkWell(
+                        onTap: (){
+                          PersianDateCalender(!_checkBox1,true);
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            TextApp2('LKW Date',14,Colors.black54,true),
+
+                            SizedBox(height: 8,),
+
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: Colors.black12,width: 2)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Column(
+                                  children: <Widget>[
+
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(width: 8,),
+                                        Expanded(child: TextApp(DateNowUnKnowLKWStr,16,Colors.black87,true)),
+                                        SizedBox(width: 8,),
+                                        Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
+                                        SizedBox(width: 4,)
+                                      ],
+                                    ),
+
+
+
+
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                      SizedBox(width: 16,),
+                      Expanded(child: InkWell(
+                        onTap: (){
+                          PersianTimeCalender(!_checkBox1,true);
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            TextApp2('LKW Time',14,Colors.black54,true),
+                            SizedBox(height: 8,),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: Colors.black12,width: 2)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: [
+                                        SizedBox(width: 8,),
+                                        Expanded(child: TextApp(TimeNowUnKnowLKWStr,16,Colors.black87,true)),
+                                        SizedBox(width: 8,),
+                                        Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
+                                        SizedBox(width: 4,)
+                                      ],
+                                    ),
+
+
+
+
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                    ],
+                  ),
+                  SizedBox(height: 8,),
+                  Row(
+                    children: [
+                      Expanded(child: InkWell(
+                        onTap: (){
+                          PersianDateCalender(!_checkBox1,false);
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            TextApp2('FSS Date',14,Colors.black54,true),
+
+                            SizedBox(height: 8,),
+
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: Colors.black12,width: 2)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Column(
+                                  children: <Widget>[
+
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(width: 8,),
+                                        Expanded(child: TextApp(DateNowUnKnowFssStr,16,Colors.black87,true)),
+                                        SizedBox(width: 8,),
+                                        Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
+                                        SizedBox(width: 4,)
+                                      ],
+                                    ),
+
+
+
+
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                      SizedBox(width: 16,),
+                      Expanded(child: InkWell(
+                        onTap: (){
+                          PersianTimeCalender(!_checkBox1,false);
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            TextApp2('FSS Time',14,Colors.black54,true),
+                            SizedBox(height: 8,),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: Colors.black12,width: 2)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Column(
+                                  children: <Widget>[
+
+                                    Row(
+                                      children: [
+                                        SizedBox(width: 8,),
+                                        Expanded(child: TextApp(TimeNowUnKnowFssStr,16,Colors.black87,true)),
+                                        SizedBox(width: 8,),
+                                        Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
+                                        SizedBox(width: 4,)
+                                      ],
+                                    ),
+
+
+
+
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                    ],
+                  ),
+                ],
+              )
+              ,
+              SizedBox(height: 24,),
+
+              SizedBox(height: 120,),
+              Spacer(),
+              Center(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        child: ElevatedButton(onPressed: (){
+                           Navigator.pop(context);
+                        },
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(Colors.white),
+                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        side:  const BorderSide(color: ColorApp,width: 2)
+                                    )
+                                )
+                            ),
+                            child:Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: TextApp('بستن',16,ColorApp,true),
+                            )),
+                      ),
+                    ),
+                    SizedBox(width: 8,),
+                    Expanded(
+                      child: Container(
+                        child: ElevatedButton(onPressed: (){
+                          Run();
+                        },
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(ColorApp),
+                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    )
+                                )
+                            ),
+                            child:Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: TextApp('ثبت اطلاعات',16,Colors.white,true),
+                            )),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              SizedBox(height: 8,),
+
             ],
-          )
-          ,
-          SizedBox(height: 24,),
-
-          SizedBox(height: 120,),
-          Spacer(),
-          Center(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    child: ElevatedButton(onPressed: (){
-                       Navigator.pop(context);
-                    },
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.white),
-                            padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    side:  const BorderSide(color: ColorApp,width: 2)
-                                )
-                            )
-                        ),
-                        child:Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: TextApp('بستن',16,ColorApp,true),
-                        )),
-                  ),
-                ),
-                SizedBox(width: 8,),
-                Expanded(
-                  child: Container(
-                    child: ElevatedButton(onPressed: (){
-                      Run();
-                    },
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(ColorApp),
-                            padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                )
-                            )
-                        ),
-                        child:Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: TextApp('ثبت اطلاعات',16,Colors.white,true),
-                        )),
-                  ),
-                ),
-              ],
-            ),
           ),
-          SizedBox(height: 8,),
-
-        ],
+        ),
       ),
     );
   }

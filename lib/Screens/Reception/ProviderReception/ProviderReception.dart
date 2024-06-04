@@ -9,6 +9,8 @@ class ProviderReception extends ChangeNotifier{
   bool status=false;
    void setItems(List<ModelPatient> newitem)
    {
+     print('دیتا از here');
+     print(newitem.length.toString());
      ListItemsPatient=newitem;
      notifyListeners();
    }

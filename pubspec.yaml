@@ -46,6 +46,8 @@ dependencies:
   dio: any
   flutter_datetime_picker_bdaya: ^3.0.2
   persian_datetime_picker : any
+#  image_picker_web: any
+  image_picker: any
 
 
   # The following adds the Cupertino Icons font to your application.

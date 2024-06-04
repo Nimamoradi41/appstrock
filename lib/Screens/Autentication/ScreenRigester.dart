@@ -35,15 +35,15 @@ class _ScreenRigesterState extends State<ScreenRigester> {
     'پذیرش',
     'بیماربر',
     'دکتر متخصص',
-    'آزماشیگاه',
+    'آزمایشگاه',
     'رزیدنت',
+    'استروک',
   ];
 
 
 
   bool IsLoading=false;
   Future RunRegister(BuildContext context)async{
-
     // GoNextPage(context,ScreenEms(true,context,'نیما مرادی احدی میسلیمانی','1234567894'));
     if(textControllerName.text.isEmpty)
       {
@@ -67,7 +67,6 @@ class _ScreenRigesterState extends State<ScreenRigester> {
 
     if(textControllerPhoneNumber.text.isEmpty)
     {
-
       ShowErrorMsg(context,'شماره تلفن را وارد کنید');
       return;
     }
@@ -77,7 +76,6 @@ class _ScreenRigesterState extends State<ScreenRigester> {
       ShowErrorMsg(context,'شماره تلفن اشتباه است');
       return;
     }
-
 
     if(textControllerNationalCode.text.length<10||textControllerNationalCode.text.length>10)
     {
@@ -95,7 +93,6 @@ class _ScreenRigesterState extends State<ScreenRigester> {
 
     if(!textControllerPhoneNumber.text.startsWith("09"))
     {
-
       ShowErrorMsg(context,'شماره تلفن اشتباه است');
       return;
     }
@@ -116,13 +113,15 @@ class _ScreenRigesterState extends State<ScreenRigester> {
 
 
 
-    // GoNextPage(context,ScreenCodeOtp(textControllerPhoneNumber.text.toString(),textControllerName.text.toString(),textControllerNationalCode.text.toString(),TypUser));
 
 
     // ignore: use_build_context_synchronously
     var Data=await ApiServiceAutentication.Rigester(textControllerName.text,
-        TypUser.toString(), textControllerNationalCode.text,
+        TypUser.toString(),
+        textControllerNationalCode.text,
         textControllerPhoneNumber.text,textControllerPassWord.text, context);
+
+
 
 
 
@@ -149,22 +148,16 @@ class _ScreenRigesterState extends State<ScreenRigester> {
 
 
   }
-
-
   var textControllerName=TextEditingController();
   var textControllerNationalCode=TextEditingController();
   var textControllerPhoneNumber=TextEditingController();
   var textControllerPassWord=TextEditingController();
 
+
+
   @override
   void initState() {
     super.initState();
-    textControllerName.text="Nimaa";
-    textControllerNationalCode.text="1747474747";
-    textControllerPhoneNumber.text="09909865595";
-    textControllerPassWord.text="1234";
-
-
   }
   @override
   Widget build(BuildContext context) {

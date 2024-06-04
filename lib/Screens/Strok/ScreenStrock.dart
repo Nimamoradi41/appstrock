@@ -1,38 +1,48 @@
-import 'package:appstrock/Screens/Atend/ProviderAtend/ProviderAtend.dart';
-import 'package:appstrock/Screens/Reception/ApiServiceReception.dart';
-import 'package:appstrock/Screens/Reception/ProviderReception/ProviderReception.dart';
+import 'dart:async';
 
+import 'package:appstrock/Screens/Laboratory/ScreenLaboratoryDetailPatient.dart';
+import 'package:appstrock/Screens/Reception/ApiServiceReception.dart';
+import 'package:appstrock/Screens/Strok/ScreenStrokDetailPatient.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:signalr_netcore/hub_connection.dart';
+import 'package:signalr_netcore/hub_connection_builder.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
 import '../../Widgets/TextApp.dart';
 import '../Autentication/screen_EditProfile.dart';
 import '../Reception/Model/ModelPatient.dart';
+import '../Reception/ProviderReception/ProviderReception.dart';
 import '../SplashScreen.dart';
-import 'ScreenDetailPatientAtend.dart';
 
 
 
 
-
-class ScreenAtend extends StatefulWidget {
-
-  late BuildContext MainContext;
+class ScreenStrock extends StatefulWidget {
 
 
-  ScreenAtend(this.MainContext);
+
 
   @override
-  State<ScreenAtend> createState() => _ScreenAtendState();
+  State<ScreenStrock> createState() => _ScreenLaboratoryState();
 }
 
-class _ScreenAtendState extends State<ScreenAtend> {
+class _ScreenLaboratoryState extends State<ScreenStrock> {
+  String  Name='';
+
+  String Code='';
+
+  late HubConnection connection;
+
+
   bool status=false;
+
+
 
   List<ModelPatient> ItemsP=[];
 
@@ -43,18 +53,16 @@ class _ScreenAtendState extends State<ScreenAtend> {
 
   String dropdownvalue = 'مرد';
 
-  late var Notifi=ProviderAtend();
+  late var Notifi=ProviderReception();
 
 
-
-
-
-
-  Future RunListP(BuildContext context,bool refresh) async
+  Future RunListP(BuildContext context) async
   {
     Jalali date=Jalali.now();
     String formattedDate =
         '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+    // چاپ تاریخ جلالی با فرمت مورد نظر
+    print('تاریخ جلالی فعلی: $formattedDate');
 
 
 
@@ -69,7 +77,6 @@ class _ScreenAtendState extends State<ScreenAtend> {
 
 
 
-    print(Data.toJson());
 
     if(Data!=null)
     {
@@ -77,14 +84,12 @@ class _ScreenAtendState extends State<ScreenAtend> {
       {
         Notifi.setItems(Data.data);
       }else{
-        // ignore: use_build_context_synchronously
-        ShowErrorMsg(context, Data.message);
+        showToast(Data.message,
+            position: StyledToastPosition.top,
+            context:context);
       }
     }
   }
-
-
-
 
 
 
@@ -123,15 +128,6 @@ class _ScreenAtendState extends State<ScreenAtend> {
 
 
   }
-  Future ClearAllDate()async{
-    var Flag=await ShowAllow(context,'آیا میخواهید از حساب کاربری خود خارج شوید ؟');
-    if(Flag)
-    {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.clear();
-      GoNextPageGameOver(context, SplashScreen());
-    }
-  }
 
 
   Future GetInfo() async {
@@ -144,17 +140,39 @@ class _ScreenAtendState extends State<ScreenAtend> {
 
 
   }
+  late Timer _timer;
+  void startTimer() {
+    const oneSec =   Duration(seconds: 20);
+    _timer = Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        RunListP(context);
+      },
+    );
+
+    GetInfo();
+    RunListP(context);
+
+  }
+  Future ClearAllDate()async{
+    var Flag=await ShowAllow(context,'آیا میخواهید از حساب کاربری خود خارج شوید ؟');
+    if(Flag)
+    {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.clear();
+      GoNextPageGameOver(context, SplashScreen());
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    GetInfo();
+    startTimer();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
-    Notifi=Provider.of<ProviderAtend>(context);
+    Notifi=Provider.of<ProviderReception>(context);
     double wid=MediaQuery.of(context).size.width;
     double hei=MediaQuery.of(context).size.height;
     wid=wid>600?600:wid;
@@ -174,7 +192,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
                   child:   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(width: 16,),
+                      const SizedBox(width: 16,),
                       Expanded(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,7 +214,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
                               quarterTurns: 0,
                               child: InkWell(
                                 onTap: (){
-                                  GoNextPage(context, screen_EditProfile());
+                                  GoNextPage(context,   screen_EditProfile());
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.all(16.0),
@@ -208,7 +226,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
                             Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Text(
-                                  'دکتر متخصص',
+                                  'استروک',
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                       color: Colors.white,
@@ -216,6 +234,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
                                       fontSize: 16
                                   ),
                                 )
+
                               // TextApp('فوریت های پزشکی', 16, Colors.white, true),
                             )),
                           ],
@@ -238,7 +257,6 @@ class _ScreenAtendState extends State<ScreenAtend> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-
                                 Row(
                                   children: [
                                     SizedBox(width: 8,),
@@ -252,6 +270,9 @@ class _ScreenAtendState extends State<ScreenAtend> {
                                             activeColor: Color(0xff38b000),
                                             onToggle: (val) {
                                               ChangShift(val,context);
+                                              // setState(() {
+                                              //   status = val;
+                                              // });
                                             },
                                           );
                                         },
@@ -266,40 +287,30 @@ class _ScreenAtendState extends State<ScreenAtend> {
                             ),
                           ),
                         ),
-
-
                         SizedBox(height: 24,),
-
                         Container(
                           height:  hei*0.68,
                           child: Consumer<ProviderReception>(
                             builder: (context,newstate,child){
                               ItemsP=newstate.ListItemsPatient;
-                              return Consumer<ProviderAtend>(
-                                builder: (context,newstate,child){
-                                  ItemsP=newstate.ListItemsPatient;
-                                  return ListView.builder(
-                                    itemCount: ItemsP.length,
-                                    itemBuilder: (ctx,item){
-                                      return InkWell(
-                                          onTap: (){
-                                            GoNextPage(context,ScreenDetailPatientAtend(ItemsP[item],context));
-                                          },
-                                          child: ItemPatientNew(wid: wid,ItemsP: ItemsP[item],));
+                              return ListView.builder(
+                                itemCount: ItemsP.length,
+                                itemBuilder: (ctx,item){
+                                  return InkWell(
+                                    onTap: (){
+                                       GoNextPage(context,
+                                           ScreenStrokDetailPatient(
+                                               ItemsP[item],context));
                                     },
+                                    child: ItemPatientNew(wid: wid, ItemsP: ItemsP[item],),
+                                    // child: ItemPatient(wid: wid),
                                   );
                                 },
-
                               );
                             },
 
                           ),
                         ),
-
-
-
-
-
 
                       ],
                     ),
@@ -318,3 +329,8 @@ class _ScreenAtendState extends State<ScreenAtend> {
     );
   }
 }
+
+
+
+
+

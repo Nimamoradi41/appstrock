@@ -1,5 +1,6 @@
 
 import 'package:appstrock/Screens/Ems/ApiServiceEms.dart';
+import 'package:appstrock/Screens/SplashScreen.dart';
 import 'package:appstrock/Widgets/TextApp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,22 +8,20 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'package:shamsi_date/shamsi_date.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Constants.dart';
+import '../Autentication/screen_EditProfile.dart';
+import '../Reception/ApiServiceReception.dart';
 import '../Reception/screen_reception.dart';
 import 'ProviderEms/ProviderEms.dart';
 
  class ScreenEms extends StatefulWidget {
-
-
-
-
    @override
   State<ScreenEms> createState() => _ScreenEmsState();
 }
 
 class _ScreenEmsState extends State<ScreenEms> {
    bool status=false;
-
    var items = [
      'مرد',
      'زن',
@@ -39,40 +38,51 @@ class _ScreenEmsState extends State<ScreenEms> {
      }
 
 
-     Jalali date=Jalali.now();
-     String formattedDate =
-         '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
-     // چاپ تاریخ جلالی با فرمت مورد نظر
-     print('تاریخ جلالی فعلی: $formattedDate');
-     ShowLoadingApp(context);
-     var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
-         TextConAge.text.toString(),Notifi.dropdownvalue=='مرد'?2:1,context);
+     RegExp regExp = new RegExp(
+       "^[\u0600-\u06FF]+",
+     );
+
+      if(regExp.hasMatch(TextConName.text.toString()))
+        {
+          showToast("برای نام بیمار از کارکتر های فارسی استفاده نکنید",
+              position: StyledToastPosition.top,
+              context:context);
+          return;
+        }
 
 
-
-
-     if(Data!=null)
+     var Flag=await ShowAllow(context,'آیا از ثبت بیمار مطمئن هستید ؟');
+     if(Flag)
      {
-       if(Data.success)
+       Jalali date=Jalali.now();
+       String formattedDate =
+           '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+       // چاپ تاریخ جلالی با فرمت مورد نظر
+       print('تاریخ جلالی فعلی: $formattedDate');
+       ShowLoadingApp(context);
+       var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
+           TextConAge.text.toString(),Notifi.dropdownvalue=='مرد'?2:1,context);
+
+
+       if(Data!=null)
        {
-         // Ok Shode
-         TextConAge.clear();
-         TextConCode.clear();
-         TextConName.clear();
-         TextConGender.clear();
-         Notifi.Refrsh();
-         ShowSuccesMsg(context,'بیمار با موفقیت ثبت شد');
-       }else{
-         ShowErrorMsg(context, Data.message);
+         if(Data.success)
+         {
+           // Ok Shode
+           TextConAge.clear();
+           TextConCode.clear();
+           TextConName.clear();
+           TextConGender.clear();
+           Notifi.Refrsh();
+           ShowSuccesMsg(context,'بیمار با موفقیت ثبت شد');
+         }else{
+           ShowErrorMsg(context, Data.message);
+         }
        }
      }
-
-
-
-
-
-
    }
+
+
 
    var TextConName=TextEditingController();
 
@@ -84,36 +94,64 @@ class _ScreenEmsState extends State<ScreenEms> {
 
    Future   ChangShift(bool StatusNew,BuildContext context) async
    {
-    var Flag=await ShowAllow(context,'آیا از تغییر شیفت خود مطمئن هستید ؟');
-    if(Flag)
-      {
-        ShowLoadingApp(context);
-        var Data=await ApiServiceEms.ChangeShiftStatus(context);
-        if(Data!=null)
-        {
-          if(Data.success)
-          {
-            Notifi.setstatus(StatusNew);
-            ShowSuccesMsg(context,'بیمار با موفقیت ثبت شد');
-          }else{
-            ShowErrorMsg(context, Data.message);
-          }
-        }
+
+
+     var Flag=await ShowAllow(context,'آیا از تغییر شیفت خود مطمئن هستید ؟');
+     if(Flag)
+     {
+       ShowLoadingApp(context);
+       // ignore: use_build_context_synchronously
+       var Data= await ApiServiceReception.ChangeShiftStatus(context);
+       print(Data.toJson());
+
+       if(Data!=null)
+       {
+         if(Data.success)
+         {
+           Notifi.setstatus(Data.data!.isOnline);
+         }else{
+           // ignore: use_build_context_synchronously
+           ShowErrorMsg(context, Data.message);
+         }
+       }
+
+       Navigator.pop(context);
+     }
 
 
 
 
 
-      }
+
+
+
+
+   }
+   Future ClearAllDate()async{
+     var Flag=await ShowAllow(context,'آیا میخواهید از حساب کاربری خود خارج شوید ؟');
+     if(Flag)
+     {
+       SharedPreferences prefs = await SharedPreferences.getInstance();
+       prefs.clear();
+       GoNextPageGameOver(context, SplashScreen());
+     }
+   }
+
+
+   Future GetInfo() async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+     if(prefs.getBool('isOnline')!=null)
+       {
+         status=prefs.getBool('isOnline')!;
+         Notifi.setstatus(status);
+       }
+
+
    }
    @override
   void initState() {
     super.initState();
-    // if(widget.IsRigester)
-    // {
-    //   ShowSuccesMsg(context, 'ثبت نام با موفقیت انجام شد');
-    //   //Set an animation
-    // }
+    GetInfo();
   }
    @override
    Widget build(BuildContext context) {
@@ -145,7 +183,7 @@ class _ScreenEmsState extends State<ScreenEms> {
                            children:   [
                              InkWell(
                                onTap: () {
-                                 SystemNavigator.pop();
+                                 ClearAllDate();
                                } ,
                                child: const RotatedBox(
                                  quarterTurns: 90,
@@ -155,11 +193,16 @@ class _ScreenEmsState extends State<ScreenEms> {
                                  ),
                                ),
                              ),
-                             const RotatedBox(
+                              RotatedBox(
                                quarterTurns: 0,
-                               child: Padding(
-                                 padding: EdgeInsets.all(16.0),
-                                 child: Icon(Icons.person,color: Colors.white,size: 30,),
+                               child: InkWell(
+                                 onTap: (){
+                                   GoNextPage(context, screen_EditProfile());
+                                 },
+                                 child: Padding(
+                                   padding: EdgeInsets.all(16.0),
+                                   child: Icon(Icons.person,color: Colors.white,size: 30,),
+                                 ),
                                ),
                              ),
                              const Expanded(child:
@@ -292,9 +335,9 @@ class _ScreenEmsState extends State<ScreenEms> {
                                          textDirection: TextDirection.rtl,
                                          child: TextField(
                                            controller: TextConCode,
+                                            maxLength: 11,
                                            decoration: InputDecoration(
                                              labelText: 'کد ملی',
-
                                              disabledBorder:OutlineInputBorder(
                                                  borderRadius: BorderRadius.circular(8)
                                              ),

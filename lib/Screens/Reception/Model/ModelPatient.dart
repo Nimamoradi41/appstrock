@@ -9,6 +9,8 @@ class ModelPatient {
   String timeOfAddToSystem;
   String? timeOfAddLabotory;
   String? TimeOfInjection;
+  int? bloodPressure1;
+  int? bloodPressure2;
   String? signsStartTime;
   String? signsStartDate;
   String? fssTime;
@@ -53,6 +55,7 @@ class ModelPatient {
   String?  ptt;
   String?  inr;
   bool?  trop;
+  int?  bs;
 
 
   ModelPatient({
@@ -109,6 +112,9 @@ class ModelPatient {
     required this.ptt,
     required this.inr,
     required this.trop,
+    required this.bloodPressure1,
+    required this.bloodPressure2,
+    required this.bs,
   });
 
   factory ModelPatient.fromJson(Map<String, dynamic> json) => ModelPatient(
@@ -124,7 +130,9 @@ class ModelPatient {
     lkwTime: json["lkwTime"]?? '',
     fssDate: json["fssDate"]?? '',
     lkwDate: json["lkwDate"]?? '',
-
+    bloodPressure1: json["bloodPressure1"]?? 0,
+    bloodPressure2: json["bloodPressure2"]?? 0,
+    bs: json["bs"]?? 0,
     Atends: json["Atends"]?? '',
     Fesharkhon: json["Fesharkhon"]?? '',
     Ghandkhon: json["Ghandkhon"]?? '',

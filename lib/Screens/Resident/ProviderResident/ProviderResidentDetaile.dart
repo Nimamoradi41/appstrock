@@ -26,7 +26,7 @@ class ProviderResidentDetaile extends ChangeNotifier{
       n_6_b: '', n_7: '',
       n_8: '', n_9: '', n_10: '', n_11: '',
       bun: '', cr: '', plt: '', pt: '',
-      ptt: '', inr: '', trop: false);
+      ptt: '', inr: '', trop: false, bloodPressure1: 0, bloodPressure2: 0, bs: 0);
   bool status=false;
    void setItems(ModelPatient newitem)
    {

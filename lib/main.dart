@@ -90,7 +90,6 @@ class _MyAppState extends State<MyApp> {
       //         TimeLKW: '', DateFSS: '', DateLKW: '',
       //         IsUnknow: false, timeOfAddResident: '', dateOfAddToStart: '', AddReasonNot724: false,
       //         AtendSeen: false, Residents: '', Atends: '', Fesharkhon: '', Ghandkhon: ''), context));
-
       // home: ScreenResident(context));
       // home: ScreenResident(context));
       // home: ScreenFormImage724());

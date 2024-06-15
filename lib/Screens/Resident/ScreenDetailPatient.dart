@@ -1,5 +1,6 @@
 import 'package:appstrock/Screens/Laboratory/ScreenFormLaboratory.dart';
 import 'package:appstrock/Screens/Resident/ApiServiceResident.dart';
+import 'package:appstrock/Screens/Resident/ScreenFormBload724.dart';
 import 'package:appstrock/Screens/Resident/ScreenFormNIHS.dart';
 import 'package:appstrock/Screens/Resident/ScreenFormTimeInjection.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,10 @@ import '../../Widgets/TextApp.dart';
 import '../../test.dart';
 import '../Reception/Model/ModelPatient.dart';
 import 'ProviderResident/ProviderResidentDetaile.dart';
+import 'ScreenFormImage724.dart';
 import 'ScreenFormIs724.dart';
 import 'ScreenFormIsNot724.dart';
+import 'ScreenFormPreesBload724.dart';
 
 
 
@@ -637,16 +640,21 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                             children: [
                                               InkWell(
                                                 onTap: (){
-                                                  GoNextPage(context, ScreenFormLaboratory((p0){
-                                                    // AddLab(p0);
-                                                  },false,
-                                                      widget.modelPatient.bun.toString(),
-                                                      widget.modelPatient.bun.toString(),
-                                                      widget.modelPatient.cr.toString(),
-                                                      widget.modelPatient.plt.toString(),
-                                                      widget.modelPatient.inr.toString(),
-                                                      widget.modelPatient.trop.toString()
-                                                  ));
+                                                  if(widget.modelPatient.is724IsComplete==true
+                                                  )
+                                                    {
+                                                      GoNextPage(context, ScreenFormLaboratory((p0){
+                                                        // AddLab(p0);
+                                                      },false,
+                                                          widget.modelPatient.bun.toString(),
+                                                          widget.modelPatient.bun.toString(),
+                                                          widget.modelPatient.cr.toString(),
+                                                          widget.modelPatient.plt.toString(),
+                                                          widget.modelPatient.inr.toString(),
+                                                          widget.modelPatient.trop.toString()
+                                                      ));
+                                                    }
+
                                                 },
                                                 child: TextApp(widget.modelPatient.labIsComplete == null  ?'تکمیل نشده است' :
                                                 widget.modelPatient.labIsComplete! ?
@@ -668,7 +676,11 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                             children: [
                                               InkWell(
                                                 onTap: (){
-                                                  AddTimeInjection();
+                                                  if(widget.modelPatient.is724IsComplete==true
+                                                  ){
+                                                    AddTimeInjection();
+                                                  }
+
                                                 },
                                                 child: TextApp(widget.modelPatient.TimeOfInjection == null  ?'تکمیل نشده است' :
                                                 widget.modelPatient.TimeOfInjection.toString().isEmpty ?
@@ -680,6 +692,55 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
                                                   child: TextApp(' :  زمان تزریق', 14, ColorTitleText, false))),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              InkWell(
+                                                onTap: (){
+                                                  if( widget.modelPatient.is724IsComplete==true&&
+                                                      widget.modelPatient.bs==0
+                                                  ){
+                                                    GoNextPage(context,  ScreenFormBload724(widget.modelPatient.id.toString()));
+                                                  }
+                                                },
+                                                child: TextApp(widget.modelPatient.bs == null  ?'تکمیل نشده است' :
+                                                widget.modelPatient.bs==0 ?
+                                                'تکمیل شده است':
+                                                widget.modelPatient.bs.toString()
+                                                    , 16, ColorTextbody, true),
+                                              ),
+                                              Expanded(child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' :  قند خون', 14, ColorTitleText, false))),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              InkWell(
+                                                onTap: (){
+                                                  if( widget.modelPatient.is724IsComplete==true&&
+                                                  widget.modelPatient.bloodPressure1==0
+                                                  ){
+                                                    GoNextPage(context,  ScreenFormPreesBload724(widget.modelPatient.id.toString()));
+                                                  }
+                                                },
+                                                child: TextApp(widget.modelPatient.bloodPressure1 == null  ?'تکمیل نشده است' :
+                                                widget.modelPatient.bloodPressure1.toString().isEmpty ?
+                                                'تکمیل شده است':
+                                                widget.modelPatient.bloodPressure1.toString()+"/"+
+                                                    widget.modelPatient.bloodPressure2.toString()
+                                                    , 16, ColorTextbody, true),
+                                              ),
+                                              Expanded(child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' :  فشار خون', 14, ColorTitleText, false))),
                                             ],
                                           ),
                                         )
@@ -920,7 +981,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                   margin: const EdgeInsets.all(8),
                                   child: ElevatedButton(
                                       onPressed: (){
-                                        AddReasonNot724();
+                                        GoNextPage(context, ScreenFormImage724(widget.modelPatient.id.toString()));
                                       },
                                       style: ButtonStyle(
                                           backgroundColor:  MaterialStateProperty.all(ColorApp),

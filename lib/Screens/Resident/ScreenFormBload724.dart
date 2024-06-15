@@ -84,8 +84,6 @@ class _ScreenFormIsNot724State extends State<ScreenFormBload724> {
   @override
   void initState() {
     super.initState();
-
-
   }
 
   var textControllerF1=TextEditingController();

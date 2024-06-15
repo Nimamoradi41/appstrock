@@ -3,6 +3,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:appstrock/Screens/Autentication/Models/ModelLogin.dart';
 import 'package:flutter/cupertino.dart';
@@ -300,6 +301,91 @@ class ApiServiceResident{
       'PT': Str[4]['selected_answer'].toString(),
       'INR': Str[5]['selected_answer'].toString(),
       'Trop': Str[5]['selected_answer'].toString()=='0'?'false':'true',
+    });
+
+
+
+
+
+
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+
+
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelNeetToCt data= await  modelNeetToCtFromJson(str);
+        login=data;
+      }
+      if(response.statusCode==400)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelNeetToCt data= await  modelNeetToCtFromJson(str);
+        login=data;
+      }else {
+        ShowErrorMsg(context,response.reasonPhrase.toString());
+
+      }
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+
+    } on Error catch (e)
+    {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    return login;
+  }
+
+  static Future<ModelNeetToCt> AddbloodPressure(String id,BuildContext context,String bloodPressure1,String bloodPressure2)
+  async {
+    var login;
+
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? UserId;
+
+    // UserId
+
+    if(prefs.getString('UserId')!=null)
+    {
+      UserId=prefs.getString('UserId')!;
+    }
+
+
+    var request = http.MultipartRequest('POST',
+        Uri.parse('https://api.appstrok.ir/Patients/AddPatientSigns'));
+    request.fields.addAll({
+      'patientId': id,
+      'userId': UserId.toString(),
+      'bloodPressure1': bloodPressure1.toString(),
+      'bloodPressure2': bloodPressure2.toString(),
     });
 
 
@@ -685,6 +771,88 @@ class ApiServiceResident{
 
     return login;
   }
+
+  static Future<ModelLogin> UploadImage(String idPa,BuildContext context,Uint8List Image,String nameFile)
+  async {
+    var login;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? UserId;
+
+    // UserId
+
+    if(prefs.getString('UserId')!=null)
+    {
+      UserId=prefs.getString('UserId')!;
+    }
+
+    var request = http.MultipartRequest('POST',
+        Uri.parse('https://api.appstrok.ir/Patients/AddImages'));
+    request.fields.addAll({
+      'patientId': idPa,
+      'userId': UserId.toString(),
+    });
+    request.files.add(
+      http.MultipartFile.fromBytes(
+          'Images',
+          Image,
+          filename:nameFile),
+    );
+
+
+
+
+
+
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+        Navigator.pop(context);
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+
+
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelLogin data= await  modelLoginFromJson(str);
+        login=data;
+      }else {
+        ShowErrorMsg(context,response.reasonPhrase.toString());
+
+      }
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+
+    } on Error catch (e)
+    {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    return login;
+  }
+
+
 
 
   static Future<ModelNeetToCt> TimeOfInjection(String idPa,BuildContext context,String Time)

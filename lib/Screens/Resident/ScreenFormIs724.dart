@@ -1,3 +1,4 @@
+
 import 'package:appstrock/Constants.dart';
 import 'package:appstrock/Widgets/TextApp.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,14 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
   late String TimeNowUnKnowFssStr;
 
   late String TimeNowKnowStr;
+
+  var year=0;
+  var month=0;
+  var day=0;
+
+  var hour=0;
+  var min=0;
+  var timestamp=0;
   void _submitForm() {
     List<Map<String, String>> answers = [];
     answers.add({
@@ -75,7 +84,9 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
     }
 
-
+    answers.add({
+      'timestamp': timestamp.toString(),
+    });
     print(answers.toString());
 
 
@@ -96,8 +107,6 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
     if(Res)
     {
       _submitForm();
-
-      // ignore: use_build_context_synchronously
     }
   }
 
@@ -118,11 +127,28 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
       temp_mont=month;
     }
 
-
-
-
-
     return  (year+"/"+temp_mont+"/"+temp_day).toString();
+
+
+  }
+
+  String    Convert_Time(String Hour,String Minute)
+  {
+    var temp_Hour="";
+    var temp_Min="";
+    if (Hour.length==1)
+    {
+      temp_Hour="0"+Hour;
+    }else{
+      temp_Hour=Hour;
+    }
+    if (Minute.length==1)
+    {
+      temp_Min="0"+Minute;
+    }else{
+      temp_Min=Minute;
+    }
+    return  (temp_Hour+":"+temp_Min).toString();
 
 
   }
@@ -141,11 +167,14 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
         if(Type)
           {
-
             DateNowKnow=picked;
             DateNowKnowStr=Convert_DATE(DateNowKnow.day.toString()
                 ,DateNowKnow.month.toString(),DateNowKnow.year.toString());
 
+
+            Jalali picked2=Jalali(DateNowKnow.year,DateNowKnow.month,
+                DateNowKnow.day,hour,min,0);
+            timestamp=picked2.toDateTime().millisecondsSinceEpoch;
 
 
           }  else  if(!Type && LKW) {
@@ -183,6 +212,17 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
       {
         TimeNowKnow=picked;
         TimeNowKnowStr="${TimeNowKnow.hour}:${TimeNowKnow.minute}";
+        // timeStamp=DateTime.now().millisecondsSinceEpoch;
+        hour=TimeNowKnow.hour;
+        min=TimeNowKnow.minute;
+        Jalali picked2=Jalali(year,month,day,hour,min,0);
+        timestamp=picked2.toDateTime().millisecondsSinceEpoch;
+        print(timestamp.toString());
+
+
+
+
+
 
       }else if(!Type && LKW){
         TimeNowUnKnowLKW=picked;
@@ -208,8 +248,12 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
   {
     super.initState();
     DateNowKnow=Jalali.now();
+    year=DateNowKnow.year;
+    day=DateNowKnow.day;
+    month=DateNowKnow.month;
     DateNowKnowStr=Convert_DATE(DateNowKnow.day.toString()
         ,DateNowKnow.month.toString(),DateNowKnow.year.toString());
+
 
     DateNowUnKnowLKW=Jalali.now();
     DateNowUnKnowLKWStr=Convert_DATE(DateNowUnKnowLKW.day.toString()
@@ -221,14 +265,19 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
 
     TimeNowKnow=TimeOfDay.now();
-    TimeNowKnowStr="${TimeNowKnow.hour}:${TimeNowKnow.minute}";
+    TimeNowKnowStr=Convert_Time(TimeNowKnow.hour.toString(),TimeNowKnow.minute.toString());
 
+    hour=TimeNowKnow.hour;
+    min=TimeNowKnow.minute;
+    Jalali picked2=Jalali(year,month,
+        day,hour,min,0);
+    timestamp=picked2.toDateTime().millisecondsSinceEpoch;
 
     TimeNowUnKnowLKW=TimeOfDay.now();
-    TimeNowUnKnowLKWStr="${TimeNowUnKnowLKW.hour}:${TimeNowUnKnowLKW.minute}";
+    TimeNowUnKnowLKWStr=Convert_Time(TimeNowUnKnowLKW.hour.toString(),TimeNowUnKnowLKW.minute.toString());
 
     TimeNowUnKnowFss=TimeOfDay.now();
-    TimeNowUnKnowFssStr="${TimeNowUnKnowFss.hour}:${TimeNowUnKnowFss.minute}";
+    TimeNowUnKnowFssStr=Convert_Time(TimeNowUnKnowFss.hour.toString(),TimeNowUnKnowFss.minute.toString());
 
   }
 

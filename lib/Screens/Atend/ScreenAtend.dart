@@ -22,10 +22,9 @@ import 'ScreenDetailPatientAtend.dart';
 
 class ScreenAtend extends StatefulWidget {
 
-  late BuildContext MainContext;
 
 
-  ScreenAtend(this.MainContext);
+
 
   @override
   State<ScreenAtend> createState() => _ScreenAtendState();
@@ -55,14 +54,6 @@ class _ScreenAtendState extends State<ScreenAtend> {
     Jalali date=Jalali.now();
     String formattedDate =
         '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
-
-
-
-
-
-
-
-
     // ignore: use_build_context_synchronously
     var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
 
@@ -143,6 +134,8 @@ class _ScreenAtendState extends State<ScreenAtend> {
     }
 
 
+    RunListP(context,true);
+
   }
   @override
   void initState() {
@@ -180,7 +173,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            InkWell(
+                              InkWell(
                               onTap: (){
                                 ClearAllDate();
                               },
@@ -192,6 +185,19 @@ class _ScreenAtendState extends State<ScreenAtend> {
                                 ),
                               ),
                             ),
+                              InkWell(
+                              onTap: (){
+                               RunListP(context, true);
+                              },
+                              child: const RotatedBox(
+                                quarterTurns: 90,
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Icon(Icons.refresh,color: Colors.white,size: 30,),
+                                ),
+                              ),
+                            ),
+
                               RotatedBox(
                               quarterTurns: 0,
                               child: InkWell(

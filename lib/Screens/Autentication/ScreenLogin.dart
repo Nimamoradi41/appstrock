@@ -1,7 +1,9 @@
+import 'package:appstrock/Screens/Atend/ScreenAtend.dart';
 import 'package:appstrock/Screens/Autentication/ScreenRigester.dart';
 import 'package:appstrock/Screens/Resident/screen_resident.dart';
 import 'package:appstrock/Screens/Strok/ScreenStrock.dart';
 import 'package:appstrock/Screens/Teriazh/screen_teriazh.dart';
+import 'package:appstrock/Screens/sickcarrier/screen_sickcarrier.dart';
 import 'package:appstrock/Widgets/TextApp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
@@ -104,6 +106,17 @@ class _ScreenLoginState extends State<ScreenLogin> {
           GoNextPage(context,ScreenReception());
         }
 
+        if(Data.data?.departmentId==4)
+        {
+          // ignore: use_build_context_synchronously
+          GoNextPage(context,ScreenSickCarrier());
+        }
+        if(Data.data?.departmentId==8)
+        {
+          // ignore: use_build_context_synchronously
+          GoNextPage(context,ScreenStrock());
+        }
+
         if(Data.data?.departmentId==7)
         {
           GoNextPage(context,ScreenResident(context));
@@ -113,6 +126,15 @@ class _ScreenLoginState extends State<ScreenLogin> {
           // ignore: use_build_context_synchronously
           GoNextPageGameOver(context,ScreenLaboratory());
         }
+
+        if(Data.data?.departmentId==5)
+        {
+          // ignore: use_build_context_synchronously
+          GoNextPageGameOver(context,ScreenAtend());
+        }
+
+
+
 
         if(Data.data?.departmentId==8)
         {
@@ -174,6 +196,10 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                 child: TextField(
                                   keyboardType: TextInputType.text,
                                   controller: textControllerName,
+                                  style: const TextStyle(
+                                    fontFamily: 'rob',
+                                    fontSize: 13
+                                  ),
                                   decoration: InputDecoration(
                                     labelText: 'نام و نام خانوادگی',
                                     labelStyle: TextStyle(
@@ -197,8 +223,14 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                 child: TextField(
                                   maxLines: 1,
                                   maxLength: 10,
+
                                   keyboardType: TextInputType.phone,
                                   controller: textControllerNationalCode,
+                                  textAlign: TextAlign.start,
+                                  style: const TextStyle(
+                                      fontFamily: 'rob',
+                                      fontSize: 13
+                                  ),
                                   decoration: InputDecoration(
                                     labelText: 'کد ملی',
                                     labelStyle: TextStyle(
@@ -217,9 +249,12 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                 textDirection: TextDirection.rtl,
                                 child: TextField(
                                   maxLines: 1,
-                                  maxLength: 10,
                                   keyboardType: TextInputType.name,
                                   controller: textControllerNationalPass,
+                                  style: const TextStyle(
+                                      fontFamily: 'rob',
+                                      fontSize: 13
+                                  ),
                                   decoration: InputDecoration(
                                     labelText: 'رمز عبور',
                                     labelStyle: TextStyle(
@@ -282,7 +317,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
                         },
                         child: TextApp('ثبت نام نکرده اید ؟', 16, Colors.black54, true)),
                     SizedBox(height: 32,),
-                    TextApp(VersionApp,12, Colors.black54, true),
+
                     SizedBox(height: 8,),
                   ],
                 ),

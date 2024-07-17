@@ -36,6 +36,7 @@ dependencies:
   loading_animation_widget: ^1.2.0+4
   flutter_styled_toast: any
   http: any
+  intl: any
   flutter_otp_text_field: ^1.1.1
   timer_count_down: ^2.2.0
   lottie: any
@@ -103,6 +104,12 @@ flutter:
       fonts:
         - asset: Fonts/fredoka.ttf
           weight: 200
+
+    - family: rob
+      fonts:
+        - asset: Fonts/rob.ttf
+          weight: 100
+
 
   # fonts:
   #   - family: Schyler

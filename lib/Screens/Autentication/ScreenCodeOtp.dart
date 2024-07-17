@@ -1,3 +1,4 @@
+import 'package:appstrock/Screens/Atend/ScreenAtend.dart';
 import 'package:appstrock/Screens/Laboratory/screen_Laboratory.dart';
 import 'package:appstrock/Screens/Resident/screen_resident.dart';
 import 'package:appstrock/Screens/Strok/ScreenStrock.dart';
@@ -12,6 +13,7 @@ import '../../Constants.dart';
 import '../../Widgets/TextApp.dart';
 import '../Ems/screen_ems.dart';
 import '../Teriazh/screen_teriazh.dart';
+import '../sickcarrier/screen_sickcarrier.dart';
 import 'ApiServiceAutentication.dart';
 
 
@@ -90,6 +92,18 @@ class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
               // ignore: use_build_context_synchronously
               GoNextPageGameOver(context,ScreenLaboratory());
             }
+            if(widget.TypUser==5)
+            {
+              // ignore: use_build_context_synchronously
+              GoNextPageGameOver(context,ScreenAtend());
+            }
+
+            if(widget.TypUser==4)
+            {
+              // ignore: use_build_context_synchronously
+              GoNextPage(context,ScreenSickCarrier());
+            }
+
             if(widget.TypUser==8)
             {
               // ignore: use_build_context_synchronously
@@ -228,7 +242,6 @@ class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
                           )),
                     ),
                     SizedBox(height: 32,),
-                    TextApp(VersionApp,12, Colors.black54, true),
                     SizedBox(height: 8,),
                   ],
                 ),

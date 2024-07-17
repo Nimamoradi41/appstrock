@@ -240,15 +240,28 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                             ],
                                           ),
                                         ),
+                                        widget.modelPatient.labIsComplete!?
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              TextApp(
+                                                  "${widget.modelPatient.labInsertDate} - "
+                                                      "${widget.modelPatient.labInsertTime}"
+                                                  , 14, ColorTextbody, true),
+                                              Expanded(child:
+                                              Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' : زمان ثبت  فرم آزمایشگاه', 12, ColorTitleText, false))),
+                                            ],
+                                          ),
+                                        ):Container(),
                                         Container(
                                           width: wid,
                                           height: 2,
                                           color: Colors.black12,
                                           margin: EdgeInsets.symmetric(horizontal: 8),
                                         ),
-
-
-
                                       ],
                                      ),
                                    ),
@@ -261,13 +274,14 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                        GoNextPage(context, ScreenFormLaboratory((p0) {
                                          Navigator.pop(context);
                                          AddLab(p0);
-                                       },widget.modelPatient.labIsComplete==null? false:widget.modelPatient.labIsComplete!,
+                                       }
+                                       ,widget.modelPatient.labIsComplete!,
                                            widget.modelPatient.bun.toString(),
-                                         widget.modelPatient.bun.toString(),
-                                         widget.modelPatient.cr.toString(),
+                                          widget.modelPatient.cr.toString(),
                                          widget.modelPatient.plt.toString(),
+                                         widget.modelPatient.pt.toString(),
                                          widget.modelPatient.inr.toString(),
-                                         widget.modelPatient.trop.toString()));
+                                         widget.modelPatient.trop.toString(),false));
                                       },
                                       style: ButtonStyle(
                                           backgroundColor: widget.modelPatient.labIsComplete ==null?
@@ -318,11 +332,7 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                     ),
                   ),
                 ),
-                Positioned(
-                    bottom: 4,
-                    right: 8,
-                    left: 8,
-                    child: TextApp(VersionApp, 12, Colors.black54, true))
+
               ],
             ),
           ),

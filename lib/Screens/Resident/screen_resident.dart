@@ -144,7 +144,7 @@ class _ScreenResidentState extends State<ScreenResident> {
       Notifi.setstatus(status);
     }
 
-
+    RunListP(context);
   }
 
 
@@ -161,7 +161,7 @@ class _ScreenResidentState extends State<ScreenResident> {
     @override
   void initState() {
     super.initState();
-    startTimer();
+    GetInfo();
   }
 
 
@@ -316,11 +316,7 @@ class _ScreenResidentState extends State<ScreenResident> {
                     ),
                   ),
                 ),
-                Positioned(
-                    bottom: 8,
-                    right: 8,
-                    left: 8,
-                    child: TextApp(VersionApp, 12, Colors.black54, true))
+
               ],
             ),
           ),

@@ -7,7 +7,11 @@ import 'package:flutter/material.dart';
 class ScreenFormIsNot724 extends StatefulWidget {
   late void Function(List<Map<String, bool>>) onClose;
 
-  ScreenFormIsNot724(this.onClose);
+  bool isEdit;
+  bool misdiagnosisOfTriage;
+  bool misdiagnosisOfEms;
+  bool overTime;
+  ScreenFormIsNot724(this.onClose,this.isEdit,this.misdiagnosisOfTriage,this.misdiagnosisOfEms,this.overTime);
 
   @override
   State<ScreenFormIsNot724> createState() => _ScreenFormIsNot724State();
@@ -54,6 +58,17 @@ class _ScreenFormIsNot724State extends State<ScreenFormIsNot724> {
     }
   }
 
+
+  @override
+  void initState() {
+    super.initState();
+    _checkBox1=widget.misdiagnosisOfTriage;
+    _checkBox2=widget.misdiagnosisOfEms;
+    _checkBox3=widget.overTime;
+    setState(() {
+
+    });
+  }
   @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
@@ -151,7 +166,13 @@ class _ScreenFormIsNot724State extends State<ScreenFormIsNot724> {
                 child: Container(
                   width: wid,
                   child: ElevatedButton(onPressed: (){
-                    Run();
+                    if(widget.isEdit)
+                      {
+                       Navigator.pop(context);
+                      }else{
+                      Run();
+                    }
+
                   },
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(ColorApp),
@@ -164,7 +185,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIsNot724> {
                       ),
                       child:Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: TextApp('ثبت اطلاعات',16,Colors.white,true),
+                        child: TextApp(  widget.isEdit ? 'بستن' : 'ثبت اطلاعات',16,Colors.white,true),
                       )),
                 ),
               ),

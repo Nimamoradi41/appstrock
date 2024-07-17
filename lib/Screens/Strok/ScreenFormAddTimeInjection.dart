@@ -74,20 +74,8 @@ class _ScreenFormIsNot724State extends State<ScreenFormAddTimeInjection> {
     }else{
       temp_mont=month;
     }
-
-
-
-
-
     return  (year+"/"+temp_mont+"/"+temp_day).toString();
-
-
   }
-
-
-
-
-
 
   Future PersianTimeCalender(bool Type,bool LKW)async{
     var picked = await showPersianTimePicker(
@@ -97,7 +85,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormAddTimeInjection> {
     if(picked!=null)
     {
       TimeNowKnow=picked;
-      TimeNowKnowStr="${TimeNowKnow.hour}:${TimeNowKnow.minute}";
+      TimeNowKnowStr=Convert_Time(TimeNowKnow.hour.toString(),TimeNowKnow.minute.toString());
 
       setState(() {
 
@@ -108,14 +96,33 @@ class _ScreenFormIsNot724State extends State<ScreenFormAddTimeInjection> {
 
 
   }
+  String    Convert_Time(String Hour,String Minute)
+  {
+    var temp_Hour="";
+    var temp_Min="";
+    if (Hour.length==1)
+    {
+      temp_Hour="0"+Hour;
+    }else{
+      temp_Hour=Hour;
+    }
+    if (Minute.length==1)
+    {
+      temp_Min="0"+Minute;
+    }else{
+      temp_Min=Minute;
+    }
+    return  (temp_Hour+":"+temp_Min).toString();
 
+
+  }
   @override
   void initState()
   {
     super.initState();
     TimeNowKnow=TimeOfDay.now();
     TimeNowKnowStr="${TimeNowKnow.hour}:${TimeNowKnow.minute}";
-
+    TimeNowKnowStr=Convert_Time(TimeNowKnow.hour.toString(),TimeNowKnow.minute.toString());
 
 
   }
@@ -125,13 +132,13 @@ class _ScreenFormIsNot724State extends State<ScreenFormAddTimeInjection> {
     double wid=MediaQuery.of(context).size.width;
     wid=wid>600?600:wid;
     return Center(
-      child: Container(
-        width: wid,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
+      child: Scaffold(
+        body: Container(
+          width: wid,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[

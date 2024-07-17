@@ -65,6 +65,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormImage724> {
   var IsSelected=false;
   late Uint8List DateImage;
   String NameFile="";
+  String pathFile="";
 
   Future  Run()async
   {
@@ -76,7 +77,13 @@ class _ScreenFormIsNot724State extends State<ScreenFormImage724> {
       final file = await  fromPicker.readAsBytes();
       IsSelected=true;
       NameFile=fromPicker.name;
+      pathFile=fromPicker.path;
       DateImage=file;
+      setState(() {
+
+      });
+
+
     }
   }
   @override
@@ -108,18 +115,20 @@ class _ScreenFormIsNot724State extends State<ScreenFormImage724> {
                   child: Container(
                     width: wid,
                     margin: EdgeInsets.symmetric(horizontal: 16),
-
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: ColorApp.withOpacity(0.4),width: 2,strokeAlign:BorderSide.strokeAlignOutside)
+                      border: Border.all(color: ColorApp.withOpacity(0.4),
+                          width: 2,strokeAlign:BorderSide.strokeAlignOutside)
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
                           SizedBox(height: 8,),
-                          Icon(Icons.image,color: ColorApp,size: 60,),
+                          pathFile.isEmpty?
+                          Icon(Icons.image,color: ColorApp,size: 60,):
+                          Image.network(pathFile,width: 60,height: 60,),
                           SizedBox(height: 16,),
                           TextApp2('عکس خود را انتخاب کنید', 16, Colors.black26, true),
                           SizedBox(height: 8,),
@@ -136,7 +145,8 @@ class _ScreenFormIsNot724State extends State<ScreenFormImage724> {
                     children: [
                       Expanded(
                         child: Container(
-                          child: ElevatedButton(onPressed: (){
+                          child: ElevatedButton(
+                              onPressed: (){
                             Navigator.pop(context);
                           },
                               style: ButtonStyle(
@@ -163,9 +173,17 @@ class _ScreenFormIsNot724State extends State<ScreenFormImage724> {
                             if(Res)
                             {
                               ShowLoadingApp(context);
-                              var Req=ApiServiceResident.
+                              var Req=await ApiServiceResident.
                               UploadImage(widget.Id.toString(),context,DateImage,NameFile.toString());
-                              Navigator.pop(context);
+                              if(Req.success)
+                              {
+                                ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              }else{
+                                ShowErrorMsg(context, Req.message);
+                              }
+
                               // ignore: use_build_context_synchronously
                             }
                           },

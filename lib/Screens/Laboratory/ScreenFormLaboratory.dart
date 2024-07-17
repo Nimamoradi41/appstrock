@@ -14,7 +14,7 @@ import '../Resident/ScreenFormNIHS.dart';
 class ScreenFormLaboratory extends StatefulWidget {
   late void Function(List<Map<String, dynamic>>) onClose;
   ScreenFormLaboratory(this.onClose,
-      this.ISEdit,this.Bun,this.Cr,this.PLT,this.PT,this.INR,this.Trop);
+      this.ISEdit,this.Bun,this.Cr,this.PLT,this.PT,this.INR,this.Trop,this.isAtend);
   bool ISEdit;
   String Bun;
   String Cr;
@@ -22,6 +22,7 @@ class ScreenFormLaboratory extends StatefulWidget {
   String PT;
   String INR;
   String Trop;
+  bool isAtend;
   @override
   _ExamFormState createState() => _ExamFormState();
 }
@@ -339,29 +340,35 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
 
                 SizedBox(height: 8,),
 
-                Container(
-                  width: wid*0.9,
-                  child: ElevatedButton(onPressed: (){
-                    Run();
-                  },
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(ColorApp),
-                          padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              )
-                          )
-                      ),
-                      child:Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text( widget.ISEdit ? 'ویرایش فرم' :  'تکمیل فرم',
-                          style: TextStyle(color:Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),),
-                      )),
-                ),
-                SizedBox(height: 8,),
+                !widget.isAtend?
+                    Column(
+                      children: [
+                        Container(
+                          width: wid*0.9,
+                          child: ElevatedButton(onPressed: (){
+                            Run();
+                          },
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(ColorApp),
+                                  padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                      )
+                                  )
+                              ),
+                              child:Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text( widget.ISEdit ? 'ویرایش فرم' :  'تکمیل فرم',
+                                  style: TextStyle(color:Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),),
+                              )),
+                        ),
+                        SizedBox(height: 8,),
+                      ],
+                    ):Container()
+
 
 
 

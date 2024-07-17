@@ -18,6 +18,8 @@ import '../../Widgets/TextApp.dart';
 import '../Autentication/screen_EditProfile.dart';
 import '../Reception/Model/ModelPatient.dart';
 import '../Reception/ProviderReception/ProviderReception.dart';
+import '../Resident/ApiServiceResident.dart';
+import '../Resident/ScreenFormTimeInjection.dart';
 import '../SplashScreen.dart';
 
 
@@ -138,22 +140,10 @@ class _ScreenLaboratoryState extends State<ScreenStrock> {
       Notifi.setstatus(status);
     }
 
-
+    RunListP(context);
   }
   late Timer _timer;
-  void startTimer() {
-    const oneSec =   Duration(seconds: 20);
-    _timer = Timer.periodic(
-      oneSec,
-          (Timer timer) {
-        RunListP(context);
-      },
-    );
 
-    GetInfo();
-    RunListP(context);
-
-  }
   Future ClearAllDate()async{
     var Flag=await ShowAllow(context,'آیا میخواهید از حساب کاربری خود خارج شوید ؟');
     if(Flag)
@@ -164,10 +154,11 @@ class _ScreenLaboratoryState extends State<ScreenStrock> {
     }
   }
 
+
   @override
   void initState() {
     super.initState();
-    startTimer();
+    GetInfo();
   }
 
   @override
@@ -316,11 +307,7 @@ class _ScreenLaboratoryState extends State<ScreenStrock> {
                     ),
                   ),
                 ),
-                Positioned(
-                    bottom: 8,
-                    right: 8,
-                    left: 8,
-                    child: TextApp(VersionApp, 12, Colors.black54, true))
+
               ],
             ),
           ),

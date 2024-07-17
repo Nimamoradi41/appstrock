@@ -4,8 +4,6 @@ import 'package:signalr_netcore/hub_connection.dart';
 import 'package:signalr_netcore/hub_connection_builder.dart';
 import 'Screens/Modelsuggestionssvsv.dart';
 import 'modetest.dart';
-
-
 class scr extends StatefulWidget {
   const scr({super.key});
 
@@ -110,3 +108,4 @@ class _scrState extends State<scr> {
     );
   }
 }
+

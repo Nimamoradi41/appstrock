@@ -124,6 +124,8 @@ class _ScreenSickCarrierState extends State<ScreenSickCarrier> {
     }
 
 
+    RunListP(context);
+
   }
   late Timer _timer;
   void startTimer() {
@@ -136,7 +138,7 @@ class _ScreenSickCarrierState extends State<ScreenSickCarrier> {
     );
 
     GetInfo();
-    RunListP(context);
+
 
   }
   Future ClearAllDate()async{
@@ -152,7 +154,7 @@ class _ScreenSickCarrierState extends State<ScreenSickCarrier> {
   @override
   void initState() {
     super.initState();
-    startTimer();
+    GetInfo();
   }
 
 
@@ -306,11 +308,7 @@ class _ScreenSickCarrierState extends State<ScreenSickCarrier> {
                 ),
 
 
-                Positioned(
-                    bottom: 8,
-                    right: 8,
-                    left: 8,
-                    child: TextApp(VersionApp, 12, Colors.black54, true))
+
               ],
             ),
           ),

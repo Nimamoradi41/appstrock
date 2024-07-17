@@ -29,6 +29,14 @@ class _ScreenEmsState extends State<ScreenEms> {
 
    late var Notifi=ProviderEms();
    Future RunAddP(BuildContext context)async{
+
+     if(!Notifi.status)
+       {
+         showToast("ابتدا شیفت خود را فعال کنید",
+             position: StyledToastPosition.top,
+             context:context);
+         return;
+       }
      if(TextConName.text.isEmpty)
      {
        showToast("نام و نام خانوادگی را وارد کنید",
@@ -60,8 +68,10 @@ class _ScreenEmsState extends State<ScreenEms> {
        // چاپ تاریخ جلالی با فرمت مورد نظر
        print('تاریخ جلالی فعلی: $formattedDate');
        ShowLoadingApp(context);
+
+       var  timestamp=DateTime.now().millisecondsSinceEpoch;
        var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
-           TextConAge.text.toString(),Notifi.dropdownvalue=='مرد'?2:1,context);
+           TextConAge.text.toString(),Notifi.dropdownvalue=='مرد'?2:1,context,timestamp);
 
 
        if(Data!=null)
@@ -316,6 +326,9 @@ class _ScreenEmsState extends State<ScreenEms> {
                                          textDirection: TextDirection.rtl,
                                          child: TextField(
                                            controller: TextConName,
+                                           style: TextStyle(
+                                             fontSize: 12
+                                           ),
                                            decoration: InputDecoration(
                                              labelText: 'نام و نام خانوادگی',
                                              disabledBorder:OutlineInputBorder(
@@ -336,6 +349,12 @@ class _ScreenEmsState extends State<ScreenEms> {
                                          child: TextField(
                                            controller: TextConCode,
                                             maxLength: 11,
+
+                                           style: const TextStyle(
+                                               fontSize: 12,
+                                             fontFamily: 'rob',
+                                           ),
+                                           keyboardType: TextInputType.phone,
                                            decoration: InputDecoration(
                                              labelText: 'کد ملی',
                                              disabledBorder:OutlineInputBorder(
@@ -355,6 +374,11 @@ class _ScreenEmsState extends State<ScreenEms> {
                                          textDirection: TextDirection.rtl,
                                          child: TextField(
                                            controller: TextConAge,
+                                           style: const TextStyle(
+                                             fontSize: 12,
+                                             fontFamily: 'rob',
+                                           ),
+                                           keyboardType: TextInputType.phone,
                                            decoration: InputDecoration(
                                              labelText: 'سن',
                                              disabledBorder:OutlineInputBorder(
@@ -418,7 +442,7 @@ class _ScreenEmsState extends State<ScreenEms> {
                                              padding: const EdgeInsets.all(10.0),
                                              child: Text('ثبت بیمار',
                                                style: TextStyle(color:Colors.white,
-                                                   fontSize: 16,
+                                                   fontSize: 14,
                                                    fontWeight: FontWeight.bold),),
                                            )),
                                      ),
@@ -441,11 +465,7 @@ class _ScreenEmsState extends State<ScreenEms> {
                      ),
                    ),
                  ),
-                 Positioned(
-                     bottom: 8,
-                     right: 8,
-                     left: 8,
-                     child: TextApp(VersionApp, 12, Colors.black54, true))
+
 
 
                ],

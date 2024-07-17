@@ -1,6 +1,7 @@
 // import 'dart:js';
 
 import 'package:appstrock/Profile/ScreenProfile.dart';
+import 'package:appstrock/Screens/Atend/ScreenListImages.dart';
 import 'package:appstrock/Screens/Autentication/ScreenRigester.dart';
 import 'package:appstrock/Screens/Ems/ProviderEms/ProviderEms.dart';
 import 'package:appstrock/Screens/Reception/Model/ModelPatient.dart';
@@ -94,6 +95,7 @@ class _MyAppState extends State<MyApp> {
       // home: ScreenResident(context));
       // home: ScreenFormImage724());
       home: SplashScreen());
+      // home: ScreenListImages("1"));
       // home: ScreenFormImage724());
       // home: ScreenEms());
       // home: ScreenFormLaboratory((p0){

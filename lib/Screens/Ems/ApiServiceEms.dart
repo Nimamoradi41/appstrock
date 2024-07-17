@@ -22,7 +22,7 @@ class ApiServiceEms{
       String NationalCode,
       String Age,
       int GenderId,
-      BuildContext context) async {
+      BuildContext context, int timestamp) async {
     var login;
 
 
@@ -47,7 +47,8 @@ class ApiServiceEms{
       'Age': Age,
       'GenderId': GenderId.toString(),
       // 'InsertBy': UserId.toString()
-      'InsertBy': UserId.toString()
+      'InsertBy': UserId.toString(),
+      'insertTimeTs': timestamp.toString(),
     });
 
     try{

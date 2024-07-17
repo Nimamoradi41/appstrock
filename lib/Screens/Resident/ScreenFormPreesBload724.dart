@@ -2,6 +2,7 @@ import 'dart:html';
 
 import 'package:appstrock/Constants.dart';
 import 'package:appstrock/Widgets/TextApp.dart';
+import 'package:appstrock/test.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart'as http;
 import 'package:flutter/material.dart';
@@ -16,10 +17,11 @@ class ScreenFormPreesBload724 extends StatefulWidget {
 
 
 
-
+  late void Function(List<Map<String, String>>) onClose;
   String Id;
+  bool isAtend;
 
-  ScreenFormPreesBload724(this.Id);
+  ScreenFormPreesBload724(this.Id,this.isAtend,this.onClose);
 
   @override
   State<ScreenFormPreesBload724> createState() => _ScreenFormIsNot724State();
@@ -55,6 +57,34 @@ class _ScreenFormIsNot724State extends State<ScreenFormPreesBload724> {
   }
 
 
+
+
+  var bload1 ="";
+  var bload2 ="";
+
+  void _submitForm() {
+    List<Map<String, String>> answers = [];
+
+
+    bload1= textControllerF1.text.toString();
+    bload2= textControllerF2.text.toString();
+
+    answers.add({
+      'bload1': bload1.toString(),
+      'bload2': bload2.toString(),
+    });
+
+
+
+
+
+
+    if (widget.onClose != null) {
+      Navigator.pop(context);
+      widget.onClose(answers);
+
+    }
+  }
 
   Future Run(String Blod1,String Blod2)async{
     ShowLoadingApp(context);
@@ -114,6 +144,9 @@ class _ScreenFormIsNot724State extends State<ScreenFormPreesBload724> {
                     maxLines: 1,
                     keyboardType: TextInputType.number,
                     controller: textControllerF1,
+                    style: const TextStyle(
+                      fontFamily: 'rob',
+                    ),
                     decoration: InputDecoration(
                       labelText: 'Systolic blood pressure (mmHg)',
                       labelStyle: TextStyle(
@@ -134,6 +167,9 @@ class _ScreenFormIsNot724State extends State<ScreenFormPreesBload724> {
                     maxLines: 1,
                     keyboardType: TextInputType.number,
                     controller: textControllerF2,
+                    style: const TextStyle(
+                      fontFamily: 'rob',
+                    ),
                     decoration: InputDecoration(
                       labelText: 'Diastolic blood pressure (mmHg)',
                       labelStyle: TextStyle(
@@ -176,13 +212,15 @@ class _ScreenFormIsNot724State extends State<ScreenFormPreesBload724> {
                               )),
                         ),
                       ),
+                      widget.isAtend?Container():
                       SizedBox(width: 8,),
+                      widget.isAtend?Container():
                       Expanded(
                         child: Container(
                           child: ElevatedButton(onPressed: (){
                             if(textControllerF1.text.isNotEmpty&&textControllerF2.text.isNotEmpty)
                               {
-                                Run(textControllerF1.text.toString(), textControllerF2.text.toString());
+                                _submitForm();
                               }
                           },
                               style: ButtonStyle(

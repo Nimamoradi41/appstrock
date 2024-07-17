@@ -8,6 +8,7 @@ import '../../Constants.dart';
 import '../../Widgets/TextApp.dart';
 import '../../test.dart';
 import '../Reception/Model/ModelPatient.dart';
+import '../Resident/ScreenFormTimeInjection.dart';
 import 'ProviderStrok/ProviderStrok.dart';
 import 'ScreenFormAddTimeInjection.dart';
 import 'ScreenFormLaboratory.dart';
@@ -33,22 +34,54 @@ class ScreenStrokDetailPatient extends StatefulWidget {
 class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
   late var Notifi=ProviderStrok();
 
-  Future AddTime(String Time)async{
+  Future  RequestAddTimeInjection(String Time)async{
+
+
     ShowLoadingApp(context);
-    var Data= await ApiServiceResident.AddTimeinjection(widget.modelPatient.id.toString(),context,Time);
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceResident.TimeOfInjection(widget.modelPatient.id.toString(),context,Time);
+    Navigator.pop(context);
     if(Data!=null)
     {
       if(Data.success)
       {
-        widget.modelPatient.TimeOfInjection=Time;
+
+        widget.modelPatient.timeOfInjection=Time;
+
+
         Notifi.setItem(widget.modelPatient);
+
+
         // ignore: use_build_context_synchronously
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-        Navigator.pop(context);
       }else{
+        // ignore: use_build_context_synchronously
         ShowErrorMsg(context, Data.message);
       }
     }
+
+  }
+  AddTimeInjection(){
+    showModalBottomSheet(context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+        ),
+        builder: (ctx){
+          return  Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                  margin: EdgeInsets.only(top: 16),
+                  child:   ScreenFormTimeInjection((pa)
+                  async{
+
+                    RequestAddTimeInjection(pa[0]['selected_answer'].toString());
+
+                  })),
+            ],
+          );
+
+        });
   }
 
 
@@ -221,6 +254,22 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                             ],
                                           ),
                                         ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              TextApp(
+                                              widget.modelPatient.timeOfInjection!.isEmpty ?
+                                              'تکمیل نشده است':
+                                              widget.modelPatient.timeOfInjection.toString()
+
+                                                  , 16, ColorTextbody, true),
+                                              Expanded(child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' :  زمان تزریق', 14, ColorTitleText, false))),
+                                            ],
+                                          ),
+                                        ),
                                         Container(
                                           width: wid,
                                           height: 2,
@@ -234,6 +283,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                      ),
                                    ),
                                  ),
+                                widget.modelPatient.timeOfInjection!.isEmpty?
                                 Container(
                                   width: wid,
                                   margin: const EdgeInsets.all(8),
@@ -241,7 +291,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                       onPressed: (){
                                         GoNextPage(context, ScreenFormAddTimeInjection((p0) {
                                           var Time=p0[0]['Time'];
-                                          AddTime(Time.toString());
+                                          RequestAddTimeInjection(Time.toString());
                                         }
                                         ));
                                       },
@@ -270,9 +320,9 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                       child:Padding(
                                         padding: const EdgeInsets.all(10.0),
                                         child: Text(
-                                          widget.modelPatient.TimeOfInjection == null ?
+                                          widget.modelPatient.timeOfInjection == null ?
                                           'تکمیل زمان تزریق':
-                                          widget.modelPatient.TimeOfInjection!.isNotEmpty ?
+                                          widget.modelPatient.timeOfInjection!.isNotEmpty ?
                                           'نمایش زمان تزریق':
                                           'تکمیل زمان تزریق',
                                           style: TextStyle(
@@ -284,7 +334,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),),
                                       )),
-                                ),
+                                ):Container(),
                                 SizedBox(height: 16,),
                               ],
                             ),
@@ -294,11 +344,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                     ),
                   ),
                 ),
-                Positioned(
-                    bottom: 4,
-                    right: 8,
-                    left: 8,
-                    child: TextApp(VersionApp, 12, Colors.black54, true))
+
               ],
             ),
           ),

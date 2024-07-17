@@ -514,27 +514,14 @@ class ApiServiceResident{
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     return login;
   }
 
 
-  static Future<ModelNeetToCt> Set724(String idPa,BuildContext context,
+  static Future<ModelLogin> Set724(String idPa,BuildContext context,
       bool IsUnkown,String TimeStart,String DateStart
-      ,String TimeFssStart,String DateFSSStart,String TimeLKWStart,String DateLKWStart,bool status)
+      ,String TimeFssStart,String DateFSSStart,String TimeLKWStart,
+      String DateLKWStart,bool status, String timestamp)
   async {
     var login;
 
@@ -562,6 +549,7 @@ class ApiServiceResident{
       'fssDate': DateFSSStart,
       'lkwTime': TimeLKWStart,
       'lkwDate': DateLKWStart,
+      'signsStartTS': timestamp,
     });
 
 
@@ -582,11 +570,104 @@ class ApiServiceResident{
       {
         String str= await response.stream.bytesToString();
         print(str);
-        ModelNeetToCt data= await  modelNeetToCtFromJson(str);
+        ModelLogin data= await  modelLoginFromJson(str);
         login=data;
-      }else {
+      }
+      if(response.statusCode==400)
+      {
+        String str= await response.stream.bytesToString();
+        ModelLogin data = modelLoginFromJson(str);
+        login = data;
+          ShowErrorMsg(context, 'مشکلی در دریافت اطلاعات از سرور به وجود آمده');
+      }
+      else {
         ShowErrorMsg(context,response.reasonPhrase.toString());
+      }
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
 
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+
+    } on Error catch (e)
+    {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    return login;
+  }
+
+  static Future<ModelLogin> SetNot724(String idPa,BuildContext context,
+      bool status, String timestamp)
+  async {
+    var login;
+
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? UserId;
+
+    // UserId
+
+    if(prefs.getString('UserId')!=null)
+    {
+      UserId=prefs.getString('UserId')!;
+    }
+
+    var request = http.MultipartRequest('POST',
+        Uri.parse('https://api.appstrok.ir/Patients/Set724Status'));
+    request.fields.addAll({
+      'id': idPa,
+      'userId': UserId.toString(),
+      'status': status.toString(),
+      'signsStartTS': timestamp,
+    });
+
+
+
+
+
+
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+
+
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelLogin data= await  modelLoginFromJson(str);
+        login=data;
+      }
+      if(response.statusCode==400)
+      {
+        String str= await response.stream.bytesToString();
+        ModelLogin data = modelLoginFromJson(str);
+        login = data;
+        ShowErrorMsg(context, 'مشکلی در دریافت اطلاعات از سرور به وجود آمده');
+
+      }
+      else {
+        ShowErrorMsg(context,response.reasonPhrase.toString());
       }
     }  on SocketException catch (e) {
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
@@ -797,10 +878,6 @@ class ApiServiceResident{
           Image,
           filename:nameFile),
     );
-
-
-
-
 
 
     try{

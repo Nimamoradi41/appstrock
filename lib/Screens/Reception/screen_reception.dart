@@ -426,11 +426,7 @@ class _ScreenReceptionState extends State<ScreenReception> {
                 ),
 
 
-                Positioned(
-                    bottom: 8,
-                    right: 8,
-                    left: 8,
-                    child: TextApp(VersionApp, 12, Colors.black54, true))
+
               ],
             ),
           ),

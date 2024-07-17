@@ -197,10 +197,14 @@ class _ScreenRigesterState extends State<ScreenRigester> {
                                 maxLines: 1,
                                 controller: textControllerName,
                                 keyboardType: TextInputType.text,
+                                style: const TextStyle(
+                                    fontFamily: 'rob'
+                                ),
                                 decoration: InputDecoration(
                                   labelText: 'نام و نام خانوادگی',
                                   labelStyle: TextStyle(
-                                      color: ColorApp
+                                      color: ColorApp,
+                                      fontSize: 13
                                   ),
                                   counterText: "",
 
@@ -222,10 +226,16 @@ class _ScreenRigesterState extends State<ScreenRigester> {
                                 maxLength: 10,
                                 controller: textControllerNationalCode,
                                 keyboardType: TextInputType.phone,
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(
+                                    fontFamily: 'rob',
+                                    fontSize: 13
+                                ),
                                 decoration: InputDecoration(
                                   labelText: 'کد ملی',
                                   labelStyle: TextStyle(
-                                      color: ColorApp
+                                      color: ColorApp,
+                                      fontSize: 13
                                   ),
                                   counterText: "",
 
@@ -275,10 +285,14 @@ class _ScreenRigesterState extends State<ScreenRigester> {
                                 maxLength: 11,
                                 controller: textControllerPhoneNumber,
                                 keyboardType: TextInputType.phone,
+                                style: const TextStyle(
+                                    fontFamily: 'rob'
+                                ),
                                 decoration: InputDecoration(
                                   labelText: 'شماره تلفن',
                                   labelStyle: TextStyle(
-                                      color: ColorApp
+                                      color: ColorApp,
+                                      fontSize: 13
                                   ),
                                   counterText: "",
 
@@ -295,7 +309,10 @@ class _ScreenRigesterState extends State<ScreenRigester> {
                               textDirection: TextDirection.rtl,
                               child: TextField(
                                 maxLines: 1,
-
+                                style: const TextStyle(
+                                    fontFamily: 'rob',
+                                    fontSize: 13
+                                ),
                                 controller: textControllerPassWord,
                                 keyboardType: TextInputType.text,
                                 decoration: InputDecoration(
@@ -344,7 +361,6 @@ class _ScreenRigesterState extends State<ScreenRigester> {
                         )),
                   ),
                   SizedBox(height: 32,),
-                  TextApp(VersionApp,12, Colors.black54, true),
                   SizedBox(height: 8,),
                 ],
               ),

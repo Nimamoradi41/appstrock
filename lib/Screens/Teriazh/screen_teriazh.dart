@@ -56,20 +56,20 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
 
       Navigator.pop(context);
     }
-
-
-
-
-
-
-
-
-
   }
 
 
 
   Future RunAddP(BuildContext context)async{
+
+    if(!Notifi.status)
+    {
+      showToast("ابتدا شیفت خود را فعال کنید",
+          position: StyledToastPosition.top,
+          context:context);
+      return;
+    }
+
     if(TextConName.text.isEmpty)
     {
       showToast("نام و نام خانوادگی را وارد کنید",
@@ -101,8 +101,9 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
       // چاپ تاریخ جلالی با فرمت مورد نظر
       print('تاریخ جلالی فعلی: $formattedDate');
       ShowLoadingApp(context);
+      var  timestamp=DateTime.now().millisecondsSinceEpoch;
       var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
-          TextConAge.text.toString(),dropdownvalue=='مرد'?2:1,context);
+          TextConAge.text.toString(),dropdownvalue=='مرد'?2:1,context,timestamp);
 
 
       if(Data!=null)
@@ -145,8 +146,6 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
       status=prefs.getBool('isOnline')!;
       Notifi.setstatus(status);
     }
-
-
   }
 
   Future ClearAllDate()async{
@@ -219,7 +218,7 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                             Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Text(
-                                  'فوریت های پزشکی',
+                                  'تریاژ',
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                       color: Colors.white,
@@ -326,6 +325,10 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                                         textDirection: TextDirection.rtl,
                                         child: TextField(
                                           controller: TextConName,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: 'rob',
+                                          ),
                                           decoration: InputDecoration(
                                             labelText: 'نام و نام خانوادگی',
                                             disabledBorder:OutlineInputBorder(
@@ -346,6 +349,11 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                                         child: TextField(
                                           controller: TextConCode,
                                           maxLength: 11,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: 'rob',
+                                          ),
+                                          keyboardType: TextInputType.phone,
                                           decoration: InputDecoration(
                                             labelText: 'کد ملی',
 
@@ -452,11 +460,7 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                     ),
                   ),
                 ),
-                Positioned(
-                    bottom: 8,
-                    right: 8,
-                    left: 8,
-                    child: TextApp(VersionApp, 12, Colors.black54, true))
+
 
 
               ],

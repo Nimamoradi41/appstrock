@@ -1,5 +1,4 @@
 
-
 class ModelPatient {
   int id;
   String fullName;
@@ -8,9 +7,12 @@ class ModelPatient {
   String gender;
   String timeOfAddToSystem;
   String? timeOfAddLabotory;
-  String? TimeOfInjection;
+  String? timeOfInjection;
   int? bloodPressure1;
   int? bloodPressure2;
+  int? signsStartTS;
+  int? insertTimeTS;
+  int? injectionType;
   String? signsStartTime;
   String? signsStartDate;
   String? fssTime;
@@ -28,14 +30,21 @@ class ModelPatient {
   bool isNot724;
   bool needToCT;
   bool? nihsIsComplete;
+  bool? notInjectingIsComplete;
+  bool? isFinished;
   bool?  labIsComplete;
   bool?  is724IsComplete;
-  bool?  AddReasonNot724;
-  bool?  AtendSeen;
+  bool?  isNot724IsComplete;
+  bool?  misdiagnosisOfTriage;
+  bool?  misdiagnosisOfEms;
+  bool?  overTime;
+  bool?  seenByAttend;
   bool?  signsStartIsUnknown;
   String?  n_1_a;
+  String?  labInsertDate;
   String?  n_1_b;
   String?  n_1_c;
+  String?  labInsertTime;
   String?  n_2;
   String?  n_3;
   String?  n_4;
@@ -54,6 +63,28 @@ class ModelPatient {
   String?  pt;
   String?  ptt;
   String?  inr;
+  bool?  c1;
+  bool?  c2;
+  bool?  c3;
+  bool?  c4;
+  bool?  c5;
+  bool?  c6;
+  bool?  c7;
+  bool?  c8;
+  bool?  c9;
+  bool?  c10;
+  bool?  c11;
+  bool?  c12;
+  bool?  c13;
+  bool?  c14;
+  bool?  c15;
+  bool?  c16;
+  bool?  c17;
+  bool?  c18;
+  bool?  c19;
+  bool?  c20;
+  bool?  c21;
+  bool?  c22;
   bool?  trop;
   int?  bs;
 
@@ -77,6 +108,8 @@ class ModelPatient {
     required this.Atends,
     required this.Fesharkhon,
     required this.lkwDate,
+    required this.isFinished,
+    required this.notInjectingIsComplete,
 
     required this.ResonNot,
     required this.needToMRI,
@@ -86,10 +119,13 @@ class ModelPatient {
     required this.nihsIsComplete,
     required this.labIsComplete,
     required this.is724IsComplete,
-    required this.AddReasonNot724,
-    required this.AtendSeen,
+    required this.isNot724IsComplete,
+    required this.misdiagnosisOfTriage,
+    required this.misdiagnosisOfEms,
+    required this.overTime,
+    required this.seenByAttend,
     required this.signsStartIsUnknown,
-    required this.TimeOfInjection,
+    required this.timeOfInjection,
     required this.n_1_a,
     required this.n_1_b,
     required this.n_1_c,
@@ -115,6 +151,33 @@ class ModelPatient {
     required this.bloodPressure1,
     required this.bloodPressure2,
     required this.bs,
+    required this.signsStartTS,
+    required this.insertTimeTS,
+    required this.injectionType,
+    required this.labInsertDate,
+    required this.labInsertTime,
+    required this.c1,
+    required this.c2,
+    required this.c3,
+    required this.c4,
+    required this.c5,
+    required this.c6,
+    required this.c7,
+    required this.c8,
+    required this.c9,
+    required this.c10,
+    required this.c11,
+    required this.c12,
+    required this.c13,
+    required this.c14,
+    required this.c15,
+    required this.c16,
+    required this.c17,
+    required this.c18,
+    required this.c19,
+    required this.c20,
+    required this.c21,
+    required this.c22,
   });
 
   factory ModelPatient.fromJson(Map<String, dynamic> json) => ModelPatient(
@@ -125,7 +188,9 @@ class ModelPatient {
     gender: json["gender"]?? '',
     timeOfAddToSystem: json["timeOfAddToSystem"]?? '',
     fssTime: json["fssTime"]?? '',
+    labInsertDate: json["labInsertDate"]?? '',
     signsStartDate: json["signsStartDate"]?? '',
+    labInsertTime: json["labInsertTime"]?? '',
     Residents: json["Residents"]?? '',
     lkwTime: json["lkwTime"]?? '',
     fssDate: json["fssDate"]?? '',
@@ -133,6 +198,9 @@ class ModelPatient {
     bloodPressure1: json["bloodPressure1"]?? 0,
     bloodPressure2: json["bloodPressure2"]?? 0,
     bs: json["bs"]?? 0,
+    insertTimeTS: json["insertTimeTS"]?? 0,
+    signsStartTS: json["signsStartTS"]?? 0,
+    injectionType: json["injectionType"]?? 0,
     Atends: json["Atends"]?? '',
     Fesharkhon: json["Fesharkhon"]?? '',
     Ghandkhon: json["Ghandkhon"]?? '',
@@ -140,18 +208,45 @@ class ModelPatient {
     dateOfAddToStart: json["dateOfAddToStart"]?? '',
     signsStartTime: json["signsStartTime"]?? '',
     timeOfAddLabotory: json["timeOfAddLabotory"]?? '',
-    TimeOfInjection: json["TimeOfInjection"]?? '',
+    timeOfInjection: json["timeOfInjection"]?? '',
     ResonNot: json["ResonNot"]??'',
     needToMRI: json["needToMRI"]??false,
+    c1: json["c1"]??false,
+    c2: json["c2"]??false,
+    c3: json["c3"]??false,
+    c4: json["c4"]??false,
+    c5: json["c5"]??false,
+    c6: json["c6"]??false,
+    c7: json["c7"]??false,
+    c8: json["c8"]??false,
+    c9: json["c9"]??false,
+    c10: json["c10"]??false,
+    c11: json["c11"]??false,
+    c12: json["c12"]??false,
+    c13: json["c13"]??false,
+    c14: json["c14"]??false,
+    c15: json["c15"]??false,
+    c16: json["c16"]??false,
+    c17: json["c17"]??false,
+    c18: json["c18"]??false,
+    c19: json["c19"]??false,
+    c20: json["c20"]??false,
+    c21: json["c21"]??false,
+    c22: json["c22"]??false,
+    isFinished: json["isFinished"]??false,
+    misdiagnosisOfTriage: json["misdiagnosisOfTriage"]??false,
+    misdiagnosisOfEms: json["misdiagnosisOfEms"]??false,
+    notInjectingIsComplete: json["notInjectingIsComplete"]??false,
     isNot724: json["isNot724"]??false,
     needToCT: json["needToCT"]??false,
     nihsIsComplete: json["nihsIsComplete"]??false,
     labIsComplete: json["labIsComplete"]??false,
     is724IsComplete: json["is724IsComplete"]??false,
-    AddReasonNot724: json["AddReasonNot724"]??false,
-    AtendSeen: json["AtendSeen"]??false,
+    isNot724IsComplete: json["isNot724IsComplete"]??false,
+    overTime: json["overTime"]??false,
+    seenByAttend: json["seenByAttend"]??false,
     signsStartIsUnknown: json["signsStartIsUnknown"]??false,
-    n_1_a: json["n_1_a"]??'',
+    n_1_a: json["n_1_a"]??'0',
     n_1_b: json["n_1_b"]??'',
     n_1_c: json["n_1_c"]??'',
     n_2: json["n_2"]??'',

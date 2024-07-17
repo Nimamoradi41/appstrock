@@ -41,7 +41,7 @@ class ScreenFormNIHS extends StatefulWidget {
       this.n_8,
       this.n_9,
       this.n_10,
-      this.n_11); // ScreenFormNIHS(this.onClose,this.ISEdit,this.DataEdit);
+      this.n_11,this.isAtend); // ScreenFormNIHS(this.onClose,this.ISEdit,this.DataEdit);
 
 
 
@@ -62,6 +62,7 @@ class ScreenFormNIHS extends StatefulWidget {
   String n_9;
   String n_10;
   String n_11;
+  bool isAtend;
   @override
   _ExamFormState createState() => _ExamFormState();
 }
@@ -308,7 +309,6 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                   child: Container(
                     margin: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(32),topRight: Radius.circular(32)),
                     ),
                     child: Column(
@@ -331,19 +331,19 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                                   child: Icon(Icons.arrow_back,size: 30,color: Colors.white,),
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 8),
-                                    child: TextAppfredoka('Score : ',16,Colors.white,true),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 8),
-                                    child: TextAppfredoka('16',16,Colors.white,true),
-                                  ),
-
-                                ],
-                              ),
+                              // Row(
+                              //   children: [
+                              //     Padding(
+                              //       padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 8),
+                              //       child: TextAppfredoka('Score : ',16,Colors.white,true),
+                              //     ),
+                              //     Padding(
+                              //       padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 8),
+                              //       child: TextAppfredoka('16',16,Colors.white,true),
+                              //     ),
+                              //
+                              //   ],
+                              // ),
                               Spacer(),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 8),
@@ -373,29 +373,44 @@ class _ExamFormState extends State<ScreenFormNIHS> {
 
                 SizedBox(height: 8,),
 
-                Container(
-                  width: wid*0.9,
-                  child: ElevatedButton(onPressed: (){
-                    Run();
-                  },
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(ColorApp),
-                          padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
+
+                  widget.isAtend?
+                    Container():
+                   Column(
+                  children: [
+                    Container(
+                      width: wid*0.9,
+                      child: ElevatedButton(onPressed: (){
+
+                        if(widget.ISEdit)
+                          {
+                            Navigator.pop(context);
+                          }else{
+                          Run();
+                        }
+
+                      },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(ColorApp),
+                              padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  )
                               )
-                          )
-                      ),
-                      child:Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text( widget.ISEdit ? 'ویرایش فرم' :  'تکمیل فرم',
-                          style: TextStyle(color:Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),),
-                      )),
-                ),
-                SizedBox(height: 8,),
+                          ),
+                          child:Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text( widget.ISEdit ? 'بستن' :  'تکمیل فرم',
+                              style: TextStyle(color:Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),),
+                          )),
+                    ),
+                    SizedBox(height: 8,),
+                  ],
+                )
+
 
 
 

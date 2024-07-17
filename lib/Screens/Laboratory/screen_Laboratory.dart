@@ -138,6 +138,9 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
       status=prefs.getBool('isOnline')!;
       Notifi.setstatus(status);
     }
+
+
+    RunListP(context);
   }
 
   late Timer _timer;
@@ -151,7 +154,7 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
     );
 
     GetInfo();
-    RunListP(context);
+
 
   }
 
@@ -168,7 +171,7 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
   @override
   void initState() {
     super.initState();
-    startTimer();
+    GetInfo();
   }
 
 
@@ -319,11 +322,7 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
                     ),
                   ),
                 ),
-                Positioned(
-                    bottom: 8,
-                    right: 8,
-                    left: 8,
-                    child: TextApp(VersionApp, 12, Colors.black54, true))
+
               ],
             ),
           ),

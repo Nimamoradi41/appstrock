@@ -4,6 +4,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:appstrock/Screens/Atend/model/ModelImages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:http/http.dart'as http;
@@ -137,6 +138,34 @@ class ApiServiceAtend{
 
 
 
+
+    return login;
+  }
+
+
+
+  static Future<ModelImages> GetPatientImages(String id,BuildContext context) async {
+    var login;
+
+
+
+
+
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients/GetPatientImages'));
+    request.fields.addAll({
+      // 'id': id
+      'id': '1'
+    });
+
+
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      String str= await response.stream.bytesToString();
+      login=   modelImagesFromJson(str);
+    }
+    else {
+      print(response.reasonPhrase);
+    }
 
     return login;
   }

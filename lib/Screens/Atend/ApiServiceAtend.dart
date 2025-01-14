@@ -153,15 +153,26 @@ class ApiServiceAtend{
 
     var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients/GetPatientImages'));
     request.fields.addAll({
-      // 'id': id
-      'id': '1'
-    });
+      'id': id
+     });
 
 
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       String str= await response.stream.bytesToString();
       login=   modelImagesFromJson(str);
+    }
+    if(response.statusCode==400)
+    {
+      String str= await response.stream.bytesToString();
+      print(str);
+      if(str != null && str.isNotEmpty) {
+        ModelRigester data = modelRigesterFromJson(str);
+        login = data;
+      } else {
+        // Handle the case where response is empty or null
+        ShowErrorMsg(context, 'مشکلی در دریافت اطلاعات از سرور به وجود آمده');
+      }
     }
     else {
       print(response.reasonPhrase);

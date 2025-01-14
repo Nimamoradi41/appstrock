@@ -83,7 +83,6 @@ class _ScreenFormIsNot724State extends State<ScreenFormReasonInjection> {
   bool _checkBox21 = false;
   bool _checkBox22 = false;
 
-
   void _submitForm() {
     List<Map<String, bool>> answers = [];
     answers.add({
@@ -184,13 +183,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormReasonInjection> {
 
   Future  Run()async
   {
-    var Res=await ShowAllow(context,'آیا از تکمیل فرم مطمئن هستید ؟');
-    if(Res)
-    {
-      print('AAA');
-      _submitForm();
-      // ignore: use_build_context_synchronously
-    }
+    _submitForm();
   }
 
 
@@ -200,18 +193,25 @@ class _ScreenFormIsNot724State extends State<ScreenFormReasonInjection> {
     _checkBox1=widget.c1;
     _checkBox2=widget.c2;
     _checkBox3=widget.c3;
-    _checkBox3=widget.c3;
-    _checkBox3=widget.c3;
-    _checkBox3=widget.c3;
-    _checkBox3=widget.c3;
-    _checkBox3=widget.c3;
-    _checkBox3=widget.c3;
-    _checkBox3=widget.c3;
-    _checkBox3=widget.c3;
-    _checkBox3=widget.c3;
-    _checkBox3=widget.c3;
-    _checkBox3=widget.c3;
-    _checkBox3=widget.c3;
+    _checkBox4=widget.c4;
+    _checkBox5=widget.c5;
+    _checkBox6=widget.c6;
+    _checkBox7=widget.c7;
+    _checkBox8=widget.c8;
+    _checkBox9=widget.c9;
+    _checkBox10=widget.c10;
+    _checkBox11=widget.c11;
+    _checkBox12=widget.c12;
+    _checkBox13=widget.c13;
+    _checkBox14=widget.c14;
+    _checkBox15=widget.c15;
+    _checkBox16=widget.c16;
+    _checkBox17=widget.c17;
+    _checkBox18=widget.c18;
+    _checkBox19=widget.c19;
+    _checkBox20=widget.c20;
+    _checkBox21=widget.c21;
+    _checkBox22=widget.c22;
     setState(() {
 
     });
@@ -220,504 +220,734 @@ class _ScreenFormIsNot724State extends State<ScreenFormReasonInjection> {
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
     wid=wid>600?600:wid;
-    return Center(
-      child: Container(
-        width: wid,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextApp('دلایل رد تزریق',16,Colors.black54,true),
-              SizedBox(height: 16,),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.black12,width: 2)
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('شواهد خونریزی مغزی در  scan یا ct یا mri',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox1,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox1 = value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('بهبود سریع علائم یا حمله ایسکمیک گذرا  (TIA)',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox2,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox2 = value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('فشار خون بالا -علی رغم دریافت دو دوز البتالول (185 < SBP  یا 110 < DBP)',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox3,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox3= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('وجود هایپودانسیته و ناحیه اینفارکت > 1/3 ناحیه MCA',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox4,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox4= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('بالای پیش  از استروک '+' mRS ',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox5,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox5= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox6,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox6= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox7,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox7= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox8,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox8= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox9,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox9= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox10,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox10= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox11,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox11= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox12,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox12= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox13,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox13= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox14,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox14= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox15,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox15= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox16,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox16= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox17,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox17= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox18,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox18= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox19,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox19= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox20,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox20= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox21,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox21= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-                        SizedBox(height: 4,),
-                        Row(
-                          children: [
-
-                            SizedBox(width: 8,),
-                            Expanded(child: TextApp2('3',16,Colors.black87,true)),
-                            SizedBox(width: 8,),
-                            Checkbox(
-                              value: _checkBox22,
-                              fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkBox22= value!;
-                                });
-                              },
-                            ),
-                            SizedBox(width: 4,)
-                          ],
-                        ),
-
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: Container(
+            width: wid,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Row(
+                      children: [
+                        InkWell(
+                            onTap: (){
+                              Navigator.pop(context);
+                            },
+                            child: Icon(Icons.arrow_back,size: 30,color: Colors.black45,)),
+                        Spacer(),
+                        TextApp('دلایل رد تزریق',16,Colors.black54,true),
                       ],
                     ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 24,),
-
-              Center(
-                child: Container(
-                  width: wid,
-                  child: ElevatedButton(onPressed: (){
-                    if(widget.isEdit)
-                      {
-                       Navigator.pop(context);
-                      }else{
-                      Run();
-                    }
-
-                  },
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(ColorApp),
-                          padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              )
-                          )
+                    SizedBox(height: 16,),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.black12,width: 2)
                       ),
-                      child:Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: TextApp(  widget.isEdit ? 'بستن' : 'ثبت اطلاعات',16,Colors.white,true),
-                      )),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                children: [
+                                  SizedBox(width: 8,),
+                                  const Expanded(child:
+                                  Text(
+                                    'شواهد خونریزی مغزی در CT Scan و MRI',
+                                    textDirection: TextDirection.rtl, // تنظیم جهت متن به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox1,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox1 = value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child:
+                                  Text(
+                                    'بهبود سریع علائم یا حمله ایسکمیک گذرا (TIA)',
+                                    textDirection: TextDirection.rtl, // تنظیم جهت متن به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox2,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox2 = value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+                                  SizedBox(width: 8,),
+                                  const Expanded(child:
+                                  Text(
+                                    'فشار خون بالا – علی‌رغم دریافت دو دوز لابتالول (DBP > 110) یا (SBP > 185)',
+                                    textDirection: TextDirection.rtl, // تنظیم جهت متن به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox3,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox3= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child:
+                                  Text(
+                                    'وجود هایپودانسیته و ناحیه اینفارکت < 1/3 ناحیه MCA',
+                                    textDirection: TextDirection.rtl, // تنظیم جهت متن به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox4,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox4= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child:
+                                  Text(
+                                    'MRS بالای پیش از استروک',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox5,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox5= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child:
+                                  Text(
+                                    'NIHSS پایین',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox6,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox6= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child:
+                                  Text(
+                                    'پلاکت > 100 هزار',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox7,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox7= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+                                  SizedBox(width: 8,),
+                                  const Expanded(
+                                    child:Text(
+                                      'سابقه کوآگولوپاتی یا مصرف آنتی کوآگولانت و آزمایشات مختل (INR > 1.7 یا برابر، یا PTT1.5 >)',
+                                      textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                      textAlign: TextAlign.right,       // تراز متن به راست
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black87,
+                                      ),
+                                    )
+                                    ,
+                                  ),
+
+                                  // const SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox8,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox8= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'قند خون > 50 mg/dl',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox9,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox9= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'قند خون < 400 mg/dl',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox10,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox10= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'سابقه ICH قبلی',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox11,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox11= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'جراحی مازور در 2 هفته اخیر',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox12,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox12= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'ترومای جدی در 2 هفته اخیر',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox13,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox13= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'سکته قلبی (STEMI) در 4 هفته اخیر',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox14,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox14= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'سابقه استروک ایسکمیک در 3 ماه اخیر',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox15,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox15= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'سابقه تروما به سر در 3 ماه اخیر',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox16,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox16= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'بارداری',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox17,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox17= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'خونریزی دستگاه گوارش، ادراری تناسلی و یا هر خونریزی Significant دیگردر 3 هفته اخیر',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox17,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox17= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'وجود arterial puncture at a noncompressible site در 7 روز اخیر',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox18,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox18= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'انجام LP در 7 روز اخیر',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox19,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox19= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'عدم رضایت بیمار یا همراه به دریافت Tpa',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox20,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox20= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+
+                                  SizedBox(width: 8,),
+                                  const Expanded(child: Text(
+                                    'سایر',
+                                    textDirection: TextDirection.rtl, // جهت‌دهی به راست‌چین
+                                    textAlign: TextAlign.right,       // تراز متن به راست
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Checkbox(
+                                    value: _checkBox21,
+                                    fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
+
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _checkBox21= value!;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 4,)
+                                ],
+                              ),
+                              SizedBox(height: 4,),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 24,),
+
+                    Center(
+                      child: Container(
+                        width: wid,
+                        child: ElevatedButton(onPressed: (){
+                          Run();
+                          // if(widget.isEdit)
+                          //   {
+                          //    Navigator.pop(context);
+                          //   }else{
+                          //
+                          // }
+
+                        },
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(ColorApp),
+                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    )
+                                )
+                            ),
+                            child:Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              // child: TextApp(  widget.isEdit ? 'بستن' : 'ثبت اطلاعات',16,Colors.white,true),
+                              child: TextApp(   'ثبت اطلاعات',16,Colors.white,true),
+                            )),
+                      ),
+                    ),
+                    SizedBox(height: 8,),
+
+                  ],
                 ),
               ),
-              SizedBox(height: 8,),
-
-            ],
+            ),
           ),
         ),
       ),

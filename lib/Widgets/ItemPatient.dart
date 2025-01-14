@@ -171,7 +171,7 @@ class ItemPatientNew extends StatelessWidget {
                       children: [
                         TextApp('جنسیت', 10, ColorTitleText, false),
                         SizedBox(height: 4,),
-                        TextApp(ItemsP.gender.toString().isEmpty?'نامشخص':ItemsP.gender.toString() , 12, ColorTextbody, true),
+                        TextApp(ItemsP.gender.toString() , 12, ColorTextbody, true),
                         // TextApp('مرد' , 12, ColorTextbody, true),
                       ],
                     ),

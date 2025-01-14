@@ -35,31 +35,31 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
   {
 
 
-    var Flag=await ShowAllow(context,'آیا از تغییر شیفت خود مطمئن هستید ؟');
-    if(Flag)
+    ShowLoadingApp(context);
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceReception.ChangeShiftStatus(context);
+    print(Data.toJson());
+
+    if(Data!=null)
     {
-      ShowLoadingApp(context);
-      // ignore: use_build_context_synchronously
-      var Data= await ApiServiceReception.ChangeShiftStatus(context);
-      print(Data.toJson());
-
-      if(Data!=null)
+      if(Data.success)
       {
-        if(Data.success)
-        {
-          Notifi.setstatus(Data.data!.isOnline);
-        }else{
-          // ignore: use_build_context_synchronously
-          ShowErrorMsg(context, Data.message);
-        }
+        Notifi.setstatus(Data.data!.isOnline);
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
       }
-
-      Navigator.pop(context);
     }
+
+    Navigator.pop(context);
   }
 
 
-
+  bool _containsNonEnglishCharacters(String input) {
+    // Define a regular expression for English letters
+    RegExp _persianRegex = RegExp(r'^[\u0600-\u06FF\s]+$'); // محدوده کاراکترهای فارسی
+    return _persianRegex.hasMatch(input);
+  }
   Future RunAddP(BuildContext context)async{
 
     if(!Notifi.status)
@@ -78,50 +78,47 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
       return;
     }
 
-
-    RegExp regExp = new RegExp(
-      "^[\u0600-\u06FF]+",
-    );
-
-    if(regExp.hasMatch(TextConName.text.toString()))
+    if(!_containsNonEnglishCharacters(TextConName.text.toString()))
     {
-      showToast("برای نام بیمار از کارکتر های فارسی استفاده نکنید",
+      showToast("برای نام بیمار از کارکتر های انگلیسی استفاده نکنید",
           position: StyledToastPosition.top,
           context:context);
       return;
     }
 
 
-    var Flag=await ShowAllow(context,'آیا از ثبت بیمار مطمئن هستید ؟');
-    if(Flag)
+    // var check=checkMeliCode(TextConCode.text.toString());
+    // if(!check)
+    // {
+    //   ShowErrorMsg(context,'کدملی اشتباه است');
+    //   return;
+    // }
+
+    Jalali date=Jalali.now();
+    String formattedDate =
+        '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2,'0')}';
+    // چاپ تاریخ جلالی با فرمت مورد نظر
+    print('تاریخ جلالی فعلی: $formattedDate');
+    ShowLoadingApp(context);
+    var  timestamp=DateTime.now().millisecondsSinceEpoch;
+    var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
+        TextConAge.text.toString(),dropdownvalue=='مرد'?2:1,context,timestamp);
+
+
+    if(Data!=null)
     {
-      Jalali date=Jalali.now();
-      String formattedDate =
-          '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
-      // چاپ تاریخ جلالی با فرمت مورد نظر
-      print('تاریخ جلالی فعلی: $formattedDate');
-      ShowLoadingApp(context);
-      var  timestamp=DateTime.now().millisecondsSinceEpoch;
-      var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
-          TextConAge.text.toString(),dropdownvalue=='مرد'?2:1,context,timestamp);
-
-
-      if(Data!=null)
+      if(Data.success)
       {
-        if(Data.success)
-        {
-          // Ok Shode
-          TextConAge.clear();
-          TextConCode.clear();
-          TextConName.clear();
-          TextConGender.clear();
-          Notifi.Refrsh();
-          ShowSuccesMsg(context,'بیمار با موفقیت ثبت شد');
-        }else{
-          ShowErrorMsg(context, Data.message);
-        }
+        // Ok Shode
+        TextConAge.clear();
+        TextConCode.clear();
+        TextConName.clear();
+        TextConGender.clear();
+        Notifi.Refrsh();
+        ShowSuccesMsg(context,'بیمار با موفقیت ثبت شد');
+      }else{
+        ShowErrorMsg(context, Data.message);
       }
-
     }
 
   }
@@ -149,13 +146,9 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
   }
 
   Future ClearAllDate()async{
-    var Flag=await ShowAllow(context,'آیا میخواهید از حساب کاربری خود خارج شوید ؟');
-    if(Flag)
-    {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.clear();
-      GoNextPageGameOver(context, SplashScreen());
-    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    GoNextPageGameOver(context, SplashScreen());
   }
   @override
   void initState() {
@@ -226,7 +219,6 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                                       fontSize: 16
                                   ),
                                 )
-
                               // TextApp('فوریت های پزشکی', 16, Colors.white, true),
                             )),
                           ],
@@ -344,27 +336,21 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(16.0),
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: TextField(
-                                          controller: TextConCode,
-                                          maxLength: 11,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            fontFamily: 'rob',
+                                      child: TextField(
+                                        controller: TextConCode,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                        ),
+                                        keyboardType: TextInputType.phone,
+                                        decoration: InputDecoration(
+                                          labelText: 'کد ملی',
+                                          disabledBorder:OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(8)
                                           ),
-                                          keyboardType: TextInputType.phone,
-                                          decoration: InputDecoration(
-                                            labelText: 'کد ملی',
-
-                                            disabledBorder:OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(8)
-                                            ),
-                                            border: OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(8)
-                                            ),
-
+                                          border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(8)
                                           ),
+
                                         ),
                                       ),
                                     ),

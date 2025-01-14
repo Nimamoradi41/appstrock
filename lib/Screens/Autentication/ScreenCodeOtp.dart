@@ -1,6 +1,8 @@
 import 'package:appstrock/Screens/Atend/ScreenAtend.dart';
 import 'package:appstrock/Screens/Laboratory/screen_Laboratory.dart';
+import 'package:appstrock/Screens/Reception/screen_reception.dart';
 import 'package:appstrock/Screens/Resident/screen_resident.dart';
+import 'package:appstrock/Screens/SplashScreen.dart';
 import 'package:appstrock/Screens/Strok/ScreenStrock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -8,36 +10,28 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
-
 import '../../Constants.dart';
 import '../../Widgets/TextApp.dart';
 import '../Ems/screen_ems.dart';
 import '../Teriazh/screen_teriazh.dart';
 import '../sickcarrier/screen_sickcarrier.dart';
 import 'ApiServiceAutentication.dart';
-
-
 class ScreenCodeOtp extends StatefulWidget {
-
-
   String Number ;
   String Name ;
   String NatiCode ;
   int TypUser ;
   String Pass ;
   String Id ;
-
-
   ScreenCodeOtp(this.Number,this.Name,this.NatiCode,this.TypUser,this.Pass,this.Id);
-
   @override
   State<ScreenCodeOtp> createState() => _ScreenCodeOtpState();
 }
 
 class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
   var ControlerTimer=CountdownController(autoStart: true);
-
-  String CodeInput="";
+   String CodeInput="";
+  String  iduser="";
 
   Future RunCode(String Code,BuildContext context)async{
     if(CodeInput.length!=5)
@@ -50,16 +44,9 @@ class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
 
 
     ShowLoadingApp(context);
-
-
-
-
-
-
-
-
     // ignore: use_build_context_synchronously
-    var Data=await  ApiServiceAutentication.CheckConfirmCode(widget.Id,CodeInput, context);
+    // var Data=await  ApiServiceAutentication.CheckConfirmCode(widget.Id,CodeInput, context);
+    var Data=await  ApiServiceAutentication.CheckConfirmCode(iduser,CodeInput, context);
 
     // ignore: use_build_context_synchronously
 
@@ -75,13 +62,20 @@ class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
             if(widget.TypUser==1)
             {
               // ignore: use_build_context_synchronously
-              GoNextPageGameOver(context,ScreenEms());
+              GoNextPageGameOver(context,ScreenEms(false));
             }
             if(widget.TypUser==2)
             {
               // ignore: use_build_context_synchronously
               GoNextPageGameOver(context,Screen_Teriazh());
             }
+
+            if(widget.TypUser==3)
+            {
+              // ignore: use_build_context_synchronously
+              GoNextPageGameOver(context,ScreenReception());
+            }
+
             if(widget.TypUser==7)
             {
               // ignore: use_build_context_synchronously
@@ -109,6 +103,17 @@ class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
               // ignore: use_build_context_synchronously
               GoNextPageGameOver(context,ScreenStrock());
             }
+            if(widget.TypUser==9)
+            {
+              // ignore: use_build_context_synchronously
+              GoNextPageGameOver(context,SplashScreen());
+            }
+
+            if(widget.TypUser==10)
+            {
+              // ignore: use_build_context_synchronously
+              GoNextPageGameOver(context,SplashScreen());
+            }
           }else{
           ShowErrorMsg(context,Data.message);
         }
@@ -119,7 +124,41 @@ class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
 
 
   }
+  Future sendCodeAgain(BuildContext context)async{
 
+
+
+    ShowLoadingApp(context);
+    // ignore: use_build_context_synchronously
+    // var Data=await  ApiServiceAutentication.CheckConfirmCode(widget.Id,CodeInput, context);
+    var Data=await  ApiServiceAutentication.SendAgain(widget.Id,widget.Number, context);
+
+    // ignore: use_build_context_synchronously
+
+
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        ControlerTimer.restart();
+        SendAgainButton=false;
+      }else{
+        ShowErrorMsg(context,Data.message);
+      }
+    }else{
+      // ignore: use_build_context_synchronously
+      ShowErrorMsg(context,ErrorConnection);
+    }
+
+
+  }
+  var SendAgainButton=false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    iduser=widget.Id;
+  }
   @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
@@ -189,18 +228,22 @@ class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
                                 Countdown(
                                   seconds: 60,
                                   controller: ControlerTimer,
-                                  build: (BuildContext context, double time) => Text(
-                                    "00:"+time.toInt().toString(),
+                                  build: (BuildContext context, double time) =>
+                                      Text(
+                                    "00:${time.toInt()}",
                                     style: const TextStyle(color: Colors.black38,fontWeight: FontWeight.bold,fontSize:18 ),
                                   ),
                                   interval: Duration(milliseconds: 1000),
                                   onFinished: () {
-
+                                    SendAgainButton=true;
                                   },
                                 ),
                                 InkWell(
                                   onTap: (){
-
+                                   if(SendAgainButton)
+                                     {
+                                       sendCodeAgain(context);
+                                     }
                                   },
                                   child: TextApp("ارسال مجدد ؟ ", 16,    Colors.black54
                                       , true),

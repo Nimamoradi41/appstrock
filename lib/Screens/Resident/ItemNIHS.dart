@@ -10,15 +10,31 @@ class ItemNIHS extends StatefulWidget {
 
   QuestionAnswer Que;
   int Index;
-  ItemNIHS(this.Index,this.Que);
+  int score;
+  List<QuestionAnswer> questions;
+  VoidCallback _onTap;
+
+  ItemNIHS(this.Index,this.Que,this.questions,this.score,this._onTap);
 
   @override
   State<ItemNIHS> createState() => _ItemNIHSState();
 }
 
+
+
 class _ItemNIHSState extends State<ItemNIHS> {
 
+  void Check() {
+    widget.score=0;
+    widget.questions.forEach((element) {
+      widget.score=widget.score+element.selectedAnswer!!;
+    });
 
+
+
+    widget._onTap();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +60,12 @@ class _ItemNIHSState extends State<ItemNIHS> {
                   children:List.generate(
                     widget.Que.options.length,
                         (optionIndex) {
-                      return Expanded(child: InkWell(
+                      return Expanded(child:
+                      InkWell(
                         onTap: (){
                           widget.Que.selectedAnswer =optionIndex;
-                          setState(() {
-
-                          });
+                          Check();
+                          setState((){});
                         },
                         child: Container(
                             decoration: widget.Que.selectedAnswer ==optionIndex ? BoxDecoration(

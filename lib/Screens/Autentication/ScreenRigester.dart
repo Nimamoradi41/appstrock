@@ -38,6 +38,8 @@ class _ScreenRigesterState extends State<ScreenRigester> {
     'آزمایشگاه',
     'رزیدنت',
     'استروک',
+    'تصویر برداری',
+    'سوپروایزور',
   ];
 
 
@@ -63,6 +65,14 @@ class _ScreenRigesterState extends State<ScreenRigester> {
       ShowErrorMsg(context,'کدملی اشتباه است');
       return;
     }
+
+
+    var check=checkMeliCode(textControllerNationalCode.text.toString());
+    if(!check)
+      {
+        ShowErrorMsg(context,'کدملی اشتباه است');
+        return;
+      }
 
 
     if(textControllerPhoneNumber.text.isEmpty)
@@ -155,6 +165,9 @@ class _ScreenRigesterState extends State<ScreenRigester> {
 
 
 
+
+
+
   @override
   void initState() {
     super.initState();
@@ -223,7 +236,6 @@ class _ScreenRigesterState extends State<ScreenRigester> {
                               textDirection: TextDirection.rtl,
                               child: TextField(
                                 maxLines: 1,
-                                maxLength: 10,
                                 controller: textControllerNationalCode,
                                 keyboardType: TextInputType.phone,
                                 textAlign: TextAlign.start,
@@ -233,7 +245,7 @@ class _ScreenRigesterState extends State<ScreenRigester> {
                                 ),
                                 decoration: InputDecoration(
                                   labelText: 'کد ملی',
-                                  labelStyle: TextStyle(
+                                  labelStyle: const TextStyle(
                                       color: ColorApp,
                                       fontSize: 13
                                   ),

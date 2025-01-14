@@ -64,6 +64,25 @@ class _ScreenFormIsNot724State extends State<ScreenFormPreesBload724> {
 
   void _submitForm() {
     List<Map<String, String>> answers = [];
+    var FOneInt=int.parse(textControllerF1.text);
+    var FTwoInt=int.parse(textControllerF2.text);
+
+
+    if(FOneInt<6||FOneInt>30)
+      {
+        ShowErrorMsg(context,"فشار خون اشتباه وارد شده است");
+        return;
+      }
+
+
+      if(FTwoInt<2||FTwoInt>15)
+    {
+      ShowErrorMsg(context,"فشار خون اشتباه وارد شده است");
+      return;
+    }
+
+
+
 
 
     bload1= textControllerF1.text.toString();

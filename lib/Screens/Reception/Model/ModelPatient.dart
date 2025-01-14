@@ -3,6 +3,8 @@ class ModelPatient {
   int id;
   String fullName;
   String nationalCode;
+  String dtn;
+  String otn;
   String age;
   String gender;
   String timeOfAddToSystem;
@@ -11,9 +13,12 @@ class ModelPatient {
   int? bloodPressure1;
   int? bloodPressure2;
   int? signsStartTS;
+  int? injectionTimeTS;
   int? insertTimeTS;
   int? injectionType;
   String? signsStartTime;
+  String? timeFinish;
+  int? nihsSubscore;
   String? signsStartDate;
   String? fssTime;
   String? lkwTime;
@@ -42,6 +47,7 @@ class ModelPatient {
   bool?  signsStartIsUnknown;
   String?  n_1_a;
   String?  labInsertDate;
+  String?  dateFinishShamsi;
   String?  n_1_b;
   String?  n_1_c;
   String?  labInsertTime;
@@ -63,6 +69,8 @@ class ModelPatient {
   String?  pt;
   String?  ptt;
   String?  inr;
+  String?  wbc;
+  String?  hb;
   bool?  c1;
   bool?  c2;
   bool?  c3;
@@ -93,6 +101,8 @@ class ModelPatient {
     required this.id,
     required this.fullName,
     required this.nationalCode,
+    required this.otn,
+    required this.dtn,
     required this.age,
     required this.gender,
     required this.timeOfAddToSystem,
@@ -110,8 +120,10 @@ class ModelPatient {
     required this.lkwDate,
     required this.isFinished,
     required this.notInjectingIsComplete,
+    required this.wbc,
 
     required this.ResonNot,
+    required this.nihsSubscore,
     required this.needToMRI,
     required this.Residents,
     required this.isNot724,
@@ -121,6 +133,7 @@ class ModelPatient {
     required this.is724IsComplete,
     required this.isNot724IsComplete,
     required this.misdiagnosisOfTriage,
+    required this.injectionTimeTS,
     required this.misdiagnosisOfEms,
     required this.overTime,
     required this.seenByAttend,
@@ -178,10 +191,17 @@ class ModelPatient {
     required this.c20,
     required this.c21,
     required this.c22,
+    required this.hb,
+    required this.timeFinish,
+    required this.dateFinishShamsi,
   });
 
   factory ModelPatient.fromJson(Map<String, dynamic> json) => ModelPatient(
     id: json["id"]?? '',
+    dtn: json["dtn"]?? '',
+    otn: json["otn"]?? '',
+    timeFinish: json["timeFinish"]?? '',
+    dateFinishShamsi: json["dateFinishShamsi"]?? '',
     fullName: json["fullName"]?? '',
     nationalCode: json["nationalCode"]?? '',
     age: json["age"]?? '',
@@ -193,7 +213,10 @@ class ModelPatient {
     labInsertTime: json["labInsertTime"]?? '',
     Residents: json["Residents"]?? '',
     lkwTime: json["lkwTime"]?? '',
+    wbc: json["wbc"]?? '',
+    hb: json["hb"]?? '',
     fssDate: json["fssDate"]?? '',
+    nihsSubscore: json["nihsSubscore"]?? 0,
     lkwDate: json["lkwDate"]?? '',
     bloodPressure1: json["bloodPressure1"]?? 0,
     bloodPressure2: json["bloodPressure2"]?? 0,
@@ -207,6 +230,7 @@ class ModelPatient {
     dateOfAddToSystem: json["dateOfAddToSystem"]?? '',
     dateOfAddToStart: json["dateOfAddToStart"]?? '',
     signsStartTime: json["signsStartTime"]?? '',
+    injectionTimeTS: json["injectionTimeTS"]?? 0,
     timeOfAddLabotory: json["timeOfAddLabotory"]?? '',
     timeOfInjection: json["timeOfInjection"]?? '',
     ResonNot: json["ResonNot"]??'',

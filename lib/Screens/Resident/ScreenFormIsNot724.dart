@@ -47,15 +47,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIsNot724> {
 
   Future  Run()async
   {
-    var Res=await ShowAllow(context,'آیا از تکمیل فرم مطمئن هستید ؟');
-    print('VVV');
-    print(Res.toString());
-    if(Res)
-    {
-      print('AAA');
-      _submitForm();
-      // ignore: use_build_context_synchronously
-    }
+    _submitForm();
   }
 
 
@@ -136,14 +128,12 @@ class _ScreenFormIsNot724State extends State<ScreenFormIsNot724> {
                       SizedBox(height: 4,),
                       Row(
                         children: [
-
                           SizedBox(width: 8,),
                           Expanded(child: TextApp2('بیش از 4 و نیم ساعت از شروع علائم گذشته است',16,Colors.black87,true)),
                           SizedBox(width: 8,),
                           Checkbox(
                             value: _checkBox3,
                             fillColor: MaterialStateColor.resolveWith((states) => ColorApp),
-
                             onChanged: (value) {
                               setState(() {
                                 _checkBox3= value!;

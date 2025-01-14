@@ -29,30 +29,25 @@ class _ScreenEmsState extends State<screen_EditProfile> {
 
    Future RunAddP(BuildContext context)async{
 
-     var Flag=await ShowAllow(context,'آیا از ویرایش مطمئن هستید ؟');
-     if(Flag)
+     ShowLoadingApp(context);
+     var Data=await ApiServiceEms.EditProfile(
+         TextName.text.toString(),
+         TextCodeMeli.text.toString(),
+         TextPass.text.toString(),
+         context);
+
+
+     if(Data!=null)
      {
-
-       ShowLoadingApp(context);
-       var Data=await ApiServiceEms.EditProfile(
-           TextName.text.toString(),
-           TextCodeMeli.text.toString(),
-           TextPass.text.toString(),
-           context);
-
-
-       if(Data!=null)
+       if(Data.success)
        {
-         if(Data.success)
-         {
-           SharedPreferences prefs = await SharedPreferences.getInstance();
-           prefs.clear();
-           ShowSuccesMsg(context,'اطلاعات با موفقیت ویرایش شد');
-           GoNextPageGameOver(context,SplashScreen());
+         SharedPreferences prefs = await SharedPreferences.getInstance();
+         prefs.clear();
+         ShowSuccesMsg(context,'اطلاعات با موفقیت ویرایش شد');
+         GoNextPageGameOver(context,SplashScreen());
 
-         }else{
-           ShowErrorMsg(context, Data.message);
-         }
+       }else{
+         ShowErrorMsg(context, Data.message);
        }
      }
    }
@@ -217,7 +212,7 @@ class _ScreenEmsState extends State<screen_EditProfile> {
                                      textDirection: TextDirection.rtl,
                                      child: TextField(
                                        controller: TextCodeMeli,
-                                        maxLength: 11,
+                                        maxLength: 10,
                                        decoration: InputDecoration(
                                          labelText: 'کد ملی',
                                          disabledBorder:OutlineInputBorder(

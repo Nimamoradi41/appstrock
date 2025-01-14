@@ -1,6 +1,7 @@
 import 'package:appstrock/Widgets/TextApp.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../Constants.dart';
 import 'ApiServiceAtend.dart';
@@ -24,8 +25,7 @@ class _ScreenListImagesState extends State<ScreenListImages> {
 
   Future   getImages(String id,BuildContext context) async
   {
-      ShowLoadingApp(context);
-      // ignore: use_build_context_synchronously
+
       var Data= await ApiServiceAtend.GetPatientImages(widget.Id.toString(),context);
 
 
@@ -33,6 +33,7 @@ class _ScreenListImagesState extends State<ScreenListImages> {
       {
         if(Data.success)
         {
+          print('Ok');
           list=Data.data!;
           setState(() {
 
@@ -86,7 +87,19 @@ class _ScreenListImagesState extends State<ScreenListImages> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8)
                     ),
-                    child: Image.network(list[item].image,fit: BoxFit.fill,),
+                    // child: Image.network(list[item].image,fit: BoxFit.fill,),
+                    child: InkWell(
+                        onTap: ()async{
+                          final String url = list[item].image;
+
+                          // const url = 'https://web.appstrok.ir/UploadFile?UserId=$UserId&PatientId='+86;
+                          if (await canLaunch(url)) {
+                          await launch(url);
+                          } else {
+                          throw 'Could not launch $url';
+                          }
+                        },
+                        child: Icon(Icons.download_for_offline,color: Colors.black45, size: 50,))
                   ),
                   Row(
                     children: [

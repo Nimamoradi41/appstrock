@@ -39,8 +39,6 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     if(Login)
       {
-
-
         var Name=  prefs.getString("Name");
         var Code=prefs.getString("Code");
         var Pass=prefs.getString("Pass");
@@ -54,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
                if(LoginUser.data?.departmentId==1)
                  {
                    // ignore: use_build_context_synchronously
-                   GoNextPageGameOver(context,ScreenEms());
+                   GoNextPageGameOver(context,ScreenEms(false));
                  }
                if(LoginUser.data?.departmentId==2)
                {
@@ -93,8 +91,7 @@ class _SplashScreenState extends State<SplashScreen> {
              }
            else
            {
-             // ignore: use_build_context_synchronously
-             ShowErrorMsg(context, LoginUser.message);
+             GoNextPageGameOver(context, ScreenLogin());
            }
          }
       }else{

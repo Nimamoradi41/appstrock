@@ -16,20 +16,12 @@ import '../Reception/screen_reception.dart';
 import 'ApiServiceAutentication.dart';
 
 class ScreenLogin extends StatefulWidget {
-
-
-
-
-
-
   @override
   State<ScreenLogin> createState() => _ScreenLoginState();
 }
 
 class _ScreenLoginState extends State<ScreenLogin> {
   String dropdownvalue = 'فوریت های پزشکی';
-
-  // List of items in our dropdown menu
   var items = [
     'فوریت های پزشکی',
     'تریاژ',
@@ -76,7 +68,6 @@ class _ScreenLoginState extends State<ScreenLogin> {
     Login(textControllerName.text,
         textControllerNationalCode.text,
         textControllerNationalPass.text,context);
-
     if(Data!=null)
     {
       if(Data.success)
@@ -90,7 +81,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
         {
 
           // ignore: use_build_context_synchronously
-          GoNextPage(context,ScreenEms());
+          GoNextPage(context,ScreenEms(false));
         }
 
         if(Data.data?.departmentId==2)
@@ -218,28 +209,22 @@ class _ScreenLoginState extends State<ScreenLogin> {
                             SizedBox(height: 8,),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: TextField(
-                                  maxLines: 1,
-                                  maxLength: 10,
-
-                                  keyboardType: TextInputType.phone,
-                                  controller: textControllerNationalCode,
-                                  textAlign: TextAlign.start,
-                                  style: const TextStyle(
-                                      fontFamily: 'rob',
-                                      fontSize: 13
+                              child: TextField(
+                                maxLines: 1,
+                                maxLength: 10,
+                                keyboardType: TextInputType.phone,
+                                controller: textControllerNationalCode,
+                                style: const TextStyle(
+                                    fontSize: 13
+                                ),
+                                decoration: InputDecoration(
+                                  labelText: 'کد ملی',
+                                  labelStyle: TextStyle(
+                                      color: ColorApp
                                   ),
-                                  decoration: InputDecoration(
-                                    labelText: 'کد ملی',
-                                    labelStyle: TextStyle(
-                                        color: ColorApp
-                                    ),
-                                    counterText: "",
-                                    enabledBorder: outlinedBorderBlack,
-                                    focusedBorder: outlinedBorderPurple,
-                                  ),
+                                  counterText: "",
+                                  enabledBorder: outlinedBorderBlack,
+                                  focusedBorder: outlinedBorderPurple,
                                 ),
                               ),
                             ),

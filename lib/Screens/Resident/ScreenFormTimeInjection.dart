@@ -38,12 +38,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
 
   Future  Run()async
   {
-    var Res=await ShowAllow(context,'آیا از تکمیل فرم مطمئن هستید ؟');
-    if(Res)
-    {
-      _submitForm();
-      // ignore: use_build_context_synchronously
-    }
+    _submitForm();
   }
 
 
@@ -56,12 +51,25 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
   Future PersianTimeCalender(bool Type,bool LKW)async{
     var picked = await showPersianTimePicker(
       context: context,
+      builder: (BuildContext context, Widget? child) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(alwaysUse24HourFormat: true),
+            child: child!,
+          ),
+        );
+      },
       initialTime: TimeNowKnow,
     );
+
+
     if(picked!=null)
     {
       TimeNowKnow=picked;
       TimeNowKnowStr="${TimeNowKnow.hour}:${TimeNowKnow.minute}";
+      TimeNowKnowStr=Convert_Time(TimeNowKnow.hour.toString(),TimeNowKnow.minute.toString());
       setState(() {});
 
     }
@@ -69,12 +77,31 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
 
 
   }
+  String    Convert_Time(String Hour,String Minute)
+  {
+    var temp_Hour="";
+    var temp_Min="";
+    if (Hour.length==1)
+    {
+      temp_Hour="0"+Hour;
+    }else{
+      temp_Hour=Hour;
+    }
+    if (Minute.length==1)
+    {
+      temp_Min="0"+Minute;
+    }else{
+      temp_Min=Minute;
+    }
+    return  (temp_Hour+":"+temp_Min).toString();
 
+
+  }
   @override
   void initState() {
     super.initState();
     TimeNowKnow=TimeOfDay.now();
-    TimeNowKnowStr="${TimeNowKnow.hour}:${TimeNowKnow.minute}";
+    TimeNowKnowStr=Convert_Time(TimeNowKnow.hour.toString(),TimeNowKnow.minute.toString());
   }
   @override
   Widget build(BuildContext context) {

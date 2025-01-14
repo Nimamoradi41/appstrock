@@ -209,6 +209,26 @@ void ShowErrorMsg(BuildContext context,String Msg)
 
 
 
+bool checkMeliCode(String meliCode){
+  if (meliCode.length != 10) return false;
+
+  int checkNumber = int.parse(meliCode.substring(9, 10));
+  int sum = 0, location = 10;
+
+  for (int i = 0; i < meliCode.length - 1; i++, location--) {
+    sum += int.parse(meliCode.substring(i, i + 1)) * location;
+  }
+
+  int remainder = sum % 11;
+
+  if (remainder < 2) {
+    return checkNumber == remainder;
+  } else {
+    return checkNumber == (11 - remainder);
+  }
+}
+
+
 // todo ShowSucces
 void ShowSuccesMsg(BuildContext context,String Msg)
 {
@@ -275,7 +295,18 @@ Future<int> GetTypeUser(String Type)async{
   {
     return 8;
   }
-  return 9;
+
+  if(Type=='تصویر برداری')
+  {
+    return 9;
+  }
+
+  if(Type=='سوپروایزور')
+  {
+    return 10;
+  }
+
+  return 11;
 }
 
 

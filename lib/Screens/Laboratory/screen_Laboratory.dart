@@ -25,8 +25,6 @@ import '../SplashScreen.dart';
 class ScreenLaboratory extends StatefulWidget {
 
 
-
-
   @override
   State<ScreenLaboratory> createState() => _ScreenLaboratoryState();
 }
@@ -63,13 +61,6 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
     // چاپ تاریخ جلالی با فرمت مورد نظر
     print('تاریخ جلالی فعلی: $formattedDate');
 
-
-
-
-
-
-
-
     // ignore: use_build_context_synchronously
     var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
 
@@ -98,27 +89,23 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
   {
 
 
-    var Flag=await ShowAllow(context,'آیا از تغییر شیفت خود مطمئن هستید ؟');
-    if(Flag)
+    ShowLoadingApp(context);
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceReception.ChangeShiftStatus(context);
+    print(Data.toJson());
+
+    if(Data!=null)
     {
-      ShowLoadingApp(context);
-      // ignore: use_build_context_synchronously
-      var Data= await ApiServiceReception.ChangeShiftStatus(context);
-      print(Data.toJson());
-
-      if(Data!=null)
+      if(Data.success)
       {
-        if(Data.success)
-        {
-          Notifi.setstatus(Data.data!.isOnline);
-        }else{
-          // ignore: use_build_context_synchronously
-          ShowErrorMsg(context, Data.message);
-        }
+        Notifi.setstatus(Data.data!.isOnline);
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
       }
-
-      Navigator.pop(context);
     }
+
+    Navigator.pop(context);
 
 
 
@@ -159,13 +146,9 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
   }
 
   Future ClearAllDate()async{
-    var Flag=await ShowAllow(context,'آیا میخواهید از حساب کاربری خود خارج شوید ؟');
-    if(Flag)
-    {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.clear();
-      GoNextPageGameOver(context, SplashScreen());
-    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    GoNextPageGameOver(context, SplashScreen());
   }
 
   @override

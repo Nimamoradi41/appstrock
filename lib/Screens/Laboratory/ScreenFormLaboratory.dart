@@ -13,8 +13,16 @@ import '../Resident/ScreenFormNIHS.dart';
 
 class ScreenFormLaboratory extends StatefulWidget {
   late void Function(List<Map<String, dynamic>>) onClose;
-  ScreenFormLaboratory(this.onClose,
-      this.ISEdit,this.Bun,this.Cr,this.PLT,this.PT,this.INR,this.Trop,this.isAtend);
+  ScreenFormLaboratory(
+      this.onClose,
+      this.ISEdit,
+      this.Bun,
+      this.Cr,this.PLT,this.PT,
+      this.INR,
+      this.Trop,
+      this.hb,
+      this.wbc,
+      this.isAtend);
   bool ISEdit;
   String Bun;
   String Cr;
@@ -22,6 +30,8 @@ class ScreenFormLaboratory extends StatefulWidget {
   String PT;
   String INR;
   String Trop;
+  String hb;
+  String wbc;
   bool isAtend;
   @override
   _ExamFormState createState() => _ExamFormState();
@@ -38,72 +48,93 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
     textControllerPT.text=widget.PT.toString();
     textControllerINR.text=widget.INR.toString();
     textControllerTrop.text=widget.Trop.toString();
+    textControllerWBC.text=widget.wbc.toString();
+    textControllerHB.text=widget.hb.toString();
   }
 
   Future Run()async{
-    if(textControllerBun.text.toString().isEmpty)
-    {
-      showToast("Bun isEmpty",
-          position: StyledToastPosition.top,
-          context:context);
-      return ;
-    }
 
-    if(textControllerCr.text.toString().isEmpty)
-    {
-      showToast("Cr isEmpty",
-          position: StyledToastPosition.top,
-          context:context);
-      return ;
-    }
+    if(textControllerCr.text.isNotEmpty)
+      {
+        var CrInt=int.parse(textControllerCr.text);
 
-    if(textControllerPLT.text.toString().isEmpty)
-    {
-      showToast("PLT isEmpty",
-          position: StyledToastPosition.top,
-          context:context);
-      return ;
-    }
+        if(CrInt>10||CrInt<0)
+        {
+          showToast("Cr not Valid",
+              position: StyledToastPosition.top,
+              context:context);
+          return ;
+        }
+      }
 
-    if(textControllerPT.text.toString().isEmpty)
-    {
-      showToast("PT isEmpty",
-          position: StyledToastPosition.top,
-          context:context);
-      return ;
-    }
 
-    if(textControllerINR.text.toString().isEmpty)
+    if(textControllerPLT.text.isNotEmpty)
     {
-      showToast("INR isEmpty",
-          position: StyledToastPosition.top,
-          context:context);
-      return ;
-    }
-
-    if(textControllerTrop.text.toString().isEmpty)
-    {
-      showToast("Trop isEmpty",
-          position: StyledToastPosition.top,
-          context:context);
-      return ;
+      var PLTInt=int.parse(textControllerPLT.text);
+      if(PLTInt>1000000||PLTInt<1000)
+      {
+        showToast("PLT not Valid",
+            position: StyledToastPosition.top,
+            context:context);
+        return ;
+      }
     }
 
 
-
-    if(textControllerTrop.text.toString()!='0'&&textControllerTrop.text.toString()!='1')
+    if(textControllerPT.text.isNotEmpty)
     {
-      showToast("Trop Not Valid",
-          position: StyledToastPosition.top,
-          context:context);
-      return ;
+      var PTInt=int.parse(textControllerPT.text);
+
+      if(PTInt>100||PTInt<10)
+      {
+        showToast("PTT not Valid",
+            position: StyledToastPosition.top,
+            context:context);
+        return ;
+      }
     }
 
-    var Res=await ShowAllow(context,'آیا از تکمیل فرم مطمئن هستید ؟');
-     if(Res)
-       {
-         _submitForm();
-       }
+
+    if(textControllerINR.text.isNotEmpty)
+    {
+      var INRInt=int.parse(textControllerINR.text);
+
+      if(INRInt>10||INRInt<1)
+      {
+        showToast("INR not Valid",
+            position: StyledToastPosition.top,
+            context:context);
+        return ;
+      }
+    }
+
+
+    if(textControllerHB.text.isNotEmpty)
+    {
+      var HBInt=int.parse(textControllerHB.text);
+      if(HBInt>20||HBInt<5)
+      {
+        showToast("HB not Valid",
+            position: StyledToastPosition.top,
+            context:context);
+        return ;
+      }
+    }
+
+
+    if(textControllerWBC.text.isNotEmpty)
+    {
+      var WBCInt=int.parse(textControllerWBC.text);
+      if(WBCInt>30000||WBCInt<1000)
+      {
+        showToast("WBC not Valid",
+            position: StyledToastPosition.top,
+            context:context);
+        return ;
+      }
+    }
+
+    _submitForm();
   }
 
 
@@ -113,7 +144,21 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
   var textControllerPLT=TextEditingController();
   var textControllerPT=TextEditingController();
   var textControllerINR=TextEditingController();
+  var textControllerHB=TextEditingController();
+  var textControllerWBC=TextEditingController();
   var textControllerTrop=TextEditingController();
+
+
+
+  String _selectedOption = 'Positive';
+
+  void _handleRadioValueChange(String? value) {
+    setState(() {
+      _selectedOption = value!;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
@@ -185,7 +230,8 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                                         textDirection: TextDirection.rtl,
                                         child: TextField(
                                           maxLines: 1,
-                                          keyboardType: TextInputType.text,
+                                          maxLength: 3,
+                                          keyboardType: TextInputType.number,
                                           controller: textControllerBun,
                                           decoration: InputDecoration(
                                             labelText: 'Bun',
@@ -254,10 +300,10 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                                         textDirection: TextDirection.rtl,
                                         child: TextField(
                                           maxLines: 1,
-                                          keyboardType: TextInputType.text,
+                                          keyboardType: TextInputType.number,
                                           controller: textControllerPT,
                                           decoration: InputDecoration(
-                                            labelText: 'PT',
+                                            labelText: 'PTT',
                                             labelStyle: TextStyle(
                                                 color: ColorApp
                                             ),
@@ -301,9 +347,9 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                                         child: TextField(
                                           maxLines: 1,
                                           keyboardType: TextInputType.text,
-                                          controller: textControllerTrop,
+                                          controller: textControllerHB,
                                           decoration: InputDecoration(
-                                            labelText: 'Trop',
+                                            labelText: 'HB',
                                             labelStyle: TextStyle(
                                                 color: ColorApp
                                             ),
@@ -317,6 +363,59 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                                         ),
                                       ),
                                     ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: TextField(
+                                          maxLines: 1,
+                                          keyboardType: TextInputType.text,
+                                          controller: textControllerWBC,
+                                          decoration: InputDecoration(
+                                            labelText: 'WBC',
+                                            labelStyle: TextStyle(
+                                                color: ColorApp
+                                            ),
+                                            counterText: "",
+
+                                            enabledBorder: outlinedBorderBlack,
+                                            focusedBorder: outlinedBorderPurple,
+
+
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 8.0),
+                                          child: TextApp('Trop', 14, ColorApp, true),
+                                        ),
+                                        RadioListTile<String>(
+                                          title: const Text('Positive'),
+                                          value: 'Positive',
+                                          groupValue: _selectedOption,
+                                          onChanged: _handleRadioValueChange,
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          height: 1,
+                                          color: Colors.black26,
+                                          margin: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+                                        ),
+                                        RadioListTile<String>(
+                                          title: const Text('Negative'),
+                                          value: 'Negative',
+                                          groupValue: _selectedOption,
+                                          onChanged: _handleRadioValueChange,
+                                        ),
+                                      ],
+                                    )
+
+
                                   ],
                                 ),
                               ),
@@ -368,10 +467,6 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                         SizedBox(height: 8,),
                       ],
                     ):Container()
-
-
-
-
               ],
             ),
           ),
@@ -411,15 +506,36 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
       'selected_answer': textControllerINR.text.toString(),
     });
 
+
     answers.add({
-      'Trop': 'Trop',
-      'selected_answer': textControllerTrop.text.toString(),
+      'HB': 'HB',
+      'selected_answer': textControllerHB.text.toString(),
     });
 
+    answers.add({
+      'WBC': 'WBC',
+      'selected_answer': textControllerWBC.text.toString(),
+    });
+
+
+    if(_selectedOption=='Positive')
+      {
+        answers.add({
+          'Trop': 'Trop',
+          'selected_answer': "1"
+        });
+      }else{
+      answers.add({
+        'Trop': 'Trop',
+        'selected_answer': "0"
+      });
+    }
 
     if (widget.onClose != null) {
       widget.onClose(answers);
       Navigator.pop(context);
     }
   }
+
+
 }

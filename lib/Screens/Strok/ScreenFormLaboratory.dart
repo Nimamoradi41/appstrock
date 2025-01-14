@@ -86,11 +86,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
       return ;
     }
 
-    var Res=await ShowAllow(context,'آیا از تکمیل فرم مطمئن هستید ؟');
-     if(Res)
-       {
-         _submitForm();
-       }
+    _submitForm();
   }
 
 

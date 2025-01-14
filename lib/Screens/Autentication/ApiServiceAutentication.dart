@@ -85,9 +85,6 @@ class ApiServiceAutentication{
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
     }
 
-
-
-
     Navigator.pop(context);
     return login;
   }
@@ -96,11 +93,13 @@ class ApiServiceAutentication{
     ModelLogin? login;
     var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Users/Login'));
     request.headers.addAll({"content-type":"application/json; charset=utf-8"});
+
     request.fields.addAll({
       'Name': Name,
       'NationalCode': NationalCode,
       'Password': Pass,
     });
+
 
 
 
@@ -155,6 +154,8 @@ class ApiServiceAutentication{
     return login;
   }
   static Future<ModelOtpCode?>
+
+
   CheckConfirmCode(String Id,String Code,BuildContext context) async {
     ModelOtpCode? login;
     var request = http.MultipartRequest('POST',
@@ -164,6 +165,74 @@ class ApiServiceAutentication{
       'id': Id,
       // 'id': '31',
       'code': Code,
+    });
+
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+        Navigator.pop(context);
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+      print(response.statusCode.toString());
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelOtpCode data=   modelOtpCodeFromJson(str);
+        login=data;
+      }
+      if(response.statusCode==400)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelOtpCode data=   modelOtpCodeFromJson(str);
+        login=data;
+      }
+
+      if(response.statusCode==404)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelOtpCode data=   modelOtpCodeFromJson(str);
+        login=data;
+      }
+
+      if(response.statusCode==403)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelOtpCode data=   modelOtpCodeFromJson(str);
+        login=data;
+      }
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+
+    }
+
+
+
+
+
+
+
+    Navigator.pop(context);
+    return login;
+  }
+
+ static SendAgain(String Id,String mobileNumber,BuildContext context) async {
+    ModelOtpCode? login;
+    var request = http.MultipartRequest('POST',
+        Uri.parse('https://api.appstrok.ir/Users/TryAgain'));
+    request.headers['Content-Type'] = 'application/json", "Accept": "application/json';
+    request.fields.addAll({
+      'id': Id,
+      'mobileNumber': mobileNumber,
     });
 
     try{

@@ -23,7 +23,7 @@ class QuestionAnswer {
 }
 
 class ScreenFormNIHS extends StatefulWidget {
-  late void Function(List<Map<String, dynamic>>) onClose;
+  late void Function(List<Map<String, dynamic>>,int Score) onClose;
   ScreenFormNIHS(
       this.onClose,
       this.ISEdit,
@@ -41,7 +41,9 @@ class ScreenFormNIHS extends StatefulWidget {
       this.n_8,
       this.n_9,
       this.n_10,
-      this.n_11,this.isAtend); // ScreenFormNIHS(this.onClose,this.ISEdit,this.DataEdit);
+      this.n_11,
+      this.isAtend,
+      this.subscroe); // ScreenFormNIHS(this.onClose,this.ISEdit,this.DataEdit);
 
 
 
@@ -62,6 +64,7 @@ class ScreenFormNIHS extends StatefulWidget {
   String n_9;
   String n_10;
   String n_11;
+  int subscroe;
   bool isAtend;
   @override
   _ExamFormState createState() => _ExamFormState();
@@ -105,6 +108,10 @@ class _ExamFormState extends State<ScreenFormNIHS> {
           n_9Number=int.parse(widget.n_9);
           n_10Number=int.parse(widget.n_10);
           n_11Number=int.parse(widget.n_11);
+          try{
+            Score=widget.subscroe;
+          }catch(s)
+          {}
       }
 
 
@@ -282,15 +289,14 @@ class _ExamFormState extends State<ScreenFormNIHS> {
 
 
   Future Run()async{
-    var Res=await ShowAllow(context,'آیا از تکمیل فرم مطمئن هستید ؟');
-     if(Res)
-       {
-         _submitForm();
-       }
+    _submitForm();
   }
 
 
   int Selected1=0;
+  int Score=0;
+
+
   @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
@@ -344,11 +350,26 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                               //
                               //   ],
                               // ),
-                              Spacer(),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 8),
-                                child: TextAppfredoka('NIHSS',16,Colors.white,true),
-                              ),
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 8),
+                                      child: TextAppfredoka('NIHSS',16,Colors.white,true),
+                                    ),
+                                    Spacer(),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 8),
+                                      child: TextAppfredoka('Score = '+Score.toString(),16,Colors.white,true),
+                                    )
+
+                                  ],
+                                ),
+                              )
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 8),
+                              //   child: TextAppfredoka('NIHSS'+'Score = '+Score.toString(),16,Colors.white,true),
+                              // ),
 
 
 
@@ -362,7 +383,16 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                           child: ListView.builder(
                             itemCount: questions.length,
                             itemBuilder: (context, index) {
-                              return  ItemNIHS(index,questions[index]);
+                              return  ItemNIHS(index,questions[index],questions,Score,(){
+                                int i=0;
+                               questions.forEach((element) {
+                                 i=i+element.selectedAnswer!!;
+                                });
+                               Score=i;
+                               setState(() {
+
+                               });
+                              });
                             },
                           ),
                         ),
@@ -372,23 +402,15 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                 ),
 
                 SizedBox(height: 8,),
-
-
                   widget.isAtend?
                     Container():
                    Column(
                   children: [
                     Container(
                       width: wid*0.9,
-                      child: ElevatedButton(onPressed: (){
-
-                        if(widget.ISEdit)
-                          {
-                            Navigator.pop(context);
-                          }else{
-                          Run();
-                        }
-
+                      child: ElevatedButton(onPressed:(){
+                        Navigator.pop(context);
+                        Run();
                       },
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(ColorApp),
@@ -401,7 +423,7 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                           ),
                           child:Padding(
                             padding: const EdgeInsets.all(10.0),
-                            child: Text( widget.ISEdit ? 'بستن' :  'تکمیل فرم',
+                            child: Text( widget.ISEdit ? 'ویرایش' :  'تکمیل فرم',
                               style: TextStyle(color:Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold),),
@@ -439,8 +461,10 @@ class _ExamFormState extends State<ScreenFormNIHS> {
 
 
 
+
+
     if (widget.onClose != null) {
-      widget.onClose(answers);
+      widget.onClose(answers,Score);
     }
   }
 }

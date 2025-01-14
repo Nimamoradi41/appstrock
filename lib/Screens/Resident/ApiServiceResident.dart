@@ -176,7 +176,7 @@ class ApiServiceResident{
   }
 
 
-  static Future<ModelNeetToCt> AddNihs(String id,BuildContext context,List<Map<String, dynamic>> Str)
+  static Future<ModelNeetToCt> AddNihs(String id,BuildContext context,List<Map<String, dynamic>> Str, int score)
   async {
     var login;
 
@@ -212,6 +212,107 @@ class ApiServiceResident{
       'N_9': Str[12]['selected_answer'].toString(),
       'N_10': Str[13]['selected_answer'].toString(),
       'N_11': Str[14]['selected_answer'].toString(),
+      'subscore':score.toString(),
+    });
+
+
+
+    print(request.fields.toString());
+
+
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+
+      print(response.statusCode.toString());
+      print(response.reasonPhrase.toString());
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelNeetToCt data= await  modelNeetToCtFromJson(str);
+        login=data;
+      }
+      if(response.statusCode==400)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelNeetToCt data= await  modelNeetToCtFromJson(str);
+        login=data;
+      }else {
+        ShowErrorMsg(context,response.reasonPhrase.toString());
+
+      }
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+
+    } on Error catch (e)
+    {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Navigator.pop(context);
+    return login;
+  }
+
+  static Future<ModelNeetToCt> editNihs(String id,BuildContext context,List<Map<String, dynamic>> Str, int score)
+  async {
+    var login;
+
+
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? UserId;
+
+    // UserId
+
+    if(prefs.getString('UserId')!=null)
+    {
+      UserId=prefs.getString('UserId')!;
+    }
+
+    var request = http.MultipartRequest('POST',
+        Uri.parse('https://api.appstrok.ir/Patients/UpdateNihsForm'));
+    request.fields.addAll({
+      'patientId': id,
+      'userId': UserId.toString(),
+      'N_1_a': Str[0]['selected_answer'].toString(),
+      'N_1_b': Str[1]['selected_answer'].toString(),
+      'N_1_c': Str[2]['selected_answer'].toString(),
+      'N_2': Str[3]['selected_answer'].toString(),
+      'N_3': Str[4]['selected_answer'].toString(),
+      'N_4': Str[5]['selected_answer'].toString(),
+      'N_5_a': Str[6]['selected_answer'].toString(),
+      'N_5_b': Str[7]['selected_answer'].toString(),
+      'N_6_a': Str[8]['selected_answer'].toString(),
+      'N_6_b': Str[9]['selected_answer'].toString(),
+      'N_7': Str[10]['selected_answer'].toString(),
+      'N_8': Str[11]['selected_answer'].toString(),
+      'N_9': Str[12]['selected_answer'].toString(),
+      'N_10': Str[13]['selected_answer'].toString(),
+      'N_11': Str[14]['selected_answer'].toString(),
+      'subscore':score.toString(),
     });
 
 
@@ -292,20 +393,121 @@ class ApiServiceResident{
 
 
     var request = http.MultipartRequest('POST',Uri.parse('https://api.appstrok.ir/Patients/AddLabResult'));
+
+
     request.fields.addAll({
       'patientId': id,
       'userId': UserId.toString(),
       'BUN': Str[0]['selected_answer'].toString(),
       'Cr': Str[1]['selected_answer'].toString(),
-      'PLT': Str[3]['selected_answer'].toString(),
-      'PT': Str[4]['selected_answer'].toString(),
-      'INR': Str[5]['selected_answer'].toString(),
-      'Trop': Str[5]['selected_answer'].toString()=='0'?'false':'true',
+      'PLT': Str[2]['selected_answer'].toString(),
+      'PT': Str[3]['selected_answer'].toString(),
+      'INR': Str[4]['selected_answer'].toString(),
+      'hb': Str[5]['selected_answer'].toString(),
+      'wbc': Str[6]['selected_answer'].toString(),
+      'Trop': Str[7]['selected_answer'].toString()=='0'?'false':'true',
     });
 
 
 
 
+
+    print(request.fields.toString());
+
+
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+
+
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelNeetToCt data= await  modelNeetToCtFromJson(str);
+        login=data;
+      }
+      if(response.statusCode==400)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelNeetToCt data= await  modelNeetToCtFromJson(str);
+        login=data;
+      }else {
+        ShowErrorMsg(context,response.reasonPhrase.toString());
+
+      }
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+
+    } on Error catch (e)
+    {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    return login;
+  }
+
+
+  static Future<ModelNeetToCt> editLab(String id,BuildContext context,List<Map<String, dynamic>> Str)
+  async {
+    var login;
+
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? UserId;
+
+    // UserId
+
+    if(prefs.getString('UserId')!=null)
+    {
+      UserId=prefs.getString('UserId')!;
+    }
+
+
+    var request = http.MultipartRequest('POST',Uri.parse('https://api.appstrok.ir/Patients/UpdateLabResult'));
+
+
+    request.fields.addAll({
+      'patientId': id,
+      'userId': UserId.toString(),
+      'BUN': Str[0]['selected_answer'].toString(),
+      'Cr': Str[1]['selected_answer'].toString(),
+      'PLT': Str[2]['selected_answer'].toString(),
+      'PT': Str[3]['selected_answer'].toString(),
+      'INR': Str[4]['selected_answer'].toString(),
+      'hb': Str[5]['selected_answer'].toString(),
+      'wbc': Str[6]['selected_answer'].toString(),
+      'Trop': Str[7]['selected_answer'].toString()=='0'?'false':'true',
+    });
+
+
+
+
+
+    print(request.fields.toString());
 
 
     try{
@@ -932,7 +1134,7 @@ class ApiServiceResident{
 
 
 
-  static Future<ModelNeetToCt> TimeOfInjection(String idPa,BuildContext context,String Time)
+  static Future<ModelNeetToCt> TimeOfInjection(String idPa,BuildContext context,String Time, int timestamp)
   async {
     var login;
 
@@ -948,14 +1150,16 @@ class ApiServiceResident{
 
     var request = http.MultipartRequest('POST',
         Uri.parse('https://api.appstrok.ir/Patients/TimeOfInjection'));
+
     request.fields.addAll({
       'patientId': idPa,
       'userId': UserId.toString(),
       'Time': Time,
+      'injectionTimeTS': timestamp.toString(),
     });
 
 
-
+  print(request.fields.toString());
 
 
 
@@ -968,13 +1172,32 @@ class ApiServiceResident{
 
 
 
+      print(response.statusCode.toString());
       if(response.statusCode==200)
       {
         String str= await response.stream.bytesToString();
         print(str);
         ModelNeetToCt data= await  modelNeetToCtFromJson(str);
         login=data;
-      }else {
+      }
+      if(response.statusCode==400)
+      {
+        String? strw= await response.reasonPhrase;
+        String str= await response.stream.bytesToString();
+        ModelNeetToCt data= await  modelNeetToCtFromJson(str);
+        print(data.message.toString());
+        login=data;
+      }
+      if(response.statusCode==403)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelNeetToCt data= await  modelNeetToCtFromJson(str);
+        login=data;
+      }
+
+
+      else {
         ShowErrorMsg(context,response.reasonPhrase.toString());
 
       }

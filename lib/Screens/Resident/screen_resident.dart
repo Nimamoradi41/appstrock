@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:appstrock/Screens/Reception/ApiServiceReception.dart';
 import 'package:appstrock/Screens/Reception/ProviderReception/ProviderReception.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:shamsi_date/shamsi_date.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
@@ -39,6 +41,7 @@ class _ScreenResidentState extends State<ScreenResident> {
   bool status=false;
 
   List<ModelPatient> ItemsP=[];
+  List<ModelPatient> ItemsHolder=[];
 
   var items = [
     'مرد',
@@ -48,6 +51,22 @@ class _ScreenResidentState extends State<ScreenResident> {
   String dropdownvalue = 'مرد';
 
   late var Notifi=ProviderReception();
+
+
+  Future persianDateCalender()async{
+    Jalali? picked = await showPersianDatePicker(
+      context: context,
+      firstDate: Jalali(1385, 8),
+      lastDate: Jalali(1450, 9),
+      initialDate: Jalali.now(),
+    );
+    if(picked!=null) {
+      runListByDate(context,picked);
+    }
+    }
+
+
+
 
 
   Future RunListP(BuildContext context) async
@@ -65,6 +84,7 @@ class _ScreenResidentState extends State<ScreenResident> {
       if(Data.success)
       {
         Notifi.setItems(Data.data);
+        ItemsHolder=Data.data;
       }else{
         // ignore: use_build_context_synchronously
         ShowErrorMsg(context, Data.message);
@@ -72,6 +92,29 @@ class _ScreenResidentState extends State<ScreenResident> {
     }
   }
 
+
+  Future runListByDate(BuildContext context, Jalali date) async
+  {
+
+    String formattedDate =
+        '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceReception.ListPatient(formattedDate,context);
+
+
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        Notifi.setItems(Data.data);
+        ItemsHolder=Data.data;
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+  }
 
 
 
@@ -103,27 +146,23 @@ class _ScreenResidentState extends State<ScreenResident> {
   {
 
 
-    var Flag=await ShowAllow(context,'آیا از تغییر شیفت خود مطمئن هستید ؟');
-    if(Flag)
+    ShowLoadingApp(context);
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceReception.ChangeShiftStatus(context);
+    print(Data.toJson());
+
+    if(Data!=null)
     {
-      ShowLoadingApp(context);
-      // ignore: use_build_context_synchronously
-      var Data= await ApiServiceReception.ChangeShiftStatus(context);
-      print(Data.toJson());
-
-      if(Data!=null)
+      if(Data.success)
       {
-        if(Data.success)
-        {
-          Notifi.setstatus(Data.data!.isOnline);
-        }else{
-          // ignore: use_build_context_synchronously
-          ShowErrorMsg(context, Data.message);
-        }
+        Notifi.setstatus(Data.data!.isOnline);
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
       }
-
-      Navigator.pop(context);
     }
+
+    Navigator.pop(context);
 
 
 
@@ -149,13 +188,9 @@ class _ScreenResidentState extends State<ScreenResident> {
 
 
   Future ClearAllDate()async{
-    var Flag=await ShowAllow(context,'آیا میخواهید از حساب کاربری خود خارج شوید ؟');
-    if(Flag)
-    {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.clear();
-      GoNextPageGameOver(context, SplashScreen());
-    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    GoNextPageGameOver(context, SplashScreen());
   }
 
     @override
@@ -164,6 +199,8 @@ class _ScreenResidentState extends State<ScreenResident> {
     GetInfo();
   }
 
+
+  var textControllerSearch=TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +242,7 @@ class _ScreenResidentState extends State<ScreenResident> {
                                 ),
                               ),
                             ),
-                              RotatedBox(
+                            RotatedBox(
                               quarterTurns: 0,
                               child: InkWell(
                                 onTap: (){
@@ -214,6 +251,18 @@ class _ScreenResidentState extends State<ScreenResident> {
                                 child: Padding(
                                   padding: EdgeInsets.all(16.0),
                                   child: Icon(Icons.person,color: Colors.white,size: 30,),
+                                ),
+                              ),
+                            ),
+                            RotatedBox(
+                              quarterTurns: 0,
+                              child: InkWell(
+                                onTap: (){
+                                  persianDateCalender();
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Icon(Icons.calendar_month,color: Colors.white,size: 30,),
                                 ),
                               ),
                             ),
@@ -282,7 +331,33 @@ class _ScreenResidentState extends State<ScreenResident> {
                           ),
                         ),
 
-
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 16),
+                          width: wid,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8)
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+                            child: TextField(
+                              textAlign: TextAlign.end,
+                              decoration: new InputDecoration.collapsed(
+                                  hintText: '...جستجو'
+                              ),
+                              onChanged: (text){
+                                if(text.isNotEmpty)
+                                  {
+                                    var data=ItemsHolder.where((element) => element.fullName.contains(text)).toList();
+                                    Notifi.setItems(data);
+                                  }else{
+                                  Notifi.setItems(ItemsHolder);
+                                }
+                              },
+                              controller:textControllerSearch ,
+                            ),
+                          ),
+                        ),
                         SizedBox(height: 24,),
 
                         Container(
@@ -290,7 +365,6 @@ class _ScreenResidentState extends State<ScreenResident> {
                           child: Consumer<ProviderReception>(
                             builder: (context,newstate,child){
                               ItemsP=newstate.ListItemsPatient;
-                              print('Count ');
                               print(ItemsP.length.toString());
                               return ListView.builder(
                                 itemCount: ItemsP.length,

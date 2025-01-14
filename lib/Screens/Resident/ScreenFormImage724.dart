@@ -169,22 +169,16 @@ class _ScreenFormIsNot724State extends State<ScreenFormImage724> {
                       Expanded(
                         child: Container(
                           child: ElevatedButton(onPressed:() async{
-                            var Res=await ShowAllow(context,'آیا از تکمیل فرم مطمئن هستید ؟');
-                            if(Res)
+                            ShowLoadingApp(context);
+                            var Req=await ApiServiceResident.
+                            UploadImage(widget.Id.toString(),context,DateImage,NameFile.toString());
+                            if(Req.success)
                             {
-                              ShowLoadingApp(context);
-                              var Req=await ApiServiceResident.
-                              UploadImage(widget.Id.toString(),context,DateImage,NameFile.toString());
-                              if(Req.success)
-                              {
-                                ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              }else{
-                                ShowErrorMsg(context, Req.message);
-                              }
-
-                              // ignore: use_build_context_synchronously
+                              ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            }else{
+                              ShowErrorMsg(context, Req.message);
                             }
                           },
                               style: ButtonStyle(

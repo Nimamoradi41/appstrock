@@ -2,11 +2,13 @@ import 'package:appstrock/Screens/Resident/ApiServiceResident.dart';
 import 'package:appstrock/Screens/Resident/ScreenFormNIHS.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_bdaya/flutter_datetime_picker_bdaya.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/TextApp.dart';
 import '../../test.dart';
+import '../Reception/ApiServiceReception.dart';
 import '../Reception/Model/ModelPatient.dart';
 import 'ProviderLaboratory/ProviderLaboratoryDetail.dart';
 import 'ScreenFormLaboratory.dart';
@@ -15,14 +17,14 @@ import 'ScreenFormLaboratory.dart';
 
 class ScreenLaboratoryDetailPatient extends StatefulWidget {
 
-  ScreenLaboratoryDetailPatient(this.modelPatient,this.MainCtx);
+  ScreenLaboratoryDetailPatient(this.patientItem,this.MainCtx);
   
 
 
 
 
 
-  ModelPatient modelPatient;
+  ModelPatient patientItem;
   BuildContext MainCtx;
 
   @override
@@ -50,16 +52,27 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
 
 
     ShowLoadingApp(context);
-    var Data= await ApiServiceResident.AddLab(widget.modelPatient.id.toString(),context,Str);
+    var Data= await ApiServiceResident.AddLab(widget.patientItem.id.toString(),context,Str);
     if(Data!=null)
     {
       if(Data.success)
       {
-        widget.modelPatient.labIsComplete=true;
-        Notifi.setItems(widget.modelPatient);
+        Notifi.patientItem.labIsComplete=true;
+        Notifi.patientItem.bun=Str[0]['selected_answer'].toString();
+        Notifi.patientItem.cr=Str[1]['selected_answer'].toString();
+        Notifi.patientItem.plt=Str[2]['selected_answer'].toString();
+        Notifi.patientItem.pt=Str[3]['selected_answer'].toString();
+        Notifi.patientItem.inr=Str[4]['selected_answer'].toString();
+        Notifi.patientItem.hb=Str[5]['selected_answer'].toString();
+        Notifi.patientItem.wbc=Str[6]['selected_answer'].toString();
+        Notifi.patientItem.trop=Str[7]['selected_answer'].toString()=='0'?false:true;
+
+
+
+        Notifi.setItems(Notifi.patientItem);
         // ignore: use_build_context_synchronously
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-        Navigator.pop(context);
+
       }else{
         ShowErrorMsg(context, Data.message);
       }
@@ -68,9 +81,63 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
 
 
 
+  Future getInfoOfPatient()async{
+    Jalali date=Jalali.now();
+    String formattedDate =
+        '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+    // چاپ تاریخ جلالی با فرمت مورد نظر
+    print('تاریخ جلالی فعلی: $formattedDate');
+
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
+
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+
+        var finded=Data.data.firstWhere((element) => element.id==widget.patientItem.id);
+        Notifi.setItems(finded);
+        Notifi.setLoading(false);
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+  }
+  Future editLab(List<Map<String, dynamic>> Str)async{
+    ShowLoadingApp(context);
+    var Data= await ApiServiceResident.editLab(widget.patientItem.id.toString(),context,Str);
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        Notifi.patientItem.labIsComplete=true;
+        Notifi.patientItem.bun=Str[0]['selected_answer'].toString();
+        Notifi.patientItem.cr=Str[1]['selected_answer'].toString();
+        Notifi.patientItem.plt=Str[2]['selected_answer'].toString();
+        Notifi.patientItem.pt=Str[3]['selected_answer'].toString();
+        Notifi.patientItem.inr=Str[4]['selected_answer'].toString();
+        Notifi.patientItem.hb=Str[5]['selected_answer'].toString();
+        Notifi.patientItem.wbc=Str[6]['selected_answer'].toString();
+        Notifi.patientItem.trop=Str[7]['selected_answer'].toString()=='0'?false:true;
+        Notifi.setItems(Notifi.patientItem);
+        // ignore: use_build_context_synchronously
+        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+
+      }else{
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+  }
 
 
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getInfoOfPatient();
+  }
   @override
   Widget build(BuildContext context) {
     Notifi=Provider.of<ProviderLaboratoryDetail>(context);
@@ -80,7 +147,10 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
     return SafeArea(
       child: Scaffold(
         body: Center(
-          child: Container(
+          child:
+          Notifi.isLoading?
+          CircularProgressIndicator():
+          Container(
             width: wid,
             height: double.infinity,
             color: BackGroundApp,
@@ -153,7 +223,7 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                       children: [
                                         TextApp('کدملی', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(widget.modelPatient.nationalCode.isEmpty  ? 'نامشخص':widget.modelPatient.nationalCode, 14, ColorTextbody, true)
+                                        TextApp(Notifi.patientItem.nationalCode.isEmpty  ? 'نامشخص':widget.patientItem.nationalCode, 14, ColorTextbody, true)
                                       ],
                                     )),
                                     SizedBox(width: 8,),
@@ -168,7 +238,7 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                       children: [
                                         TextApp('نام و نام خانوادگی', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(widget.modelPatient.fullName.isEmpty  ? 'نامشخص':widget.modelPatient.fullName, 14, ColorTextbody, true)
+                                        TextApp(Notifi.patientItem.fullName.isEmpty  ? 'نامشخص':widget.patientItem.fullName, 14, ColorTextbody, true)
                                       ],
                                     )),
                                   ],
@@ -183,7 +253,7 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                       children: [
                                         TextApp('سن', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(widget.modelPatient.age.isEmpty  ? 'نامشخص':widget.modelPatient.age, 14, ColorTextbody, true)
+                                        TextApp(Notifi.patientItem.age.isEmpty  ? 'نامشخص':Notifi.patientItem.age, 14, ColorTextbody, true)
                                       ],
                                     )),
                                     SizedBox(width: 8,),
@@ -198,7 +268,7 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                       children: [
                                         TextApp('جنسیت', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(widget.modelPatient.gender.isEmpty  ? 'نامشخص':widget.modelPatient.gender, 14, ColorTextbody, true)
+                                        TextApp(Notifi.patientItem.gender.isEmpty  ? 'نامشخص':Notifi.patientItem.gender, 14, ColorTextbody, true)
                                       ],
                                     )),
                                   ],
@@ -222,7 +292,7 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.timeOfAddToSystem.isEmpty  ? 'نامشخص':widget.modelPatient.timeOfAddToSystem, 16, ColorTextbody, true),
+                                              TextApp(Notifi.patientItem.timeOfAddToSystem.isEmpty  ? 'نامشخص':Notifi.patientItem.timeOfAddToSystem, 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
                                                   child: TextApp(' :  زمان ثبت در سیستم', 14, ColorTitleText, false))),
@@ -233,21 +303,21 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.dateOfAddToSystem == null ? 'نامشخص' : widget.modelPatient.dateOfAddToSystem!, 16, ColorTextbody, true),
+                                              TextApp(Notifi.patientItem.dateOfAddToSystem == null ? 'نامشخص' : Notifi.patientItem.dateOfAddToSystem!, 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
                                                   child: TextApp(' :  تاریخ ثبت در سیستم', 14, ColorTitleText, false))),
                                             ],
                                           ),
                                         ),
-                                        widget.modelPatient.labIsComplete!?
+                                        Notifi.patientItem.labIsComplete!?
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
                                               TextApp(
-                                                  "${widget.modelPatient.labInsertDate} - "
-                                                      "${widget.modelPatient.labInsertTime}"
+                                                  "${Notifi.patientItem.labInsertDate} - "
+                                                      "${Notifi.patientItem.labInsertTime}"
                                                   , 14, ColorTextbody, true),
                                               Expanded(child:
                                               Align(
@@ -271,31 +341,45 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                   margin: const EdgeInsets.all(8),
                                   child: ElevatedButton(
                                       onPressed: (){
-                                       GoNextPage(context, ScreenFormLaboratory((p0) {
-                                         Navigator.pop(context);
-                                         AddLab(p0);
-                                       }
-                                       ,widget.modelPatient.labIsComplete!,
-                                           widget.modelPatient.bun.toString(),
-                                          widget.modelPatient.cr.toString(),
-                                         widget.modelPatient.plt.toString(),
-                                         widget.modelPatient.pt.toString(),
-                                         widget.modelPatient.inr.toString(),
-                                         widget.modelPatient.trop.toString(),false));
+                                        if(Notifi.patientItem.is724IsComplete==true)
+                                        {
+                                          GoNextPage(context,
+
+                                              ScreenFormLaboratory((p0){
+                                                Navigator.pop(context);
+                                                if(Notifi.patientItem!.labIsComplete!!)
+                                                {
+                                                  editLab(p0);
+                                                }else{
+                                                  AddLab(p0);
+                                                }
+
+                                              },Notifi.patientItem.labIsComplete!!,
+                                                  Notifi.patientItem.bun.toString(),
+                                                  Notifi.patientItem.cr.toString(),
+                                                  Notifi.patientItem.plt.toString(),
+                                                  Notifi.patientItem.pt.toString(),
+                                                  Notifi.patientItem.inr.toString(),
+                                                  Notifi.patientItem.trop.toString(),
+                                                  Notifi.patientItem.hb.toString(),
+                                                  Notifi.patientItem.wbc.toString(),
+                                                  false
+                                              ));
+                                        }
                                       },
                                       style: ButtonStyle(
-                                          backgroundColor: widget.modelPatient.labIsComplete ==null?
+                                          backgroundColor: Notifi.patientItem.labIsComplete ==null?
                                           MaterialStateProperty.all(ColorApp):
-                                          widget.modelPatient.labIsComplete!?
+                                          Notifi.patientItem.labIsComplete!?
                                           MaterialStateProperty.all(Colors.white):
                                           MaterialStateProperty.all(ColorApp),
                                           padding: MaterialStateProperty.all(EdgeInsets.all(8)),
                                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                              widget.modelPatient.labIsComplete ==null?
+                                              Notifi.patientItem.labIsComplete ==null?
                                               RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(8.0),
                                               ):
-                                              widget.modelPatient.labIsComplete! ?
+                                              Notifi.patientItem.labIsComplete! ?
                                               RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(8.0),
                                                 side:  const BorderSide(color: ColorApp,width: 2)
@@ -308,16 +392,16 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                       child:Padding(
                                         padding: const EdgeInsets.all(10.0),
                                         child: Text(
-                                          widget.modelPatient.labIsComplete == null ?
+                                          Notifi.patientItem.labIsComplete == null ?
                                           'تکمیل فرم':
-                                          widget.modelPatient.labIsComplete! ?
+                                          Notifi.patientItem.labIsComplete! ?
                                           'نمایش فرم':
                                           'تکمیل فرم',
                                           style: TextStyle(
                                               color:
-                                              widget.modelPatient.labIsComplete == null ?
+                                              Notifi.patientItem.labIsComplete == null ?
                                               Colors.white:
-                                              widget.modelPatient.labIsComplete! ?
+                                              Notifi.patientItem.labIsComplete! ?
                                               ColorApp : Colors.white,
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),),
@@ -332,7 +416,6 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                     ),
                   ),
                 ),
-
               ],
             ),
           ),

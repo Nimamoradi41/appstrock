@@ -1,4 +1,3 @@
-import 'dart:html';
 
 import 'package:appstrock/Constants.dart';
 import 'package:appstrock/Widgets/TextApp.dart';
@@ -6,15 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart'as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
-
 import 'ApiServiceResident.dart';
-
-
 class ScreenFormBload724 extends StatefulWidget {
-
-
 
   String Id;
 
@@ -40,9 +33,14 @@ class _ScreenFormIsNot724State extends State<ScreenFormBload724> {
   void _submitForm() {
     List<Map<String, String>> answers = [];
 
+    var bloadInt=int.parse(textControllerGh.text);
+    if(bloadInt>1000)
+      {
+        ShowErrorMsg(context,"قند خون وارد شده مجاز نمیباشد");
+        return;
+      }
 
     bload= textControllerGh.text.toString();
-
     answers.add({
       'bload': bload.toString(),
     });

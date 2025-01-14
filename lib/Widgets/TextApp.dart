@@ -128,6 +128,36 @@ class TextApp2 extends StatelessWidget {
   }
 }
 
+class TextApp4 extends StatelessWidget {
+
+  String Title;
+  double Fontsize;
+  Color Mcolor;
+  bool Isbold=false;
+
+
+  TextApp4(this.Title, this.Fontsize, this.Mcolor, this.Isbold);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Text(Title,
+        textAlign: TextAlign.right,
+        style: TextStyle(
+            color: Mcolor,
+            shadows: [
+
+            ],
+            fontSize: Fontsize,
+            fontWeight: Isbold==true?
+            FontWeight.bold:FontWeight.normal
+        ),),
+    );
+  }
+}
+
 
 class TextApp3 extends StatelessWidget {
 
@@ -157,7 +187,7 @@ class TextApp3 extends StatelessWidget {
 }
 
 
-class TextApp4 extends StatelessWidget {
+class TextApp5 extends StatelessWidget {
 
   String Title;
   double Fontsize;
@@ -165,7 +195,7 @@ class TextApp4 extends StatelessWidget {
   bool Isbold=false;
 
 
-  TextApp4(this.Title, this.Fontsize, this.Mcolor, this.Isbold);
+  TextApp5(this.Title, this.Fontsize, this.Mcolor, this.Isbold);
 
 
   @override

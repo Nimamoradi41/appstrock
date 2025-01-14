@@ -33,6 +33,7 @@ import 'Screens/Resident/ScreenFormImage724.dart';
 import 'Screens/Resident/ScreenFormIs724.dart';
 import 'Screens/Resident/ScreenFormIsNot724.dart';
 import 'Screens/Resident/ScreenFormNIHS.dart';
+import 'Screens/Resident/ScreenFormReasonInjection.dart';
 import 'Screens/SplashScreen.dart';
 import 'Screens/Strok/ProviderStrok/ProviderStrok.dart';
 import 'Screens/Teriazh/ProviderTeraizh.dart';
@@ -70,31 +71,48 @@ class _MyAppState extends State<MyApp> {
           fontFamily: 'iransans'
       ),
       debugShowCheckedModeBanner: false,
-      // home: ScreenLogin());
-      // home: ScreenRigester());
-      // home: ScreenAtend(context));
-      // home: ScreenProfile());
       // home: SplashScreen());
-      // home: SplashScreen());
+      home: ScreenFormReasonInjection((p0) {
+
+      },
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true
+      ));
+      // home: ScreenFormLaboratory((p0){
+      // },false,
+      //    '',
+      //     '',
+      //     '',
+      //     '',
+      //     '',
+      //     '',
+      //     '',
+      //     '',
+      //     false
+      // ));
       // home: ScreenCodeOtp('','','',1,'',''));
-      // home: ScreenEms());
-      // home: ScreenDetailPatientAtend(
-      //     ModelPatient(id: 10, fullName: 'Ahmad Bagheri',
-      //         nationalCode: '548548548484', age: '45',
-      //         gender: 'مرد',
-      //         timeOfAddToSystem: '14:20',
-      //         dateOfAddToSystem: '1402/02/02',
-      //         needToMRI: false,
-      //         isNot724: false,
-      //         needToCT: false,
-      //         IsNIHSS: false, IsLab: false, timeOfAddLabotory: '', ResonNot: 'nxfnxfgn', Is724: false, TimeFss: '',
-      //         TimeLKW: '', DateFSS: '', DateLKW: '',
-      //         IsUnknow: false, timeOfAddResident: '', dateOfAddToStart: '', AddReasonNot724: false,
-      //         AtendSeen: false, Residents: '', Atends: '', Fesharkhon: '', Ghandkhon: ''), context));
-      // home: ScreenResident(context));
-      // home: ScreenResident(context));
-      // home: ScreenFormImage724());
-      home: SplashScreen());
+      // home: ScreenFormLaboratory((p0) { }, ISEdit, Bun, Cr, PLT, PT, INR, Trop, isAtend));
       // home: ScreenListImages("1"));
       // home: ScreenFormImage724());
       // home: ScreenEms());

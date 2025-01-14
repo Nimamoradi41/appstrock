@@ -1,12 +1,14 @@
 import 'package:appstrock/Screens/Atend/ProviderAtend/ProviderAtend.dart';
+import 'package:appstrock/Screens/Ems/screen_ems.dart';
 import 'package:appstrock/Screens/Reception/ApiServiceReception.dart';
 import 'package:appstrock/Screens/Reception/ProviderReception/ProviderReception.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:shamsi_date/shamsi_date.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
@@ -45,8 +47,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
   late var Notifi=ProviderAtend();
 
 
-
-
+  List<ModelPatient> ItemsHolder=[];
 
 
   Future RunListP(BuildContext context,bool refresh) async
@@ -58,9 +59,10 @@ class _ScreenAtendState extends State<ScreenAtend> {
     var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
 
 
-
-
-    print(Data.toJson());
+    if(refresh)
+      {
+        Notifi.ListItemsPatient.clear();
+      }
 
     if(Data!=null)
     {
@@ -74,37 +76,62 @@ class _ScreenAtendState extends State<ScreenAtend> {
     }
   }
 
+  Future runListByDate(BuildContext context, Jalali date) async
+  {
 
+    String formattedDate =
+        '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
 
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
 
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        Notifi.setItems(Data.data);
+        ItemsHolder=Data.data;
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+  }
+
+  Future persianDateCalender()async{
+    Jalali? picked = await showPersianDatePicker(
+      context: context,
+      firstDate: Jalali(1385, 8),
+      lastDate: Jalali(1450, 9),
+      initialDate: Jalali.now(),
+    );
+    if(picked!=null) {
+      runListByDate(context,picked);
+    }
+  }
 
 
   Future   ChangShift(bool StatusNew,BuildContext context) async
   {
 
 
-    var Flag=await ShowAllow(context,'آیا از تغییر شیفت خود مطمئن هستید ؟');
-    if(Flag)
+    ShowLoadingApp(context);
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceReception.ChangeShiftStatus(context);
+    print(Data.toJson());
+
+    if(Data!=null)
     {
-      ShowLoadingApp(context);
-      // ignore: use_build_context_synchronously
-      var Data= await ApiServiceReception.ChangeShiftStatus(context);
-      print(Data.toJson());
-
-      if(Data!=null)
+      if(Data.success)
       {
-        if(Data.success)
-        {
-          Notifi.setstatus(Data.data!.isOnline);
-        }else{
-          // ignore: use_build_context_synchronously
-          ShowErrorMsg(context, Data.message);
-        }
+        Notifi.setstatus(Data.data!.isOnline);
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
       }
-
-      Navigator.pop(context);
     }
 
+    Navigator.pop(context);
 
 
 
@@ -115,13 +142,9 @@ class _ScreenAtendState extends State<ScreenAtend> {
 
   }
   Future ClearAllDate()async{
-    var Flag=await ShowAllow(context,'آیا میخواهید از حساب کاربری خود خارج شوید ؟');
-    if(Flag)
-    {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.clear();
-      GoNextPageGameOver(context, SplashScreen());
-    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    GoNextPageGameOver(context, SplashScreen());
   }
 
 
@@ -144,6 +167,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
   }
 
 
+  var textControllerSearch=TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -210,6 +234,18 @@ class _ScreenAtendState extends State<ScreenAtend> {
                                 ),
                               ),
                             ),
+                              RotatedBox(
+                              quarterTurns: 0,
+                              child: InkWell(
+                                onTap: (){
+                                  GoNextPage(context, ScreenEms(true));
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Icon(Icons.add,color: Colors.white,size: 30,),
+                                ),
+                              ),
+                            ),
                             const Expanded(child:
                             Padding(
                                 padding: EdgeInsets.all(16.0),
@@ -272,7 +308,33 @@ class _ScreenAtendState extends State<ScreenAtend> {
                             ),
                           ),
                         ),
-
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 16),
+                          width: wid,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8)
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+                            child: TextField(
+                              textAlign: TextAlign.end,
+                              decoration: new InputDecoration.collapsed(
+                                  hintText: '...جستجو'
+                              ),
+                              onChanged: (text){
+                                if(text.isNotEmpty)
+                                {
+                                  var data=ItemsHolder.where((element) => element.fullName.contains(text)).toList();
+                                  Notifi.setItems(data);
+                                }else{
+                                  Notifi.setItems(ItemsHolder);
+                                }
+                              },
+                              controller:textControllerSearch ,
+                            ),
+                          ),
+                        ),
 
                         SizedBox(height: 24,),
 
@@ -288,7 +350,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
                                     itemCount: ItemsP.length,
                                     itemBuilder: (ctx,item){
                                       return InkWell(
-                                          onTap: (){
+                                          onTap: () async {
                                             GoNextPage(context,ScreenDetailPatientAtend(ItemsP[item],context));
                                           },
                                           child: ItemPatientNew(wid: wid,ItemsP: ItemsP[item],));

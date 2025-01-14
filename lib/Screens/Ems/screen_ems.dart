@@ -16,6 +16,8 @@ import '../Reception/screen_reception.dart';
 import 'ProviderEms/ProviderEms.dart';
 
  class ScreenEms extends StatefulWidget {
+   late bool isAtend;
+   ScreenEms(this.isAtend){}
    @override
   State<ScreenEms> createState() => _ScreenEmsState();
 }
@@ -28,6 +30,12 @@ class _ScreenEmsState extends State<ScreenEms> {
    ];
 
    late var Notifi=ProviderEms();
+
+   bool _containsNonEnglishCharacters(String input) {
+     RegExp _persianRegex = RegExp(r'^[\u0600-\u06FF\s]+$'); // محدوده کاراکترهای فارسی
+     return _persianRegex.hasMatch(input);
+   }
+
    Future RunAddP(BuildContext context)async{
 
      if(!Notifi.status)
@@ -45,49 +53,44 @@ class _ScreenEmsState extends State<ScreenEms> {
        return;
      }
 
-
-     RegExp regExp = new RegExp(
-       "^[\u0600-\u06FF]+",
-     );
-
-      if(regExp.hasMatch(TextConName.text.toString()))
+      if(!_containsNonEnglishCharacters(TextConName.text.toString()))
         {
-          showToast("برای نام بیمار از کارکتر های فارسی استفاده نکنید",
+          showToast("برای نام بیمار از کارکتر های انگلیسی استفاده نکنید",
               position: StyledToastPosition.top,
               context:context);
           return;
         }
 
+     // var check=checkMeliCode(TextConCode.text.toString());
+     // if(!check)
+     // {
+     //   ShowErrorMsg(context,'کدملی اشتباه است');
+     //   return;
+     // }
 
-     var Flag=await ShowAllow(context,'آیا از ثبت بیمار مطمئن هستید ؟');
-     if(Flag)
+
+     Jalali date=Jalali.now();
+     String formattedDate =
+         '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+     // چاپ تاریخ جلالی با فرمت مورد نظر
+     print('تاریخ جلالی فعلی: $formattedDate');
+     ShowLoadingApp(context);
+     var  timestamp=DateTime.now().millisecondsSinceEpoch;
+     var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
+         TextConAge.text.toString(),Notifi.dropdownvalue=='مرد'?2:1,context,timestamp);
+     if(Data!=null)
      {
-       Jalali date=Jalali.now();
-       String formattedDate =
-           '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
-       // چاپ تاریخ جلالی با فرمت مورد نظر
-       print('تاریخ جلالی فعلی: $formattedDate');
-       ShowLoadingApp(context);
-
-       var  timestamp=DateTime.now().millisecondsSinceEpoch;
-       var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
-           TextConAge.text.toString(),Notifi.dropdownvalue=='مرد'?2:1,context,timestamp);
-
-
-       if(Data!=null)
+       if(Data.success)
        {
-         if(Data.success)
-         {
-           // Ok Shode
-           TextConAge.clear();
-           TextConCode.clear();
-           TextConName.clear();
-           TextConGender.clear();
-           Notifi.Refrsh();
-           ShowSuccesMsg(context,'بیمار با موفقیت ثبت شد');
-         }else{
-           ShowErrorMsg(context, Data.message);
-         }
+         // Ok Shode
+         TextConAge.clear();
+         TextConCode.clear();
+         TextConName.clear();
+         TextConGender.clear();
+         Notifi.Refrsh();
+         ShowSuccesMsg(context,'بیمار با موفقیت ثبت شد');
+       }else{
+         ShowErrorMsg(context, Data.message);
        }
      }
    }
@@ -106,28 +109,23 @@ class _ScreenEmsState extends State<ScreenEms> {
    {
 
 
-     var Flag=await ShowAllow(context,'آیا از تغییر شیفت خود مطمئن هستید ؟');
-     if(Flag)
+     ShowLoadingApp(context);
+     // ignore: use_build_context_synchronously
+     var Data= await ApiServiceReception.ChangeShiftStatus(context);
+     print(Data.toJson());
+
+     if(Data!=null)
      {
-       ShowLoadingApp(context);
-       // ignore: use_build_context_synchronously
-       var Data= await ApiServiceReception.ChangeShiftStatus(context);
-       print(Data.toJson());
-
-       if(Data!=null)
+       if(Data.success)
        {
-         if(Data.success)
-         {
-           Notifi.setstatus(Data.data!.isOnline);
-         }else{
-           // ignore: use_build_context_synchronously
-           ShowErrorMsg(context, Data.message);
-         }
+         Notifi.setstatus(Data.data!.isOnline);
+       }else{
+         // ignore: use_build_context_synchronously
+         ShowErrorMsg(context, Data.message);
        }
-
-       Navigator.pop(context);
      }
 
+     Navigator.pop(context);
 
 
 
@@ -138,13 +136,9 @@ class _ScreenEmsState extends State<ScreenEms> {
 
    }
    Future ClearAllDate()async{
-     var Flag=await ShowAllow(context,'آیا میخواهید از حساب کاربری خود خارج شوید ؟');
-     if(Flag)
-     {
-       SharedPreferences prefs = await SharedPreferences.getInstance();
-       prefs.clear();
-       GoNextPageGameOver(context, SplashScreen());
-     }
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+     prefs.clear();
+     GoNextPageGameOver(context, SplashScreen());
    }
 
 
@@ -193,7 +187,13 @@ class _ScreenEmsState extends State<ScreenEms> {
                            children:   [
                              InkWell(
                                onTap: () {
-                                 ClearAllDate();
+                                 if(widget.isAtend)
+                                   {
+                                     Navigator.pop(context);
+                                   }else{
+                                   ClearAllDate();
+                                 }
+
                                } ,
                                child: const RotatedBox(
                                  quarterTurns: 90,
@@ -215,13 +215,13 @@ class _ScreenEmsState extends State<ScreenEms> {
                                  ),
                                ),
                              ),
-                             const Expanded(child:
+                               Expanded(child:
                              Padding(
                                  padding: EdgeInsets.all(16.0),
                                  child: Text(
-                                   'فوریت های پزشکی',
+                                   widget.isAtend?'دکتر متخصص':'فوریت های پزشکی',
                                    textAlign: TextAlign.end,
-                                   style: TextStyle(
+                                   style: const TextStyle(
                                        color: Colors.white,
                                        fontWeight: FontWeight.bold,
                                        fontSize: 16
@@ -252,7 +252,7 @@ class _ScreenEmsState extends State<ScreenEms> {
                            decoration: BoxDecoration(
                                color: Colors.white,
                                borderRadius: BorderRadius.circular(12),
-                               boxShadow: [
+                               boxShadow: const [
                                  BoxShadow(
                                      color: Colors.black26,
                                      spreadRadius: 1,
@@ -301,7 +301,7 @@ class _ScreenEmsState extends State<ScreenEms> {
                            decoration: BoxDecoration(
                                color: Colors.white,
                                borderRadius: BorderRadius.circular(12),
-                               boxShadow: [
+                               boxShadow: const [
                                  BoxShadow(
                                      color: Colors.black26,
                                      spreadRadius: 1,
@@ -348,11 +348,11 @@ class _ScreenEmsState extends State<ScreenEms> {
                                          textDirection: TextDirection.rtl,
                                          child: TextField(
                                            controller: TextConCode,
-                                            maxLength: 11,
+                                            maxLength: 10,
 
                                            style: const TextStyle(
-                                               fontSize: 12,
-                                             fontFamily: 'rob',
+                                               fontSize: 13,
+
                                            ),
                                            keyboardType: TextInputType.phone,
                                            decoration: InputDecoration(

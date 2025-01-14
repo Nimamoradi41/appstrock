@@ -47,15 +47,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormAddTimeInjection> {
 
   Future  Run()async
   {
-    var Res=await ShowAllow(context,'آیا از تکمیل فرم مطمئن هستید ؟');
-    print('VVV');
-    print(Res.toString());
-    if(Res)
-    {
-      _submitForm();
-
-      // ignore: use_build_context_synchronously
-    }
+    _submitForm();
   }
 
   String    Convert_DATE(String day,String month,String year)
@@ -80,6 +72,16 @@ class _ScreenFormIsNot724State extends State<ScreenFormAddTimeInjection> {
   Future PersianTimeCalender(bool Type,bool LKW)async{
     var picked = await showPersianTimePicker(
       context: context,
+      builder: (BuildContext context, Widget? child) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(alwaysUse24HourFormat: true),
+            child: child!,
+          ),
+        );
+      },
       initialTime: TimeNowKnow,
     );
     if(picked!=null)

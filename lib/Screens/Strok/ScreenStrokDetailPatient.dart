@@ -2,11 +2,13 @@ import 'package:appstrock/Screens/Resident/ApiServiceResident.dart';
 import 'package:appstrock/Screens/Resident/ScreenFormNIHS.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_bdaya/flutter_datetime_picker_bdaya.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../Constants.dart';
 import '../../Widgets/TextApp.dart';
 import '../../test.dart';
+import '../Reception/ApiServiceReception.dart';
 import '../Reception/Model/ModelPatient.dart';
 import '../Resident/ScreenFormTimeInjection.dart';
 import 'ProviderStrok/ProviderStrok.dart';
@@ -17,14 +19,14 @@ import 'ScreenFormLaboratory.dart';
 
 class ScreenStrokDetailPatient extends StatefulWidget {
 
-  ScreenStrokDetailPatient(this.modelPatient,this.MainCtx);
+  ScreenStrokDetailPatient(this.patientItem,this.MainCtx);
   
 
 
 
 
 
-  ModelPatient modelPatient;
+  ModelPatient patientItem;
   BuildContext MainCtx;
 
   @override
@@ -39,17 +41,18 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
 
     ShowLoadingApp(context);
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceResident.TimeOfInjection(widget.modelPatient.id.toString(),context,Time);
+    var  timestamp=DateTime.now().millisecondsSinceEpoch;
+    var Data= await ApiServiceResident.TimeOfInjection(widget.patientItem.id.toString(),context,Time,timestamp);
     Navigator.pop(context);
     if(Data!=null)
     {
       if(Data.success)
       {
 
-        widget.modelPatient.timeOfInjection=Time;
+        Notifi.patientItem!.timeOfInjection=Time;
 
 
-        Notifi.setItem(widget.modelPatient);
+        Notifi.setItem(Notifi.patientItem);
 
 
         // ignore: use_build_context_synchronously
@@ -83,8 +86,36 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
 
         });
   }
+  Future getInfoOfPatient()async{
+    Jalali date=Jalali.now();
+    String formattedDate =
+        '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+    // چاپ تاریخ جلالی با فرمت مورد نظر
+    print('تاریخ جلالی فعلی: $formattedDate');
 
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
 
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+
+        var finded=Data.data.firstWhere((element) => element.id==widget.patientItem.id);
+        Notifi.setItem(finded);
+        Notifi.setLoading(false);
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getInfoOfPatient();
+  }
   @override
   Widget build(BuildContext context) {
     Notifi=Provider.of<ProviderStrok>(context);
@@ -94,7 +125,10 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
     return SafeArea(
       child: Scaffold(
         body: Center(
-          child: Container(
+          child:
+          Notifi.isLoading?
+          CircularProgressIndicator():
+          Container(
             width: wid,
             height: double.infinity,
             color: BackGroundApp,
@@ -167,7 +201,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                       children: [
                                         TextApp('کدملی', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(widget.modelPatient.nationalCode.isEmpty  ? 'نامشخص':widget.modelPatient.nationalCode, 14, ColorTextbody, true)
+                                        TextApp(Notifi.patientItem.nationalCode.isEmpty  ? 'نامشخص':Notifi.patientItem.nationalCode, 14, ColorTextbody, true)
                                       ],
                                     )),
                                     SizedBox(width: 8,),
@@ -182,7 +216,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                       children: [
                                         TextApp('نام و نام خانوادگی', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(widget.modelPatient.fullName.isEmpty  ? 'نامشخص':widget.modelPatient.fullName, 14, ColorTextbody, true)
+                                        TextApp(Notifi.patientItem.fullName.isEmpty  ? 'نامشخص':Notifi.patientItem.fullName, 14, ColorTextbody, true)
                                       ],
                                     )),
                                   ],
@@ -197,7 +231,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                       children: [
                                         TextApp('سن', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(widget.modelPatient.age.isEmpty  ? 'نامشخص':widget.modelPatient.age, 14, ColorTextbody, true)
+                                        TextApp(Notifi.patientItem.age.isEmpty  ? 'نامشخص':Notifi.patientItem.age, 14, ColorTextbody, true)
                                       ],
                                     )),
                                     SizedBox(width: 8,),
@@ -212,7 +246,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                       children: [
                                         TextApp('جنسیت', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(widget.modelPatient.gender.isEmpty  ? 'نامشخص':widget.modelPatient.gender, 14, ColorTextbody, true)
+                                        TextApp(Notifi.patientItem.gender.isEmpty  ? 'نامشخص':Notifi.patientItem.gender, 14, ColorTextbody, true)
                                       ],
                                     )),
                                   ],
@@ -236,7 +270,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.timeOfAddToSystem.isEmpty  ? 'نامشخص':widget.modelPatient.timeOfAddToSystem, 16, ColorTextbody, true),
+                                              TextApp(Notifi.patientItem.timeOfAddToSystem.isEmpty  ? 'نامشخص':Notifi.patientItem.timeOfAddToSystem, 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
                                                   child: TextApp(' :  زمان ثبت در سیستم', 14, ColorTitleText, false))),
@@ -247,7 +281,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
                                             children: [
-                                              TextApp(widget.modelPatient.dateOfAddToSystem == null ? 'نامشخص' : widget.modelPatient.dateOfAddToSystem!, 16, ColorTextbody, true),
+                                              TextApp(Notifi.patientItem.dateOfAddToSystem == null ? 'نامشخص' : Notifi.patientItem.dateOfAddToSystem!, 16, ColorTextbody, true),
                                               Expanded(child: Align(
                                                   alignment: Alignment.centerRight,
                                                   child: TextApp(' :  تاریخ ثبت در سیستم', 14, ColorTitleText, false))),
@@ -259,9 +293,9 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                           child: Row(
                                             children: [
                                               TextApp(
-                                              widget.modelPatient.timeOfInjection!.isEmpty ?
+                                                  Notifi.patientItem.timeOfInjection!.isEmpty ?
                                               'تکمیل نشده است':
-                                              widget.modelPatient.timeOfInjection.toString()
+                                                  Notifi.patientItem.timeOfInjection.toString()
 
                                                   , 16, ColorTextbody, true),
                                               Expanded(child: Align(
@@ -283,7 +317,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                      ),
                                    ),
                                  ),
-                                widget.modelPatient.timeOfInjection!.isEmpty?
+                                Notifi.patientItem.timeOfInjection!.isEmpty?
                                 Container(
                                   width: wid,
                                   margin: const EdgeInsets.all(8),
@@ -296,18 +330,18 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                         ));
                                       },
                                       style: ButtonStyle(
-                                          backgroundColor: widget.modelPatient.labIsComplete ==null?
+                                          backgroundColor: Notifi.patientItem.labIsComplete ==null?
                                           MaterialStateProperty.all(ColorApp):
-                                          widget.modelPatient.labIsComplete!?
+                                          Notifi.patientItem.labIsComplete!?
                                           MaterialStateProperty.all(Colors.white):
                                           MaterialStateProperty.all(ColorApp),
                                           padding: MaterialStateProperty.all(EdgeInsets.all(8)),
                                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                              widget.modelPatient.labIsComplete ==null?
+                                              Notifi.patientItem.labIsComplete ==null?
                                               RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(8.0),
                                               ):
-                                              widget.modelPatient.labIsComplete! ?
+                                              Notifi.patientItem.labIsComplete! ?
                                               RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(8.0),
                                                 side:  const BorderSide(color: ColorApp,width: 2)
@@ -320,16 +354,16 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                       child:Padding(
                                         padding: const EdgeInsets.all(10.0),
                                         child: Text(
-                                          widget.modelPatient.timeOfInjection == null ?
+                                          Notifi.patientItem.timeOfInjection == null ?
                                           'تکمیل زمان تزریق':
-                                          widget.modelPatient.timeOfInjection!.isNotEmpty ?
+                                          Notifi.patientItem.timeOfInjection!.isNotEmpty ?
                                           'نمایش زمان تزریق':
                                           'تکمیل زمان تزریق',
                                           style: TextStyle(
                                               color:
-                                              widget.modelPatient.labIsComplete == null ?
+                                              Notifi.patientItem.labIsComplete == null ?
                                               Colors.white:
-                                              widget.modelPatient.labIsComplete! ?
+                                              Notifi.patientItem.labIsComplete! ?
                                               ColorApp : Colors.white,
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),),

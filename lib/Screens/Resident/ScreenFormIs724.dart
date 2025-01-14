@@ -49,7 +49,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
   var hour=0;
   var min=0;
-  var timestamp=0;
+
   void _submitForm() {
     List<Map<String, String>> answers = [];
     answers.add({
@@ -84,9 +84,26 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
     }
 
-    answers.add({
-      'timestamp': timestamp.toString(),
-    });
+    if (_selectedJalaliDate != null && _selectedTime != null) {
+      // تبدیل تاریخ شمسی به میلادی
+      final gregorianDate = _selectedJalaliDate!.toGregorian();
+
+      // تبدیل تاریخ و زمان به DateTime میلادی
+      final dateTime = DateTime(
+        gregorianDate.year,
+        gregorianDate.month,
+        gregorianDate.day,
+        _selectedTime!.hour,
+        _selectedTime!.minute,
+      );
+
+      timestamp = dateTime.millisecondsSinceEpoch;
+      answers.add({
+        'timestamp': timestamp.toString(),
+      });
+    }
+
+
     print(answers.toString());
 
 
@@ -101,13 +118,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
   Future  Run()async
   {
-    var Res=await ShowAllow(context,'آیا از تکمیل فرم مطمئن هستید ؟');
-    print('VVV');
-    print(Res.toString());
-    if(Res)
-    {
-      _submitForm();
-    }
+    _submitForm();
   }
 
   String    Convert_DATE(String day,String month,String year)
@@ -154,6 +165,10 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
   }
 
 
+  Jalali? _selectedJalaliDate;
+  TimeOfDay? _selectedTime;
+  int? timestamp;
+
 
   Future PersianDateCalender(bool Type,bool LKW)async{
     Jalali? picked = await showPersianDatePicker(
@@ -167,6 +182,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
         if(Type)
           {
+            _selectedJalaliDate=picked;
             DateNowKnow=picked;
             DateNowKnowStr=Convert_DATE(DateNowKnow.day.toString()
                 ,DateNowKnow.month.toString(),DateNowKnow.year.toString());
@@ -201,9 +217,21 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
   }
 
 
+
+
   Future PersianTimeCalender(bool Type,bool LKW)async{
     var picked = await showPersianTimePicker(
       context: context,
+      builder: (BuildContext context, Widget? child) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(alwaysUse24HourFormat: true),
+            child: child!,
+          ),
+        );
+      },
       initialTime: Type ? TimeNowKnow:!Type && LKW ?TimeNowUnKnowLKW :TimeNowUnKnowFss,
     );
     if(picked!=null)
@@ -211,13 +239,13 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
       if(Type)
       {
         TimeNowKnow=picked;
+        _selectedTime=picked;
         TimeNowKnowStr="${TimeNowKnow.hour}:${TimeNowKnow.minute}";
         // timeStamp=DateTime.now().millisecondsSinceEpoch;
         hour=TimeNowKnow.hour;
         min=TimeNowKnow.minute;
         Jalali picked2=Jalali(year,month,day,hour,min,0);
         timestamp=picked2.toDateTime().millisecondsSinceEpoch;
-        print(timestamp.toString());
 
 
 
@@ -248,6 +276,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
   {
     super.initState();
     DateNowKnow=Jalali.now();
+    _selectedJalaliDate=Jalali.now();
     year=DateNowKnow.year;
     day=DateNowKnow.day;
     month=DateNowKnow.month;
@@ -265,6 +294,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
 
     TimeNowKnow=TimeOfDay.now();
+    _selectedTime=TimeOfDay.now();
     TimeNowKnowStr=Convert_Time(TimeNowKnow.hour.toString(),TimeNowKnow.minute.toString());
 
     hour=TimeNowKnow.hour;

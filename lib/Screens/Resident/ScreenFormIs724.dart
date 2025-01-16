@@ -50,6 +50,24 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
   var hour=0;
   var min=0;
 
+
+
+  var yearLKW=0;
+  var monthLKW=0;
+  var dayLKW=0;
+
+  var hourLKW=0;
+  var minLKW=0;
+
+
+  var yearFSS=0;
+  var monthFSS=0;
+  var dayFSS=0;
+
+  var hourFSS=0;
+  var minFSS=0;
+
+
   void _submitForm() {
     List<Map<String, String>> answers = [];
     answers.add({
@@ -79,37 +97,67 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
         'DateFss': DateNowUnKnowFssStr,
       });
 
-
-
-
     }
 
-    if (_selectedJalaliDate != null && _selectedTime != null) {
-      // تبدیل تاریخ شمسی به میلادی
-      final gregorianDate = _selectedJalaliDate!.toGregorian();
+    if(!_checkBox1)
+      {
+        if (_selectedJalaliDate != null && _selectedTime != null) {
+          // تبدیل تاریخ شمسی به میلادی
+          final gregorianDate = _selectedJalaliDate!.toGregorian();
 
-      // تبدیل تاریخ و زمان به DateTime میلادی
-      final dateTime = DateTime(
-        gregorianDate.year,
-        gregorianDate.month,
-        gregorianDate.day,
-        _selectedTime!.hour,
-        _selectedTime!.minute,
-      );
+          // تبدیل تاریخ و زمان به DateTime میلادی
+          final dateTime = DateTime(
+            gregorianDate.year,
+            gregorianDate.month,
+            gregorianDate.day,
+            _selectedTime!.hour,
+            _selectedTime!.minute,
+          );
 
-      timestamp = dateTime.millisecondsSinceEpoch;
-      answers.add({
-        'timestamp': timestamp.toString(),
-      });
+          timestamp = dateTime.millisecondsSinceEpoch;
+          answers.add({
+            'timestamp': timestamp.toString(),
+          });
+        }
+      }else{
+      if (_selectedNotKnowLKWJalaliDate != null && _selectedTimeLKW != null) {
+        // تبدیل تاریخ شمسی به میلادی
+        final gregorianDate = _selectedNotKnowLKWJalaliDate!.toGregorian();
+
+        // تبدیل تاریخ و زمان به DateTime میلادی
+        final dateTime = DateTime(
+          gregorianDate.year,
+          gregorianDate.month,
+          gregorianDate.day,
+          _selectedTimeLKW!.hour,
+          _selectedTimeLKW!.minute,
+        );
+
+        timestampLKW = dateTime.millisecondsSinceEpoch;
+        answers.add({
+          'timestampLKW': timestamp.toString(),
+        });
+      }
+
+      if (_selectedNotKnowFSSJalaliDate != null && _selectedTimeFSS != null) {
+        // تبدیل تاریخ شمسی به میلادی
+        final gregorianDate = _selectedNotKnowFSSJalaliDate!.toGregorian();
+
+        // تبدیل تاریخ و زمان به DateTime میلادی
+        final dateTime = DateTime(
+          gregorianDate.year,
+          gregorianDate.month,
+          gregorianDate.day,
+          _selectedTimeFSS!.hour,
+          _selectedTimeFSS!.minute,
+        );
+
+        timestampFSS = dateTime.millisecondsSinceEpoch;
+        answers.add({
+          'timestampFSS': timestamp.toString(),
+        });
+      }
     }
-
-
-    print(answers.toString());
-
-
-
-
-
 
     if (widget.onClose != null) {
       widget.onClose(answers);
@@ -166,8 +214,14 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
 
   Jalali? _selectedJalaliDate;
+  Jalali? _selectedNotKnowLKWJalaliDate;
+  Jalali? _selectedNotKnowFSSJalaliDate;
   TimeOfDay? _selectedTime;
+  TimeOfDay? _selectedTimeLKW;
+  TimeOfDay? _selectedTimeFSS;
   int? timestamp;
+  int? timestampLKW;
+  int? timestampFSS;
 
 
   Future PersianDateCalender(bool Type,bool LKW)async{
@@ -179,45 +233,46 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
     );
     if(picked!=null)
       {
-
         if(Type)
           {
             _selectedJalaliDate=picked;
             DateNowKnow=picked;
             DateNowKnowStr=Convert_DATE(DateNowKnow.day.toString()
                 ,DateNowKnow.month.toString(),DateNowKnow.year.toString());
-
-
             Jalali picked2=Jalali(DateNowKnow.year,DateNowKnow.month,
                 DateNowKnow.day,hour,min,0);
             timestamp=picked2.toDateTime().millisecondsSinceEpoch;
-
-
           }  else  if(!Type && LKW) {
+
+          _selectedNotKnowLKWJalaliDate=picked;
           DateNowUnKnowLKW=picked;
           DateNowUnKnowLKWStr=Convert_DATE(DateNowUnKnowLKW.day.toString()
               ,DateNowUnKnowLKW.month.toString(),DateNowUnKnowLKW.year.toString());
+
+          Jalali picked2=Jalali(DateNowUnKnowLKW.year,DateNowUnKnowLKW.month,
+              DateNowUnKnowLKW.day,hour,min,0);
+
+          timestampLKW=picked2.toDateTime().millisecondsSinceEpoch;
         }
         else  if(!Type && !LKW) {
+          _selectedNotKnowFSSJalaliDate=picked;
           DateNowUnKnowFss=picked;
           DateNowUnKnowFssStr=Convert_DATE(DateNowUnKnowFss.day.toString()
               ,DateNowUnKnowFss.month.toString(),DateNowUnKnowFss.year.toString());
+
+          Jalali picked2=Jalali(DateNowUnKnowFss.year,DateNowUnKnowFss.month,
+              DateNowUnKnowFss.day,hour,min,0);
+
+          timestampFSS=picked2.toDateTime().millisecondsSinceEpoch;
         }
 
+        setState((){});
 
-
-
-        setState(() {
-
-        });
       }
 
 
 
   }
-
-
-
 
   Future PersianTimeCalender(bool Type,bool LKW)async{
     var picked = await showPersianTimePicker(
@@ -246,19 +301,23 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
         min=TimeNowKnow.minute;
         Jalali picked2=Jalali(year,month,day,hour,min,0);
         timestamp=picked2.toDateTime().millisecondsSinceEpoch;
-
-
-
-
-
-
       }else if(!Type && LKW){
         TimeNowUnKnowLKW=picked;
+        _selectedTimeLKW=picked;
         TimeNowUnKnowLKWStr="${TimeNowUnKnowLKW.hour}:${TimeNowUnKnowLKW.minute}";
+        hourLKW=TimeNowUnKnowLKW.hour;
+        minLKW=TimeNowUnKnowLKW.minute;
+        Jalali picked2=Jalali(yearLKW,monthLKW,dayLKW,hourLKW,minLKW,0);
+        timestampLKW=picked2.toDateTime().millisecondsSinceEpoch;
       }
       else if(!Type && !LKW){
         TimeNowUnKnowFss=picked;
+        _selectedTimeFSS=picked;
         TimeNowUnKnowFssStr="${TimeNowUnKnowFss.hour}:${TimeNowUnKnowFss.minute}";
+        hourFSS=TimeNowUnKnowFss.hour;
+        minFSS=TimeNowUnKnowFss.minute;
+        Jalali picked2=Jalali(yearFSS,monthFSS,dayFSS,hourFSS,minFSS,0);
+        timestampFSS=picked2.toDateTime().millisecondsSinceEpoch;
       }
 
       setState(() {
@@ -285,10 +344,19 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
 
     DateNowUnKnowLKW=Jalali.now();
+    _selectedNotKnowLKWJalaliDate=Jalali.now();
+    yearLKW=DateNowUnKnowLKW.year;
+    dayLKW=DateNowUnKnowLKW.day;
+    monthLKW=DateNowUnKnowLKW.month;
+
     DateNowUnKnowLKWStr=Convert_DATE(DateNowUnKnowLKW.day.toString()
         ,DateNowUnKnowLKW.month.toString(),DateNowUnKnowLKW.year.toString());
 
     DateNowUnKnowFss=Jalali.now();
+    _selectedNotKnowFSSJalaliDate=Jalali.now();
+    yearFSS=DateNowUnKnowFss.year;
+    dayFSS=DateNowUnKnowFss.day;
+    monthFSS=DateNowUnKnowFss.month;
     DateNowUnKnowFssStr=Convert_DATE(DateNowUnKnowFss.day.toString()
         ,DateNowUnKnowFss.month.toString(),DateNowUnKnowFss.year.toString());
 
@@ -303,11 +371,37 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
         day,hour,min,0);
     timestamp=picked2.toDateTime().millisecondsSinceEpoch;
 
+
+    // -----------------------
+
     TimeNowUnKnowLKW=TimeOfDay.now();
+    _selectedTimeLKW=TimeOfDay.now();
     TimeNowUnKnowLKWStr=Convert_Time(TimeNowUnKnowLKW.hour.toString(),TimeNowUnKnowLKW.minute.toString());
 
+    hourLKW=TimeNowUnKnowLKW.hour;
+    minLKW=TimeNowUnKnowLKW.minute;
+    Jalali picked3=Jalali(yearLKW,monthLKW,
+        dayLKW,hourLKW,minLKW,0);
+    timestampLKW=picked3.toDateTime().millisecondsSinceEpoch;
+
+    // -----------------------
+
+
+
+
+    // -----------------------
+
     TimeNowUnKnowFss=TimeOfDay.now();
+    _selectedTimeFSS=TimeOfDay.now();
     TimeNowUnKnowFssStr=Convert_Time(TimeNowUnKnowFss.hour.toString(),TimeNowUnKnowFss.minute.toString());
+
+    hourFSS=TimeNowUnKnowFss.hour;
+    minFSS=TimeNowUnKnowFss.minute;
+    Jalali picked4=Jalali(yearFSS,monthFSS,
+        dayFSS,hourFSS,minFSS,0);
+    timestampFSS=picked4.toDateTime().millisecondsSinceEpoch;
+
+    // -----------------------
 
   }
 
@@ -435,11 +529,6 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
                                     SizedBox(width: 4,)
                                   ],
                                 ),
-
-
-
-
-
                               ],
                             ),
                           ),

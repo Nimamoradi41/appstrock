@@ -169,11 +169,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
 
   }
   Future IsNot724()async{
-
-
-
-
-
     var  timestamp=DateTime.now().millisecondsSinceEpoch;
     var Data= await ApiServiceResident.SetNot724(widget.patientItem.id.toString(),
         context,false,timestamp.toString());
@@ -264,14 +259,15 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
 
 
 Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
-    ,String TimeFssStart,String DateFSSStart,String TimeLKWStart,String DateLKWStart, String timestamp)async{
+    ,String TimeFssStart,String DateFSSStart,String TimeLKWStart,String DateLKWStart, String timestamp,
+    String timestampLKW,String timestampFSS)async{
 
 
   ShowLoadingApp(context);
   // ignore: use_build_context_synchronously
   var Data= await ApiServiceResident.Set724(widget.patientItem.id.toString(),
   context,IsUnkown,TimeStart,DateStart,TimeFssStart,
-      DateFSSStart,TimeLKWStart,DateLKWStart,true,timestamp);
+      DateFSSStart,TimeLKWStart,DateLKWStart,true,timestamp,timestampLKW,timestampFSS);
   Navigator.pop(context);
   if(Data!=null)
   {
@@ -303,6 +299,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
     }
   }
 }
+
   Add724(){
     showModalBottomSheet(context: context,
         isScrollControlled: true,
@@ -338,14 +335,9 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                   TimeLKW=p[1]['TimeLKW']!;
                   DateFSS=p[4]['DateFss']!;
                   DateLKW=p[2]['DateLKW']!;
-                  timestamp=p[5]['timestamp']!;
-
+                 var timestampFSS=p[5]['timestampLKW']!;
+                  var timestampLKW=p[6]['timestampFSS']!;
                   AddRequestIs724(true, '', '', TimeFss, DateFSS, TimeLKW, DateLKW,timestamp);
-
-
-
-
-
                 }
 
 

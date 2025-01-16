@@ -634,19 +634,6 @@ class ApiServiceResident{
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     return login;
   }
 

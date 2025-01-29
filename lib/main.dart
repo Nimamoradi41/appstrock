@@ -71,34 +71,34 @@ class _MyAppState extends State<MyApp> {
           fontFamily: 'iransans'
       ),
       debugShowCheckedModeBanner: false,
-      // home: SplashScreen());
-      home: ScreenFormReasonInjection((p0) {
-
-      },
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true
-      ));
+      home: SplashScreen());
+      // home: ScreenFormReasonInjection((p0) {
+      //
+      // },
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true,
+      //  true
+      // ));
       // home: ScreenFormLaboratory((p0){
       // },false,
       //    '',

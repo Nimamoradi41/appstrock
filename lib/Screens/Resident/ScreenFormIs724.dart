@@ -135,7 +135,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
         timestampLKW = dateTime.millisecondsSinceEpoch;
         answers.add({
-          'timestampLKW': timestamp.toString(),
+          'timestampLKW': timestampLKW.toString(),
         });
       }
 
@@ -154,7 +154,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
         timestampFSS = dateTime.millisecondsSinceEpoch;
         answers.add({
-          'timestampFSS': timestamp.toString(),
+          'timestampFSS': timestampFSS.toString(),
         });
       }
     }

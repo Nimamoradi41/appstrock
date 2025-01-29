@@ -198,19 +198,18 @@ class ItemPatientNew extends StatelessWidget {
                     color: Colors.white,
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(6),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                           color: Colors.black12,
                           blurRadius: 1,
                           spreadRadius: 1,
-
                           offset: Offset(0,0)
                       ),
                     ]
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: Icon(Icons.person,size: 35,color: Colors.blueAccent,),
+                  child:  ItemsP.gender=='زن' ? const Icon(Icons.woman,size: 35,color: Colors.red,): const Icon(Icons.man,size: 35,color: Colors.blueAccent,),
                 )),
             SizedBox(width: 1,)
           ],

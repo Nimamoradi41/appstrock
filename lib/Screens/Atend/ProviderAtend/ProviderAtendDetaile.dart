@@ -11,6 +11,7 @@ class ProviderAtendDetaile extends ChangeNotifier{
   bool status=false;
   String oldTime="";
   String oldTime2="";
+  String oldTimeFSS="";
   // String oldTime3="";
    void setItems(ModelPatient newitem)
    {
@@ -24,6 +25,12 @@ class ProviderAtendDetaile extends ChangeNotifier{
     notifyListeners();
   }
 
+
+  void setTimeEffectFss(String newTime)
+  {
+    oldTimeFSS=newTime;
+    notifyListeners();
+  }
 
   void setstatus(bool newst)
   {

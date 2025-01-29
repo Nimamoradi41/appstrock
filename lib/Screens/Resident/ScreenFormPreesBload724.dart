@@ -68,14 +68,14 @@ class _ScreenFormIsNot724State extends State<ScreenFormPreesBload724> {
     var FTwoInt=int.parse(textControllerF2.text);
 
 
-    if(FOneInt<6||FOneInt>30)
+    if(FOneInt<50||FOneInt>300)
       {
         ShowErrorMsg(context,"فشار خون اشتباه وارد شده است");
         return;
       }
 
 
-      if(FTwoInt<2||FTwoInt>15)
+      if(FTwoInt<20||FTwoInt>150)
     {
       ShowErrorMsg(context,"فشار خون اشتباه وارد شده است");
       return;

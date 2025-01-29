@@ -25,9 +25,10 @@ class ProviderResidentDetaile extends ChangeNotifier{
       n_8: '', n_9: '', n_10: '', n_11: '',
       bun: '', cr: '', plt: '', pt: '',
       ptt: '', inr: '', trop: false, bloodPressure1: 0, bloodPressure2: 0, bs: 0, signsStartTS: 0, insertTimeTS: 0, injectionType: 0, misdiagnosisOfTriage: false, misdiagnosisOfEms: false, overTime: false, labInsertDate: '', labInsertTime: '', isFinished: false,
-      notInjectingIsComplete: false, c1: false, c2: false, c3: false, c4: false,c5: false,c6: false,c8: false,c7: false,c9: false,c10: false,c11: false, c12: false, c13: false, c14: false, c15: false, c16: false, c17: false, c18: false, c19: false, c20: false, c21: false, c22: false, nihsSubscore: 0, injectionTimeTS: 0, wbc: '', hb: '', otn: '', dtn: '', timeFinish: '', dateFinishShamsi: '',);
+      notInjectingIsComplete: false, c1: false, c2: false, c3: false, c4: false,c5: false,c6: false,c8: false,c7: false,c9: false,c10: false,c11: false, c12: false, c13: false, c14: false, c15: false, c16: false, c17: false, c18: false, c19: false, c20: false, c21: false, c22: false, nihsSubscore: 0, injectionTimeTS: 0, wbc: '', hb: '', otn: '', dtn: '', timeFinish: '', dateFinishShamsi: '', signsStartTSFSS: 0, signsStartTSLKW: 0, ftn: '',);
   bool status=false;
   String oldTime="";
+  String oldTimeFSS="";
   String oldTime2="";
   String oldTime3="";
 
@@ -55,6 +56,12 @@ class ProviderResidentDetaile extends ChangeNotifier{
     oldTime=newTime;
     notifyListeners();
   }
+
+    void setTimeEffectFss(String newTime)
+    {
+      oldTimeFSS=newTime;
+      notifyListeners();
+    }
 
   void setTimeAriveToHospital(String newTime)
   {

@@ -632,21 +632,6 @@ class ApiServiceResident{
     {
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     return login;
   }
 
@@ -751,18 +736,15 @@ class ApiServiceResident{
       'fssDate': DateFSSStart,
       'lkwTime': TimeLKWStart,
       'lkwDate': DateLKWStart,
-      'signsStartTS': timestamp,
     });
 
-    if(IsUnkown)
+    if(!IsUnkown)
       {
-
-      }
-
-
-
-
-
+        request.fields.addAll({ 'signsStartTS': timestamp});
+      }else{
+        request.fields.addAll({ 'signsStartTSLKW': timestampLKW});
+        request.fields.addAll({ 'signsStartTSFSS': timestampFSS});
+    }
 
     try{
       http.StreamedResponse response = await request.send().timeout(
@@ -1157,10 +1139,10 @@ class ApiServiceResident{
         Uri.parse('https://api.appstrok.ir/Patients/TimeOfInjection'));
 
     request.fields.addAll({
-      'patientId': idPa,
-      'userId': UserId.toString(),
+      'PatientId': idPa,
+      'UserId': UserId.toString(),
       'Time': Time,
-      'injectionTimeTS': timestamp.toString(),
+      'InjectionTimeTS': timestamp.toString(),
     });
 
 

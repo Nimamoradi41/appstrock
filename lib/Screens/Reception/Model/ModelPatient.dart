@@ -4,6 +4,7 @@ class ModelPatient {
   String fullName;
   String nationalCode;
   String dtn;
+  String ftn;
   String otn;
   String age;
   String gender;
@@ -13,6 +14,8 @@ class ModelPatient {
   int? bloodPressure1;
   int? bloodPressure2;
   int? signsStartTS;
+  int? signsStartTSFSS;
+  int? signsStartTSLKW;
   int? injectionTimeTS;
   int? insertTimeTS;
   int? injectionType;
@@ -23,7 +26,7 @@ class ModelPatient {
   String? fssTime;
   String? lkwTime;
   String? fssDate;
-  String? lkwDate;
+  String lkwDate;
   String? dateOfAddToSystem;
   String? dateOfAddToStart;
   String? ResonNot;
@@ -118,6 +121,9 @@ class ModelPatient {
     required this.Atends,
     required this.Fesharkhon,
     required this.lkwDate,
+    required this.signsStartTSFSS,
+    required this.signsStartTSLKW,
+    required this.ftn,
     required this.isFinished,
     required this.notInjectingIsComplete,
     required this.wbc,
@@ -201,6 +207,7 @@ class ModelPatient {
     dtn: json["dtn"]?? '',
     otn: json["otn"]?? '',
     timeFinish: json["timeFinish"]?? '',
+    ftn: json["ftn"]?? '',
     dateFinishShamsi: json["dateFinishShamsi"]?? '',
     fullName: json["fullName"]?? '',
     nationalCode: json["nationalCode"]?? '',
@@ -218,6 +225,8 @@ class ModelPatient {
     fssDate: json["fssDate"]?? '',
     nihsSubscore: json["nihsSubscore"]?? 0,
     lkwDate: json["lkwDate"]?? '',
+    signsStartTSFSS: json["signsStartTSFSS"]?? 0,
+    signsStartTSLKW: json["signsStartTSLKW"]?? 0,
     bloodPressure1: json["bloodPressure1"]?? 0,
     bloodPressure2: json["bloodPressure2"]?? 0,
     bs: json["bs"]?? 0,

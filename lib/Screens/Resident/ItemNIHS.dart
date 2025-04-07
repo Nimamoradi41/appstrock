@@ -46,9 +46,9 @@ class _ItemNIHSState extends State<ItemNIHS> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 8,),
+            const SizedBox(height: 4,),
             TextAppStartfredoka(widget.Index.toString()+' '+widget.Que.question,14 , Colors.black87, true),
-            SizedBox(height: 16,),
+            const SizedBox(height: 4,),
             Container(
               decoration: BoxDecoration(
                 color: Colors.black12,
@@ -83,13 +83,13 @@ class _ItemNIHSState extends State<ItemNIHS> {
               ),
 
             ),
-            SizedBox(height: 16,),
+            const SizedBox(height: 4,),
             Row(
               children: [
                 Expanded(child: TextAppStartfredokaCenter(widget.Que.options[widget.Que.selectedAnswer!].toString(),16 , Colors.black87, true)),
               ],
             ),
-            SizedBox(height: 64,),
+            const SizedBox(height: 8,),
 
           ],
         ),

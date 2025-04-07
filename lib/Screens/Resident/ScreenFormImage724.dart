@@ -151,7 +151,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormImage724> {
                           },
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(Colors.white),
-                                  padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                  padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(8.0),
@@ -160,8 +160,8 @@ class _ScreenFormIsNot724State extends State<ScreenFormImage724> {
                                   )
                               ),
                               child:Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: TextApp('بستن',16,ColorApp,true),
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextApp('بستن',12,ColorApp,true),
                               )),
                         ),
                       ),
@@ -183,7 +183,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormImage724> {
                           },
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(ColorApp),
-                                  padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                  padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8.0),
@@ -191,8 +191,8 @@ class _ScreenFormIsNot724State extends State<ScreenFormImage724> {
                                   )
                               ),
                               child:Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: TextApp('ثبت اطلاعات',16,Colors.white,true),
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextApp('ثبت اطلاعات',12,Colors.white,true),
                               )),
                         ),
                       ),

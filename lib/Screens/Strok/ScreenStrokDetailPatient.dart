@@ -320,7 +320,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                 Notifi.patientItem.timeOfInjection!.isEmpty?
                                 Container(
                                   width: wid,
-                                  margin: const EdgeInsets.all(8),
+                                  margin: const EdgeInsets.all(4),
                                   child: ElevatedButton(
                                       onPressed: (){
                                         GoNextPage(context, ScreenFormAddTimeInjection((p0) {
@@ -352,7 +352,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                           )
                                       ),
                                       child:Padding(
-                                        padding: const EdgeInsets.all(10.0),
+                                        padding: const EdgeInsets.all(8.0),
                                         child: Text(
                                           Notifi.patientItem.timeOfInjection == null ?
                                           'تکمیل زمان تزریق':
@@ -365,7 +365,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
                                               Colors.white:
                                               Notifi.patientItem.labIsComplete! ?
                                               ColorApp : Colors.white,
-                                              fontSize: 16,
+                                              fontSize: 12,
                                               fontWeight: FontWeight.bold),),
                                       )),
                                 ):Container(),

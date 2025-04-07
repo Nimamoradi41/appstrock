@@ -12,6 +12,8 @@ import '../../Widgets/TextApp.dart';
 import '../Laboratory/ScreenFormLaboratory.dart';
 import '../Reception/ApiServiceReception.dart';
 import '../Reception/Model/ModelPatient.dart';
+import '../Resident/ScreenFormBload724.dart';
+import '../Resident/ScreenFormPreesBload724.dart';
 import '../Resident/ScreenFormReasonInjection.dart';
 import 'ProviderAtend/ProviderAtendDetaile.dart';
 
@@ -382,6 +384,72 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
 
   }
 
+  Future RunPressBload(String Blod1,String Blod2)async{
+
+    ShowLoadingApp(context);
+
+    var Data= await ApiServiceResident.PressBlod(widget.patientItem.id.toString()
+        ,context,Blod1,Blod2);
+
+    Navigator.pop(context);
+
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+        Notifi.patientItem.bloodPressure1= int.parse(Blod1);
+        Notifi.patientItem.bloodPressure2=int.parse(Blod2);
+        Notifi.setItems(Notifi.patientItem);
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+
+  }
+
+  Future RunBload(String Blod)async{
+    ShowLoadingApp(context);
+    var Data= await ApiServiceResident.Blod(widget.patientItem.id.toString(),context,Blod);
+
+    Navigator.pop(context);
+
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+        Notifi.patientItem.bs= int.parse(Blod);
+        Notifi.setItems(Notifi.patientItem);
+      }else{
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+
+
+  }
+
+  Future reset()async{
+    ShowLoadingApp(context);
+    var Data= await ApiServiceResident.reset(widget.patientItem.id.toString(),context);
+
+    Navigator.pop(context);
+
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+        Navigator.pop(context);
+      }else{
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+
+
+  }
+
   Future getInfoOfPatient()async{
     Jalali date=Jalali.now();
     String formattedDate =
@@ -457,6 +525,15 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                 child: Icon(Icons.refresh,color: Colors.white,size: 30,),
                               ),
                             ),
+                            InkWell(
+                              onTap: (){
+                                getInfoOfPatient();
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Icon(Icons.settings_backup_restore,color: Colors.white,size: 30,),
+                              ),
+                            ),
                             !Notifi.patientItem.seenByAttend!!?
                               InkWell(
                               onTap: (){
@@ -489,7 +566,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 16
+                                          fontSize: 12
                                       ),
                                     )
 
@@ -517,64 +594,60 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                           child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(12.0),
+                                padding: const EdgeInsets.only(right: 8.0,left: 8,top: 8),
                                 child: Row(
                                   children: [
                                     Expanded(child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
-                                        TextApp('کدملی', 12, ColorTitleText, false),
-                                        SizedBox(height: 8,),
-                                        TextApp(Notifi.patientItem.nationalCode.isEmpty  ? 'نامشخص':widget.patientItem.nationalCode, 13, ColorTextbody, true)
+                                        TextApp('کدملی', 10, ColorTitleText, false),
+                                        SizedBox(height: 4,),
+                                        TextApp(Notifi.patientItem.nationalCode.isEmpty  ? 'نامشخص':Notifi.patientItem.nationalCode, 12, ColorTextbody, true)
                                       ],
                                     )),
-                                    SizedBox(width: 8,),
+                                    SizedBox(width: 4,),
                                     Container(
                                       width: 1,
                                       height: 25,
                                       color: Colors.black12,
                                     ),
-                                    SizedBox(width: 8,),
+                                    SizedBox(width: 4,),
                                     Expanded(child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
-                                        TextApp('نام و نام خانوادگی', 12, ColorTitleText, false),
+                                        TextApp('نام و نام خانوادگی', 10, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(Notifi.patientItem.fullName.isEmpty  ?
-                                        'نامشخص':Notifi.patientItem.fullName, 13, ColorTextbody, true)
+                                        TextApp(Notifi.patientItem.fullName.isEmpty  ? 'نامشخص':Notifi.patientItem.fullName, 12, ColorTextbody, true)
                                       ],
                                     )),
                                   ],
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(12.0),
+                                padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   children: [
                                     Expanded(child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         TextApp('سن', 12, ColorTitleText, false),
-                                        SizedBox(height: 8,),
-                                        TextApp(Notifi.patientItem.age.isEmpty
-                                            ? 'نامشخص':Notifi.patientItem.age, 13, ColorTextbody, true)
+                                        SizedBox(height: 4,),
+                                        TextApp(Notifi.patientItem.age.isEmpty  ? 'نامشخص':Notifi.patientItem.age, 14, ColorTextbody, true)
                                       ],
                                     )),
-                                    SizedBox(width: 8,),
+                                    SizedBox(width: 4,),
                                     Container(
                                       width: 1,
                                       height: 25,
                                       color: Colors.black12,
                                     ),
-                                    SizedBox(width: 8,),
+                                    SizedBox(width: 4,),
                                     Expanded(child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         TextApp('جنسیت', 12, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(Notifi.patientItem.gender.isEmpty
-                                            ? 'نامشخص':Notifi.patientItem.gender, 13,
-                                            ColorTextbody, true)
+                                        TextApp(Notifi.patientItem.gender.isEmpty  ? 'نامشخص':Notifi.patientItem.gender, 14, ColorTextbody, true)
                                       ],
                                     )),
                                   ],
@@ -606,6 +679,68 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                             ],
                                           ),
                                         ),
+
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              TextApp(Notifi.oldTime2
+                                                  , 14, ColorTextbody, true),
+                                              Expanded(child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextApp(' :  تایمر بر اساس زمان ثبت در سیستم', 12,
+                                                      ColorTitleText, false))),
+                                            ],
+                                          ),
+                                        ),
+
+                                        Notifi.oldTime.isNotEmpty
+                                            && !Notifi.patientItem.isFinished! &&
+                                            Notifi.patientItem.signsStartTSFSS==0?
+                                        Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                              child: Row(
+                                                children: [
+                                                  TextApp(Notifi.oldTime
+                                                      , 14, ColorTextbody, true),
+                                                  Expanded(child: Align(
+                                                      alignment: Alignment.centerRight,
+                                                      child: TextApp(' :  تایمر بر اساس زمان شروع علائم', 12, ColorTitleText, false))
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ):Container(),
+
+                                        Notifi.oldTimeFSS.isNotEmpty   ?
+                                        Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                              child: Row(
+                                                children: [
+                                                  TextApp(Notifi.oldTimeFSS
+                                                      , 14, ColorTextbody, true),
+                                                  Expanded(child: Align(
+                                                      alignment: Alignment.centerRight,
+                                                      child: TextApp(' :  تایمر بر اساس دیدن علائم', 12,
+                                                          ColorTitleText, false))),
+                                                ],
+                                              ),
+                                            ),
+
+
+
+
+
+
+
+                                          ],
+                                        ):Container(),
+
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                           child: Row(
@@ -784,30 +919,51 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                             ],
                                           ),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
-                                          child: Row(
-                                            children: [
-                                              TextApp(Notifi.patientItem.bs == 0  ?'تکمیل نشده است' :
-                                              Notifi.patientItem.bs.toString()
-                                                  , 14, ColorTextbody, true),
-                                              Expanded(child: Align(
-                                                  alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  قند خون', 12, ColorTitleText, false))),
-                                            ],
+
+                                        InkWell(
+                                          onTap: (){
+                                            GoNextPage(context,  ScreenFormBload724(
+                                                Notifi.patientItem.id.toString(),
+                                                false,(p0){
+                                              var item= p0[0]['bload'].toString();
+                                              RunBload(item);
+                                            }));
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                            child: Row(
+                                              children: [
+                                                TextApp(Notifi.patientItem.bs == 0  ?'تکمیل نشده است' :
+                                                Notifi.patientItem.bs.toString()
+                                                    , 14, ColorTextbody, true),
+                                                Expanded(child: Align(
+                                                    alignment: Alignment.centerRight,
+                                                    child: TextApp(' :  قند خون', 12, ColorTitleText, false))),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
-                                          child: Row(
-                                            children: [
-                                            TextApp(Notifi.patientItem.bloodPressure1 == 0  ?'تکمیل نشده است' :
-                                              "${Notifi.patientItem.bloodPressure1}/${Notifi.patientItem.bloodPressure2}"
-                                                  , 14, ColorTextbody, true),
-                                              Expanded(child: Align(
-                                                  alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  فشار خون', 12, ColorTitleText, false))),
-                                            ],
+                                        InkWell(
+                                          onTap: (){
+                                            GoNextPage(context,ScreenFormPreesBload724(
+                                                Notifi.patientItem.id.toString(),false,(p0){
+                                              var bload1= p0[0]['bload1'].toString();
+                                              var bload2= p0[0]['bload2'].toString();
+                                              RunPressBload(bload1,bload2);
+                                            }));
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+                                            child: Row(
+                                              children: [
+                                              TextApp(Notifi.patientItem.bloodPressure1 == 0  ?'تکمیل نشده است' :
+                                                "${Notifi.patientItem.bloodPressure1}/${Notifi.patientItem.bloodPressure2}"
+                                                    , 14, ColorTextbody, true),
+                                                Expanded(child: Align(
+                                                    alignment: Alignment.centerRight,
+                                                    child: TextApp(' :  فشار خون', 12, ColorTitleText, false))),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                         Notifi.patientItem.is724IsComplete! &&
@@ -818,7 +974,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                           children: [
 
                                             Expanded(child: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
                                               child: ElevatedButton(
 
                                                   onPressed: (){
@@ -827,7 +983,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                                   },
                                                   style: ButtonStyle(
                                                       backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                                      padding: MaterialStateProperty.all(EdgeInsets.all(2)),
+                                                      padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                           RoundedRectangleBorder(
                                                             borderRadius: BorderRadius.circular(8.0),
@@ -835,7 +991,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                                       )
                                                   ),
                                                   child:const Padding(
-                                                    padding: EdgeInsets.all(10.0),
+                                                    padding: EdgeInsets.all(8.0),
                                                     child: Text('CT',
                                                       style: TextStyle(color:Colors.white,
                                                           fontSize: 12,
@@ -843,13 +999,13 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                                   )),
                                             )),
                                             Expanded(child: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
                                               child: ElevatedButton(onPressed: (){
                                                 NeedToMRI(context);
                                               },
                                                   style: ButtonStyle(
                                                       backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                                      padding: MaterialStateProperty.all(EdgeInsets.all(2)),
+                                                      padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                           RoundedRectangleBorder(
                                                             borderRadius: BorderRadius.circular(8.0),
@@ -857,7 +1013,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                                       )
                                                   ),
                                                   child:Padding(
-                                                    padding: const EdgeInsets.all(10.0),
+                                                    padding: const EdgeInsets.all(8.0),
                                                     child: Text('MRI',
                                                       style: TextStyle(color:Colors.white,
                                                           fontSize: 12,
@@ -884,19 +1040,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                           ),
                                         ):Container(),
 
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
-                                          child: Row(
-                                            children: [
-                                              TextApp(Notifi.oldTime2
-                                                  , 14, ColorTextbody, true),
-                                              Expanded(child: Align(
-                                                  alignment: Alignment.centerRight,
-                                                  child: TextApp(' :  تایمر بر اساس زمان ثبت در سیستم', 12,
-                                                      ColorTitleText, false))),
-                                            ],
-                                          ),
-                                        ),
+
 
                                         Notifi.patientItem.otn.isNotEmpty?
                                         Padding(
@@ -944,52 +1088,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                           ),
                                         ):Container(),
 
-                                        Notifi.oldTime.isNotEmpty
-                                            && !Notifi.patientItem.isFinished! &&
-                                            Notifi.patientItem.signsStartTSFSS==0?
-                                         Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
-                                              child: Row(
-                                                children: [
-                                                  TextApp(Notifi.oldTime
-                                                      , 14, ColorTextbody, true),
-                                                  Expanded(child: Align(
-                                                      alignment: Alignment.centerRight,
-                                                      child: TextApp(' :  تایمر بر اساس زمان شروع علائم', 12, ColorTitleText, false))
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ):Container(),
 
-                                        Notifi.oldTimeFSS.isNotEmpty   ?
-                                        Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
-                                              child: Row(
-                                                children: [
-                                                  TextApp(Notifi.oldTimeFSS
-                                                      , 14, ColorTextbody, true),
-                                                  Expanded(child: Align(
-                                                      alignment: Alignment.centerRight,
-                                                      child: TextApp(' :  تایمر بر اساس دیدن علائم', 12,
-                                                          ColorTitleText, false))),
-                                                ],
-                                              ),
-                                            ),
-
-
-
-
-
-
-
-                                          ],
-                                        ):Container()
 
 
                                       ],
@@ -1011,7 +1110,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                           },
                                           style: ButtonStyle(
                                               backgroundColor:MaterialStateProperty.all(ColorApp),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                   Notifi.patientItem.nihsIsComplete ==true ?
                                                   RoundedRectangleBorder(
@@ -1028,13 +1127,13 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                               )
                                           ),
                                           child:const Padding(
-                                            padding: EdgeInsets.all(10.0),
+                                            padding: EdgeInsets.all(8.0),
                                             child: Text(
                                               'تزریق',
                                               style: TextStyle(
                                                   color:
                                                   Colors.white,
-                                                  fontSize: 13,
+                                                  fontSize: 12,
                                                   fontWeight: FontWeight.bold),),
                                           )),
                                     ),),
@@ -1047,7 +1146,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                            },
                                           style: ButtonStyle(
                                               backgroundColor:  MaterialStateProperty.all(ColorApp),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                   RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(8.0),
@@ -1055,13 +1154,13 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                               )
                                           ),
                                           child:const Padding(
-                                            padding: EdgeInsets.all(10.0),
+                                            padding: EdgeInsets.all(8.0),
                                             child: Text(
                                               'عدم تزریق',
                                               style: TextStyle(
                                                   color:
                                                   Colors.white,
-                                                  fontSize: 13,
+                                                  fontSize: 12,
                                                   fontWeight: FontWeight.bold),),
                                           )),
                                     ),),
@@ -1073,14 +1172,14 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                 Row(
                                   children: [
                                     Expanded(child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
                                       child: ElevatedButton(
                                           onPressed: (){
                                             NeedToCT(context);
                                           },
                                           style: ButtonStyle(
                                               backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(2)),
+                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                   RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(8.0),
@@ -1088,7 +1187,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                               )
                                           ),
                                           child:const Padding(
-                                            padding: EdgeInsets.all(10.0),
+                                            padding: EdgeInsets.all(8.0),
                                             child: Text('CT',
                                               style: TextStyle(color:Colors.white,
                                                   fontSize: 12,
@@ -1096,13 +1195,13 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                           )),
                                     )),
                                     Expanded(child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
                                       child: ElevatedButton(onPressed: (){
                                         NeedToMRI(context);
                                       },
                                           style: ButtonStyle(
                                               backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(2)),
+                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                   RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(8.0),
@@ -1110,7 +1209,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                               )
                                           ),
                                           child:Padding(
-                                            padding: const EdgeInsets.all(10.0),
+                                            padding: const EdgeInsets.all(8.0),
                                             child: Text('MRI',
                                               style: TextStyle(color:Colors.white,
                                                   fontSize: 12,
@@ -1179,14 +1278,14 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                     // ),),
                                     // SizedBox(width: 8,),
                                     Expanded(child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.all(4.0),
                                       child: ElevatedButton(
                                           onPressed: (){
                                             GoNextPage(context,ScreenListImages(Notifi.patientItem.id.toString()));
                                           },
                                           style: ButtonStyle(
                                               backgroundColor:  MaterialStateProperty.all(ColorApp),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                   RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(8.0),
@@ -1194,13 +1293,13 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                               )
                                           ),
                                           child:const Padding(
-                                            padding: EdgeInsets.all(10.0),
+                                            padding: EdgeInsets.all(8.0),
                                             child: Text(
                                               'نمایش عکس های ارسال شده',
                                               style: TextStyle(
                                                   color:
                                                   Colors.white,
-                                                  fontSize: 13,
+                                                  fontSize: 12,
                                                   fontWeight: FontWeight.bold),),
                                           )),
                                     ),),
@@ -1211,7 +1310,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                 Row(
                                   children: [
                                     Expanded(child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.all(4.0),
                                       child: ElevatedButton(
                                           onPressed: (){
                                             GoNextPage(context, ScreenFormReasonInjection((p0) {
@@ -1244,7 +1343,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                            },
                                           style: ButtonStyle(
                                               backgroundColor:  MaterialStateProperty.all(ColorApp),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                   RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(8.0),
@@ -1252,14 +1351,14 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                               )
                                           ),
                                           child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
+                                            padding: const EdgeInsets.all(8.0),
                                             child: Text(
                                               !Notifi.patientItem.notInjectingIsComplete!!?
                                               'ثبت دلایل رد تزریق':'نمایش دلایل رد تزریق',
                                               style: const TextStyle(
                                                   color:
                                                   Colors.white,
-                                                  fontSize: 13,
+                                                  fontSize: 12,
                                                   fontWeight: FontWeight.bold),),
                                           )),
                                     ),),

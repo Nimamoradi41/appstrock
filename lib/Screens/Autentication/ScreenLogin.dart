@@ -124,9 +124,6 @@ class _ScreenLoginState extends State<ScreenLogin> {
           GoNextPageGameOver(context,ScreenAtend());
         }
 
-
-
-
         if(Data.data?.departmentId==8)
         {
           // ignore: use_build_context_synchronously
@@ -134,7 +131,6 @@ class _ScreenLoginState extends State<ScreenLogin> {
         }
 
       }else{
-        // ignore: use_build_context_synchronously
         ShowErrorMsg(context,Data.message);
       }
     }
@@ -161,7 +157,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
           color: Colors.redAccent,
           child: Scaffold(
               resizeToAvoidBottomInset: false,
-              body: Container(
+              body: SizedBox(
                 width: wid,
                 height: double.infinity,
                 child: Column(
@@ -179,30 +175,30 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                   alignment: Alignment.centerRight,
                                   child: TextApp('ورود', 24, ColorTitleText, true)),
                             ),
-
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: TextField(
-                                  keyboardType: TextInputType.text,
-                                  controller: textControllerName,
-                                  style: const TextStyle(
-                                    fontFamily: 'rob',
-                                    fontSize: 13
+                              child: TextField(
+                                textDirection: TextDirection.rtl, // جهت کلی متن
+                                textAlign: TextAlign.right, // متن ورودی راست‌چین باشد
+                                keyboardType: TextInputType.text,
+                                controller: textControllerName,
+                                style: const TextStyle(
+                                  fontFamily: 'rob',
+                                  fontSize: 13
+                                ),
+                                decoration: InputDecoration(
+                                  labelText: 'نام و نام خانوادگی',
+                                  labelStyle: TextStyle(
+                                      color: ColorApp
                                   ),
-                                  decoration: InputDecoration(
-                                    labelText: 'نام و نام خانوادگی',
-                                    labelStyle: TextStyle(
-                                        color: ColorApp
-                                    ),
-                                    counterText: "",
+                                  alignLabelWithHint: true,
+                                  hintTextDirection: TextDirection.rtl,
+                                  counterText: "",
 
-                                    enabledBorder: outlinedBorderBlack,
-                                    focusedBorder: outlinedBorderPurple,
+                                  enabledBorder: outlinedBorderBlack,
+                                  focusedBorder: outlinedBorderPurple,
 
 
-                                  ),
                                 ),
                               ),
                             ),
@@ -212,6 +208,8 @@ class _ScreenLoginState extends State<ScreenLogin> {
                               child: TextField(
                                 maxLines: 1,
                                 maxLength: 10,
+                                textDirection: TextDirection.rtl, // جهت کلی متن
+                                textAlign: TextAlign.right, // متن ورودی راست‌چین باشد
                                 keyboardType: TextInputType.phone,
                                 controller: textControllerNationalCode,
                                 style: const TextStyle(
@@ -230,27 +228,26 @@ class _ScreenLoginState extends State<ScreenLogin> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: TextField(
-                                  maxLines: 1,
-                                  keyboardType: TextInputType.name,
-                                  controller: textControllerNationalPass,
-                                  style: const TextStyle(
-                                      fontFamily: 'rob',
-                                      fontSize: 13
+                              child: TextField(
+                                maxLines: 1,
+                                textDirection: TextDirection.rtl, // جهت کلی متن
+                                textAlign: TextAlign.right, // متن ورودی راست‌چین باشد
+                                keyboardType: TextInputType.name,
+                                controller: textControllerNationalPass,
+                                style: const TextStyle(
+                                    fontFamily: 'rob',
+                                    fontSize: 13
+                                ),
+                                decoration: InputDecoration(
+                                  labelText: 'رمز عبور',
+                                  labelStyle: TextStyle(
+                                      color: ColorApp
                                   ),
-                                  decoration: InputDecoration(
-                                    labelText: 'رمز عبور',
-                                    labelStyle: TextStyle(
-                                        color: ColorApp
-                                    ),
-                                    counterText: "",
-                                    enabledBorder: outlinedBorderBlack,
-                                    focusedBorder: outlinedBorderPurple,
+                                  counterText: "",
+                                  enabledBorder: outlinedBorderBlack,
+                                  focusedBorder: outlinedBorderPurple,
 
 
-                                  ),
                                 ),
                               ),
                             ),
@@ -280,7 +277,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
                       },
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(ColorApp),
-                              padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -288,10 +285,10 @@ class _ScreenLoginState extends State<ScreenLogin> {
                               )
                           ),
                           child:Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: Text('ورود',
                               style: TextStyle(color:Colors.white,
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.bold),),
                           )),
                     ),

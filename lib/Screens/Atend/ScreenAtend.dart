@@ -277,10 +277,9 @@ class _ScreenAtendState extends State<ScreenAtend> {
                         Container(
                           decoration: MainDecoration,
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(4.0),
                             child: Column(
                               children: [
-
                                 Row(
                                   children: [
                                     SizedBox(width: 8,),
@@ -299,7 +298,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
                                         },
                                       ),
                                     ),
-                                    Expanded(child: TextApp2('وضعیت شیفت',16,ColorTextsubject,false)),
+                                    Expanded(child: TextApp2('وضعیت شیفت',12,ColorTextsubject,false)),
                                     SizedBox(width: 4 ,)
                                   ],
 
@@ -336,7 +335,6 @@ class _ScreenAtendState extends State<ScreenAtend> {
                           ),
                         ),
 
-                        SizedBox(height: 24,),
 
                         Container(
                           height:  hei*0.68,

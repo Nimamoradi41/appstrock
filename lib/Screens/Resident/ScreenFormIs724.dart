@@ -68,7 +68,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
   var minFSS=0;
 
 
-  void _submitForm() {
+  void _submitForm() async {
     List<Map<String, String>> answers = [];
     answers.add({
       'Know': _checkBox1.toString(),
@@ -115,6 +115,21 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
           );
 
           timestamp = dateTime.millisecondsSinceEpoch;
+
+          final now = DateTime.now().millisecondsSinceEpoch;
+
+          const fourAndHalfHoursInMillis = 4 * 60 * 60 * 1000 + 30 * 60 * 1000;
+
+          if (now - timestamp! > fourAndHalfHoursInMillis) {
+            var flag= await ShowAllow(context,"بیشتر از 4 و نیم ساعت گدشته است , ثیت شود ؟  ");
+            if(!flag)
+              {
+                return;
+              }
+          }
+
+
+
           answers.add({
             'timestamp': timestamp.toString(),
           });
@@ -137,6 +152,18 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
         answers.add({
           'timestampLKW': timestampLKW.toString(),
         });
+
+        final now = DateTime.now().millisecondsSinceEpoch;
+
+        const fourAndHalfHoursInMillis = 4 * 60 * 60 * 1000 + 30 * 60 * 1000;
+
+        if (now - timestampLKW! > fourAndHalfHoursInMillis) {
+          var flag= await ShowAllow(context,"بیشتر از 4 و نیم ساعت گدشته است , ثیت شود ؟  ");
+          if(!flag)
+          {
+            return;
+          }
+        }
       }
 
       if (_selectedNotKnowFSSJalaliDate != null && _selectedTimeFSS != null) {
@@ -156,8 +183,22 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
         answers.add({
           'timestampFSS': timestampFSS.toString(),
         });
+
+        final now = DateTime.now().millisecondsSinceEpoch;
+
+        const fourAndHalfHoursInMillis = 4 * 60 * 60 * 1000 + 30 * 60 * 1000;
+
+        if (now - timestampFSS! > fourAndHalfHoursInMillis) {
+          var flag= await ShowAllow(context,"بیشتر از 4 و نیم ساعت گذشته است ,آیا اضافه شود ؟  ");
+          if(!flag)
+          {
+            return;
+          }
+        }
+
       }
     }
+
 
     if (widget.onClose != null) {
       widget.onClose(answers);
@@ -402,6 +443,8 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
     timestampFSS=picked4.toDateTime().millisecondsSinceEpoch;
 
     // -----------------------
+
+
 
   }
 
@@ -737,7 +780,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
                         },
                             style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(Colors.white),
-                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8.0),
@@ -746,8 +789,8 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
                                 )
                             ),
                             child:Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: TextApp('بستن',16,ColorApp,true),
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextApp('بستن',12,ColorApp,true),
                             )),
                       ),
                     ),
@@ -759,7 +802,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
                         },
                             style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(ColorApp),
-                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),
@@ -767,8 +810,8 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
                                 )
                             ),
                             child:Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: TextApp('ثبت اطلاعات',16,Colors.white,true),
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextApp('ثبت اطلاعات',12,Colors.white,true),
                             )),
                       ),
                     ),

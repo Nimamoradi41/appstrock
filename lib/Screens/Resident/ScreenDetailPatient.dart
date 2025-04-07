@@ -341,8 +341,8 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
 
         });
   }
-  late Timer _timer;
-  late Timer _timer2;
+    Timer? _timer;
+    Timer? _timer2;
   // var TimeEffect=0.0;
 
   // var TimeTaInjection=0.0;
@@ -384,6 +384,11 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
       oneSec,
           (Timer timer) {
 
+            if(Notifi.patientItem.isFinished!)
+            {
+              _timer!.cancel();
+              _timer2!.cancel();
+            }
         TimeAriveToHospital=TimeAriveToHospital+1;
         var date2=Duration(seconds: TimeAriveToHospital.toInt());
 
@@ -395,7 +400,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
 
         if( Notifi.patientItem.signsStartTS!=0)
         {
-          var date=DateTime.fromMillisecondsSinceEpoch(widget.patientItem.signsStartTS!!);
+          var date=DateTime.fromMillisecondsSinceEpoch(Notifi.patientItem.signsStartTS!!);
 
           _elapsedTime   = DateTime.now().difference(date);
 
@@ -438,7 +443,16 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
   @override
   void dispose() {
     _controller.dispose(); // رها کردن منابع انیمیشن کنترلر
-    _timer.cancel();
+    if(_timer2!=null)
+      {
+        _timer2?.cancel();
+      }
+
+    if(_timer2!=null)
+    {
+      _timer?.cancel();
+    }
+
     super.dispose();
 
   }
@@ -547,15 +561,10 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
     ).animate(_controller);
 
     DateTime now = new DateTime.now();
-    // if(widget.patientItem.signsStartTS!=0  &&  !widget.patientItem.isFinished!)
+
     if( !widget.patientItem.isFinished!)
     {
       TimeAriveToHospital=((now.millisecondsSinceEpoch/1000)-(widget.patientItem.insertTimeTS!/1000));
-      if( Notifi.patientItem.signsStartTS!=0)
-      {
-        _formatElapsedTime();
-      }
-
       startTimerEffect();
     }
 
@@ -568,6 +577,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
     var Data= await ApiServiceResident.Blod(widget.patientItem.id.toString(),context,Blod);
 
     Navigator.pop(context);
+
     if(Data!=null)
     {
       if(Data.success)
@@ -602,10 +612,9 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
         ShowErrorMsg(context, Data.message);
       }
     }
-
   }
 
-  Future uploadImage(String idPa)async{
+  Future uploadImage(String idPa)async    {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String UserId='';
@@ -657,8 +666,6 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
     // ignore: use_build_context_synchronously
     var Data= await ApiServiceReception.ListPatient(formattedDate,context);
 
-
-    print(Data.toString());
     if(Data!=null)
     {
       if(Data.success)
@@ -671,6 +678,12 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
         {
           _formatElapsedTimeFss();
         }
+
+        if(Notifi.patientItem.signsStartTS!=0)
+        {
+          _formatElapsedTime();
+        }
+
       }else{
         // ignore: use_build_context_synchronously
         ShowErrorMsg(context, Data.message);
@@ -703,50 +716,54 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                   height: wid*0.25,
                   color: ColorApp,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(width: 16,),
                       Expanded(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children:   [
-                            InkWell(
-                              onTap: (){
-                                Navigator.pop(context);
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16,top: 16,right: 16),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children:   [
+                              InkWell(
+                                onTap: (){
+                                  if(_timer!=null)
+                                    {
+                                      _timer!.cancel();
+                                    }
+                                  if(_timer2!=null)
+                                  {
+                                    _timer2!.cancel();
+                                  }
+                                  Navigator.pop(context);
+                                },
                                 child: Icon(Icons.arrow_back,color: Colors.white,size: 30,),
                               ),
-                            ),
-                            InkWell(
-                              onTap: (){
-                                getInfoOfPatient();
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
+                              InkWell(
+                                onTap: (){
+                                  getInfoOfPatient();
+                                },
                                 child: Icon(Icons.refresh,color: Colors.white,size: 30,),
                               ),
-                            ),
-                            Spacer(),
-                            Container(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Expanded(child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:  MainAxisAlignment.center,
                                 children: [
-                                  Notifi.patientItem!.is724IsComplete! && !Notifi.patientItem!.isNot724?
+                                  Notifi.patientItem.is724IsComplete! && !Notifi.patientItem.isNot724?
                                   Container(
-                                    margin: EdgeInsets.only(top: 8),
+                                    margin: EdgeInsets.symmetric(horizontal: 8),
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(8)
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding:  EdgeInsets.all(8.0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          SizedBox(width: 4,),
+                                          SizedBox(width: 2,),
                                           AnimatedBuilder(
                                             animation:  Notifi.patientItem!.seenByAttend! ?
 
@@ -765,36 +782,38 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                               );
                                             },
                                           ),
-                                          SizedBox(width: 8,),
+                                          SizedBox(width: 2,),
                                           TextApp(  Notifi.patientItem!.seenByAttend!?
                                           'دکتر متخصص مشاهده کرده است'
                                               : 'دکتر متخصص مشاهده نکرده است', 10,
                                               Notifi.patientItem!.seenByAttend!? Colors.green :
                                               Colors.red, true),
-                                          SizedBox(width: 4,)
+                                          SizedBox(width: 2,)
                                         ],
                                       ),
                                     ),
                                   ):
                                   Container() ,
+                                  Spacer(),
                                   const Padding(
-                                      padding: EdgeInsets.all(16.0),
+                                      padding: EdgeInsets.only(left: 8.0),
                                       child: Text(
                                         'اطلاعات بیمار',
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 16
+                                            fontSize: 12
                                         ),
                                       )
 
                                     // TextApp('فوریت های پزشکی', 16, Colors.white, true),
                                   ),
                                 ],
-                              ),
-                            ),
-                          ],
+                              ))
+
+                            ],
+                          ),
                         ),
                       )
                     ],
@@ -814,54 +833,54 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                           child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(12.0),
+                                padding: const EdgeInsets.only(right: 8.0,left: 8,top: 8),
                                 child: Row(
                                   children: [
                                     Expanded(child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
-                                        TextApp('کدملی', 12, ColorTitleText, false),
-                                        SizedBox(height: 8,),
-                                        TextApp(Notifi.patientItem.nationalCode.isEmpty  ? 'نامشخص':Notifi.patientItem.nationalCode, 14, ColorTextbody, true)
+                                        TextApp('کدملی', 10, ColorTitleText, false),
+                                        SizedBox(height: 4,),
+                                        TextApp(Notifi.patientItem.nationalCode.isEmpty  ? 'نامشخص':Notifi.patientItem.nationalCode, 12, ColorTextbody, true)
                                       ],
                                     )),
-                                    SizedBox(width: 8,),
+                                    SizedBox(width: 4,),
                                     Container(
                                       width: 1,
                                       height: 25,
                                       color: Colors.black12,
                                     ),
-                                    SizedBox(width: 8,),
+                                    SizedBox(width: 4,),
                                     Expanded(child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
-                                        TextApp('نام و نام خانوادگی', 12, ColorTitleText, false),
+                                        TextApp('نام و نام خانوادگی', 10, ColorTitleText, false),
                                         SizedBox(height: 8,),
-                                        TextApp(Notifi.patientItem.fullName.isEmpty  ? 'نامشخص':Notifi.patientItem.fullName, 14, ColorTextbody, true)
+                                        TextApp(Notifi.patientItem.fullName.isEmpty  ? 'نامشخص':Notifi.patientItem.fullName, 12, ColorTextbody, true)
                                       ],
                                     )),
                                   ],
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(12.0),
+                                padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   children: [
                                     Expanded(child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         TextApp('سن', 12, ColorTitleText, false),
-                                        SizedBox(height: 8,),
+                                        SizedBox(height: 4,),
                                         TextApp(Notifi.patientItem.age.isEmpty  ? 'نامشخص':Notifi.patientItem.age, 14, ColorTextbody, true)
                                       ],
                                     )),
-                                    SizedBox(width: 8,),
+                                    SizedBox(width: 4,),
                                     Container(
                                       width: 1,
                                       height: 25,
                                       color: Colors.black12,
                                     ),
-                                    SizedBox(width: 8,),
+                                    SizedBox(width: 4,),
                                     Expanded(child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
@@ -876,7 +895,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                             ],
                           ),
                         ),
-                        SizedBox(height: 8,),
+                        SizedBox(height: 4,),
                         Expanded(
                           child: Container(
                             decoration: MainDecoration,
@@ -890,6 +909,27 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                             value: Notifi.patientItem.timeOfAddToSystem.isEmpty  ?
                                         'نامشخص':Notifi.patientItem.timeOfAddToSystem, title: ' :  زمان ثبت در سیستم'
                                         ),
+
+                                        Notifi.patientItem.isFinished==false?
+                                        BoxInformation(value:Notifi.oldTime2, title:
+                                        ' :  تایمر بر اساس زمان ثبت در سیستم'
+                                        ):Container(),
+
+
+                                        Notifi.patientItem.is724IsComplete!
+                                            && !Notifi.patientItem.isFinished! &&
+                                            Notifi.patientItem.signsStartTime!.isNotEmpty &&
+                                            Notifi.patientItem.signsStartTSFSS==0?
+                                        BoxInformation(value:Notifi.oldTime, title:
+                                        ' :  تایمر بر اساس زمان شروع علائم'
+                                        ):Container(),
+
+                                        Notifi.patientItem.is724IsComplete!
+                                            && !Notifi.patientItem.isFinished! && Notifi.patientItem.signsStartTSFSS!=0  ?
+                                        BoxInformation(value:Notifi.oldTimeFSS, title:
+                                        ' :  تایمر بر اساس دیدن علائم'
+                                        ):Container(),
+
                                         BoxInformation(
                                             value:Notifi.patientItem.dateOfAddToSystem == null ?
                                         'نامشخص' : Notifi.patientItem.dateOfAddToSystem!,
@@ -913,22 +953,26 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                             ' :  وضعیت'
                                         ):Container(),
 
+                                        Notifi.patientItem.isNot724==false?
                                         BoxInformation(value:   !Notifi.patientItem.nihsIsComplete!?
                                         'تکمیل نشده است':
                                         Notifi.patientItem.nihsSubscore.toString(),
                                             title:
-                                            ' :  وضعیت',
+                                            ' :  وضعیت  NIHSS',
                                           onTap: (){
-                                            GoNextPage(context, ScreenFormNIHS((p0,s) {
-                                              Navigator.pop(context);
+                                            if(Notifi.patientItem.is724IsComplete==false)
+                                            {
+                                              return ;
+                                            }
 
+                                            GoNextPage(context,ScreenFormNIHS((p0,s) {
+                                              Navigator.pop(context);
                                               if(Notifi.patientItem!.nihsIsComplete!!)
                                               {
                                                 editNIHS(p0,s);
                                               }else{
                                                 AddNIHS(p0,s);
                                               }
-
                                             },Notifi.patientItem.nihsIsComplete!,
                                               Notifi.patientItem.n_1_a!,
                                               Notifi.patientItem.n_1_b!,
@@ -950,7 +994,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
 
                                             ));
                                           },
-                                        ),
+                                        ):Container(),
 
                                         Notifi.patientItem.signsStartTSFSS!=0 && Notifi.patientItem.lkwDate.isNotEmpty ?
                                         BoxInformation(value:   "${Notifi.patientItem.lkwDate} ${Notifi.patientItem.lkwTime}", title:
@@ -963,7 +1007,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                         'تزریق نشود', title:
                                         ' :  وضعیت تزریق'
                                         ):Container(),
-
+                                        Notifi.patientItem.isNot724==false?
                                         BoxInformation(value:Notifi.patientItem.labIsComplete == null  ?'تکمیل نشده است' :
                                         Notifi.patientItem.labIsComplete! ?
                                         'تکمیل شده است':
@@ -977,7 +1021,8 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
 
                                                   ScreenFormLaboratory((p0){
                                                     Navigator.pop(context);
-                                                    if(Notifi.patientItem!.labIsComplete!!)
+                                                    if(Notifi.patientItem.labIsComplete!!
+                                                     )
                                                     {
                                                       editLab(p0);
                                                     }else{
@@ -997,7 +1042,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                                   ));
                                             }
                                           },
-                                        ),
+                                        ):Container(),
 
                                         Notifi.patientItem.labIsComplete!?
                                         BoxInformation(value:"${Notifi.patientItem.labInsertDate} - "
@@ -1005,18 +1050,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                         ' : زمان ثبت  فرم آزمایشگاه'
                                         ):Container(),
 
-                                        BoxInformation(value:Notifi.patientItem.timeOfInjection!.isEmpty  ?'تکمیل نشده است' :
-                                        Notifi.patientItem.timeOfInjection.toString()
-                                          , title:
-                                          ' :  زمان تزریق',
-                                          onTap: (){
-                                            if(Notifi.patientItem.timeOfInjection!.isEmpty&&Notifi.patientItem.is724IsComplete!)
-                                            {
-                                              AddTimeInjection();
-                                            }
-                                          },
-                                        ),
-
+                                        Notifi.patientItem.isNot724==false?
                                         BoxInformation(value:Notifi.patientItem.bs == 0  ?'تکمیل نشده است' :
                                         Notifi.patientItem.bs.toString()
                                           , title:
@@ -1032,8 +1066,8 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                               }));
                                             }
                                           },
-                                        ),
-
+                                        ):Container(),
+                                        Notifi.patientItem.isNot724==false?
                                         BoxInformation(value:Notifi.patientItem.bloodPressure1 == 0  ?'تکمیل نشده است' :
                                         "${Notifi.patientItem.bloodPressure1}/${
                                             Notifi.patientItem.bloodPressure2}"
@@ -1044,19 +1078,27 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                             ){
                                               GoNextPage(context,ScreenFormPreesBload724(
                                                   Notifi.patientItem.id.toString(),false,(p0){
-                                                print(p0);
                                                 var bload1= p0[0]['bload1'].toString();
                                                 var bload2= p0[0]['bload2'].toString();
-
                                                 RunPressBload(bload1,bload2);
                                               }));
                                             }
                                           },
-                                        ),
+                                        ):Container(),
+                                        Notifi.patientItem.isNot724==false?
+                                        BoxInformation(value:Notifi.patientItem.timeOfInjection!.isEmpty  ?'تکمیل نشده است' :
+                                        Notifi.patientItem.timeOfInjection.toString()
+                                          , title:
+                                          ' :  زمان تزریق',
+                                          onTap: (){
+                                            if(Notifi.patientItem.timeOfInjection!.isEmpty&&Notifi.patientItem.is724IsComplete!)
+                                            {
+                                              AddTimeInjection();
+                                            }
+                                          },
+                                        ):Container(),
 
-                                        BoxInformation(value:Notifi.oldTime2, title:
-                                        ' :  تایمر بر اساس زمان ثبت در سیستم'
-                                        ),
+
 
                                         Notifi.patientItem.otn.isEmpty?
                                         Container():
@@ -1074,37 +1116,26 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                         ' :  FTN'
                                         ):Container(),
 
-                                        Notifi.patientItem.is724IsComplete!
-                                            && !Notifi.patientItem.isFinished! &&
-                                            Notifi.patientItem.signsStartTime!.isNotEmpty &&
-                                            Notifi.patientItem.signsStartTSFSS==0?
-                                         BoxInformation(value:Notifi.oldTime, title:
-                                         ' :  تایمر بر اساس زمان شروع علائم'
-                                         ):Container(),
 
-                                        Notifi.patientItem.is724IsComplete!
-                                            && !Notifi.patientItem.isFinished! && Notifi.patientItem.signsStartTSFSS!=0  ?
-                                        BoxInformation(value:Notifi.oldTimeFSS, title:
-                                        ' :  تایمر بر اساس دیدن علائم'
-                                        ):Container()
+
+
                                       ],
                                      ),
                                    ),
                                  ),
 
-
                                 !Notifi.patientItem.is724IsComplete! && !Notifi.patientItem.isNot724!  ?
                                 Row(
                                   children: [
                                     Expanded(child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
                                       child: ElevatedButton(
                                           onPressed: (){
                                             IsNot724();
                                           },
                                           style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(BtnColorgreen),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                              backgroundColor: MaterialStateProperty.all(ColorApp),
+                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                   RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(8.0),
@@ -1112,21 +1143,21 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                               )
                                           ),
                                           child:Padding(
-                                            padding: const EdgeInsets.all(10.0),
+                                            padding: const EdgeInsets.all(8.0),
                                             child: Text('کد 724 نیست',
                                               style: TextStyle(color:Colors.white,
-                                                  fontSize: 16,
+                                                  fontSize: 12,
                                                   fontWeight: FontWeight.bold),),
                                           )),
                                     )),
                                     Expanded(child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
                                       child: ElevatedButton(onPressed: (){
                                         Add724();
                                       },
                                           style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                              backgroundColor: MaterialStateProperty.all(ColorApp),
+                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                   RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(8.0),
@@ -1134,10 +1165,10 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                               )
                                           ),
                                           child:const Padding(
-                                            padding: EdgeInsets.all(10.0),
+                                            padding: EdgeInsets.all(8.0),
                                             child: Text('کد 724 است',
                                               style: TextStyle(color:Colors.white,
-                                                  fontSize: 16,
+                                                  fontSize: 12,
                                                   fontWeight: FontWeight.bold),),
                                           )),
                                     ))
@@ -1148,7 +1179,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
 
                                 Container(
                                   width: wid,
-                                  margin: const EdgeInsets.all(8),
+                                  margin: const EdgeInsets.all(4),
                                   child: ElevatedButton(
                                       onPressed: () async{
                                         uploadImage(Notifi.patientItem.id.toString());
@@ -1156,7 +1187,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                       style: ButtonStyle(
                                           backgroundColor:
                                           MaterialStateProperty.all(ColorApp),
-                                          padding: MaterialStateProperty.all(EdgeInsets.all(2)),
+                                          padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                               RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(8.0),
@@ -1180,7 +1211,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                     && Notifi.patientItem.isNot724!  ?
                                 Container(
                                   width: wid,
-                                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                                  margin: const EdgeInsets.symmetric(horizontal: 4),
                                   child: ElevatedButton(
                                       onPressed: (){
                                         AddReasonNot724();
@@ -1189,7 +1220,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                           backgroundColor: !Notifi.patientItem.isNot724IsComplete! ?
                                           MaterialStateProperty.all(ColorApp):
                                           MaterialStateProperty.all(Colors.white),
-                                          padding: MaterialStateProperty.all(EdgeInsets.all(2)),
+                                          padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                               !Notifi.patientItem.isNot724IsComplete! ?
                                               RoundedRectangleBorder(

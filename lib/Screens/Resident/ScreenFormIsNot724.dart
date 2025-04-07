@@ -156,17 +156,19 @@ class _ScreenFormIsNot724State extends State<ScreenFormIsNot724> {
                 child: Container(
                   width: wid,
                   child: ElevatedButton(onPressed: (){
-                    if(widget.isEdit)
-                      {
-                       Navigator.pop(context);
-                      }else{
-                      Run();
-                    }
+                    // if(widget.isEdit)
+                    //   {
+                    //    Navigator.pop(context);
+                    //   }else{
+                    //
+                    // }
+
+                    Run();
 
                   },
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(ColorApp),
-                          padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                          padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
@@ -174,8 +176,8 @@ class _ScreenFormIsNot724State extends State<ScreenFormIsNot724> {
                           )
                       ),
                       child:Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: TextApp(  widget.isEdit ? 'بستن' : 'ثبت اطلاعات',16,Colors.white,true),
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextApp(  widget.isEdit ? 'بستن' : 'ثبت اطلاعات',12,Colors.white,true),
                       )),
                 ),
               ),

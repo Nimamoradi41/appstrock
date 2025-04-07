@@ -150,63 +150,56 @@ class _ScreenFormIsNot724State extends State<ScreenFormPreesBload724> {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                SizedBox(height: 24,),
+                const SizedBox(height: 24,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextApp('فشار خون',18,Colors.black87,true),
                   ],
                 ),
-                Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: TextField(
-                    maxLines: 1,
-                    keyboardType: TextInputType.number,
-                    controller: textControllerF1,
-                    style: const TextStyle(
+                TextField(
+                  maxLines: 1,
+                  keyboardType: TextInputType.number,
+                  controller: textControllerF1,
+                  style: const TextStyle(
                       fontFamily: 'rob',
+                      fontSize: 12
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'Systolic blood pressure (mmHg)',
+                    labelStyle: TextStyle(
+                        color: ColorApp.withOpacity(0.5)
                     ),
-                    decoration: InputDecoration(
-                      labelText: 'Systolic blood pressure (mmHg)',
-                      labelStyle: TextStyle(
-                          color: ColorApp.withOpacity(0.5)
-                      ),
-                      counterText: "",
-                      enabledBorder: outlinedBorderBlack,
-                      focusedBorder: outlinedBorderPurple,
+                    counterText: "",
+                    enabledBorder: outlinedBorderBlack,
+                    focusedBorder: outlinedBorderPurple,
 
 
-                    ),
                   ),
                 ),
-                SizedBox(height: 16,),
-                Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: TextField(
-                    maxLines: 1,
-                    keyboardType: TextInputType.number,
-                    controller: textControllerF2,
-                    style: const TextStyle(
+                const SizedBox(height: 8,),
+                TextField(
+                  maxLines: 1,
+                  keyboardType: TextInputType.number,
+                  controller: textControllerF2,
+                  style: const TextStyle(
                       fontFamily: 'rob',
+                      fontSize: 12
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'Diastolic blood pressure (mmHg)',
+                    labelStyle: TextStyle(
+                        color: ColorApp.withOpacity(0.5)
                     ),
-                    decoration: InputDecoration(
-                      labelText: 'Diastolic blood pressure (mmHg)',
-                      labelStyle: TextStyle(
-                          color: ColorApp.withOpacity(0.5)
-                      ),
-                      counterText: "",
+                    counterText: "",
 
-                      enabledBorder: outlinedBorderBlack,
-                      focusedBorder: outlinedBorderPurple,
+                    enabledBorder: outlinedBorderBlack,
+                    focusedBorder: outlinedBorderPurple,
 
 
-                    ),
                   ),
                 ),
-
-
-                Spacer(),
-
+                const Spacer(),
                 Center(
                   child: Row(
                     children: [
@@ -217,17 +210,17 @@ class _ScreenFormIsNot724State extends State<ScreenFormPreesBload724> {
                           },
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(Colors.white),
-                                  padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                  padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(4.0),
                                           side:  const BorderSide(color: ColorApp,width: 2)
                                       )
                                   )
                               ),
                               child:Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: TextApp('بستن',16,ColorApp,true),
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextApp('بستن',12,ColorApp,true),
                               )),
                         ),
                       ),
@@ -244,7 +237,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormPreesBload724> {
                           },
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(ColorApp),
-                                  padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                  padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8.0),
@@ -252,16 +245,14 @@ class _ScreenFormIsNot724State extends State<ScreenFormPreesBload724> {
                                   )
                               ),
                               child:Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: TextApp('ثبت اطلاعات',16,Colors.white,true),
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextApp('ثبت اطلاعات',12,Colors.white,true),
                               )),
                         ),
                       ),
                     ],
                   ),
                 ),
-
-
               ],
             ),
           ),

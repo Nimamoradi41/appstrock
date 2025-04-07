@@ -42,7 +42,8 @@ class _ScreenResidentState extends State<ScreenResident> {
 
   List<ModelPatient> ItemsP=[];
   List<ModelPatient> ItemsHolder=[];
-
+      Jalali? dateFrom;
+      Jalali? dateTo;
   var items = [
     'مرد',
     'زن',
@@ -53,17 +54,34 @@ class _ScreenResidentState extends State<ScreenResident> {
   late var Notifi=ProviderReception();
 
 
-  Future persianDateCalender()async{
-    Jalali? picked = await showPersianDatePicker(
+  Future persianDateCalenderFrom()async{
+    Jalali? pickedFrom = await showPersianDatePicker(
       context: context,
       firstDate: Jalali(1385, 8),
       lastDate: Jalali(1450, 9),
-      initialDate: Jalali.now(),
+      initialDate: dateFrom==null? Jalali.now():dateFrom!!,
     );
-    if(picked!=null) {
-      runListByDate(context,picked);
+    dateFrom=pickedFrom;
+
+    if(pickedFrom!=null) {
+      persianDateCalenderTo(pickedFrom);
+      // runListByDate(context,picked);
     }
     }
+
+  Future persianDateCalenderTo(Jalali pickedFrom)async{
+    Jalali? pickedTo = await showPersianDatePicker(
+      context: context,
+      firstDate: Jalali(1385, 8),
+      lastDate: Jalali(1450, 9),
+      initialDate: dateTo==null? Jalali.now():dateTo!!,
+    );
+    dateFrom=pickedTo;
+
+    if(pickedTo!=null) {
+      runListByDate(context,pickedFrom,pickedTo);
+    }
+  }
 
 
 
@@ -93,14 +111,18 @@ class _ScreenResidentState extends State<ScreenResident> {
   }
 
 
-  Future runListByDate(BuildContext context, Jalali date) async
+  Future runListByDate(BuildContext context, Jalali dateFrom,Jalali dateTo) async
   {
 
-    String formattedDate =
-        '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+    String formattedDateFrom =
+        '${dateFrom.year}/${dateFrom.month.toString().padLeft(2, '0')}/${dateFrom.day.toString().padLeft(2, '0')}';
+
+    String formattedDateTo =
+        '${dateTo.year}/${dateTo.month.toString().padLeft(2, '0')}/${dateTo.day.toString().padLeft(2, '0')}';
+
 
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatient(formattedDate,context);
+    var Data= await ApiServiceReception.PatientListBetweenDate(formattedDateFrom,formattedDateTo,context);
 
 
     if(Data!=null)
@@ -258,9 +280,9 @@ class _ScreenResidentState extends State<ScreenResident> {
                               quarterTurns: 0,
                               child: InkWell(
                                 onTap: (){
-                                  persianDateCalender();
+                                  persianDateCalenderFrom();
                                 },
-                                child: Padding(
+                                child: const Padding(
                                   padding: EdgeInsets.all(16.0),
                                   child: Icon(Icons.calendar_month,color: Colors.white,size: 30,),
                                 ),
@@ -285,7 +307,6 @@ class _ScreenResidentState extends State<ScreenResident> {
                         ),
                       )
                     ],
-
                   ),
                 ),
                 Positioned(
@@ -299,10 +320,9 @@ class _ScreenResidentState extends State<ScreenResident> {
                         Container(
                           decoration: MainDecoration,
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(4.0),
                             child: Column(
                               children: [
-
                                 Row(
                                   children: [
                                     SizedBox(width: 8,),
@@ -321,7 +341,7 @@ class _ScreenResidentState extends State<ScreenResident> {
                                         },
                                       ),
                                     ),
-                                    Expanded(child: TextApp2('وضعیت شیفت',16,ColorTextsubject,false)),
+                                    Expanded(child: TextApp2('وضعیت شیفت',12,ColorTextsubject,false)),
                                     SizedBox(width: 4 ,)
                                   ],
 
@@ -330,7 +350,6 @@ class _ScreenResidentState extends State<ScreenResident> {
                             ),
                           ),
                         ),
-
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 16),
                           width: wid,
@@ -358,7 +377,6 @@ class _ScreenResidentState extends State<ScreenResident> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 24,),
 
                         Container(
                           height:  hei*0.68,

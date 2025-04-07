@@ -330,7 +330,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                   },
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(ColorApp),
-                          padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                          padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
@@ -338,10 +338,10 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                           )
                       ),
                       child:Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Text( widget.ISEdit ? 'ویرایش فرم' :  'تکمیل فرم',
                           style: TextStyle(color:Colors.white,
-                              fontSize: 16,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold),),
                       )),
                 ),

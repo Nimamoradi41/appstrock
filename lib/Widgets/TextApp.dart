@@ -14,6 +14,7 @@ class TextApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Fontsize=Fontsize-1;
     return Text(Title,
       textAlign: TextAlign.center,
       style: TextStyle(
@@ -37,6 +38,7 @@ class TextAppStartfredoka extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Fontsize=Fontsize-1;
     return Text(Title,
       textAlign: TextAlign.start,
       style: TextStyle(
@@ -61,6 +63,7 @@ class TextAppStartfredokaCenter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Fontsize=Fontsize-1;
     return Text(Title,
       textAlign: TextAlign.center,
       style: TextStyle(
@@ -86,6 +89,7 @@ class TextAppfredoka extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Fontsize=Fontsize-1;
     return Text(Title,
       textAlign: TextAlign.center,
       style: TextStyle(
@@ -114,6 +118,7 @@ class TextApp2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Fontsize=Fontsize-1;
     return Text(Title,
       textAlign: TextAlign.right,
       style: TextStyle(
@@ -141,6 +146,7 @@ class TextApp4 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Fontsize=Fontsize-1;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Text(Title,
@@ -172,6 +178,7 @@ class TextApp3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Fontsize=Fontsize-1;
     return Text(Title,
       textAlign: TextAlign.start,
       style: TextStyle(
@@ -200,6 +207,7 @@ class TextApp5 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Fontsize=Fontsize-1;
     return Text(Title,
       textAlign: TextAlign.end,
       style: TextStyle(

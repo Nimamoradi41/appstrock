@@ -928,7 +928,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormReasonInjection> {
                         },
                             style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(ColorApp),
-                                padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),
@@ -936,9 +936,9 @@ class _ScreenFormIsNot724State extends State<ScreenFormReasonInjection> {
                                 )
                             ),
                             child:Padding(
-                              padding: const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.all(8.0),
                               // child: TextApp(  widget.isEdit ? 'بستن' : 'ثبت اطلاعات',16,Colors.white,true),
-                              child: TextApp(   'ثبت اطلاعات',16,Colors.white,true),
+                              child: TextApp(   'ثبت اطلاعات',12,Colors.white,true),
                             )),
                       ),
                     ),

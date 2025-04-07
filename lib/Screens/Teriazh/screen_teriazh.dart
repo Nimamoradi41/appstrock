@@ -55,6 +55,7 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
   }
 
 
+
   bool _containsNonEnglishCharacters(String input) {
     // Define a regular expression for English letters
     RegExp _persianRegex = RegExp(r'^[\u0600-\u06FF\s]+$'); // محدوده کاراکترهای فارسی
@@ -86,6 +87,14 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
       return;
     }
 
+    if(containsNumber(TextConName.text.toString()))
+    {
+      showToast("برای نام بیمار از اعداد استفاده نکنید",
+          position: StyledToastPosition.top,
+          context:context);
+      return;
+    }
+
 
     // var check=checkMeliCode(TextConCode.text.toString());
     // if(!check)
@@ -100,10 +109,10 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
     // چاپ تاریخ جلالی با فرمت مورد نظر
     print('تاریخ جلالی فعلی: $formattedDate');
     ShowLoadingApp(context);
+    var age=convertPersianNumbersToEnglish( TextConAge.text.toString());
     var  timestamp=DateTime.now().millisecondsSinceEpoch;
     var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
-        TextConAge.text.toString(),dropdownvalue=='مرد'?2:1,context,timestamp);
-
+        age,dropdownvalue=='مرد'?2:1,context,timestamp);
 
     if(Data!=null)
     {
@@ -159,10 +168,10 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
   Widget build(BuildContext context) {
     Notifi=Provider.of<ProviderTeraizh>(context);
     double wid=MediaQuery.of(context).size.width;
-    double hei=MediaQuery.of(context).size.height;
-    wid=wid>600?600:wid;
+     wid=wid>600?600:wid;
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Center(
           child: Container(
             width: wid,
@@ -233,17 +242,13 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                   left: 16,
                   child: Container(
                     width: wid*0.85,
-
                     child: Column(
                       children: [
-
-
                         Container(
-
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                     color: Colors.black26,
                                     spreadRadius: 1,
@@ -252,10 +257,9 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                               ]
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(4.0),
                             child: Column(
                               children: [
-
                                 Row(
                                   children: [
                                     SizedBox(width: 8,),
@@ -269,14 +273,12 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                                             activeColor: Color(0xff38b000),
                                             onToggle: (val) {
                                               ChangShift(val,context);
-
-
                                             },
                                           );
                                         },
                                       ),
                                     ),
-                                    Expanded(child: TextApp2('وضعیت شیفت',16,ColorTextsubject,false)),
+                                    Expanded(child: TextApp2('وضعیت شیفت',14,ColorTextsubject,false)),
                                     SizedBox(width: 4 ,)
                                   ],
 
@@ -285,14 +287,12 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                             ),
                           ),
                         ),
-
-
-                        SizedBox(height: 24,),
+                        SizedBox(height: 8,),
                         Container(
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                     color: Colors.black26,
                                     spreadRadius: 1,
@@ -301,25 +301,25 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                               ]
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(2.0),
                             child: Consumer<ProviderTeraizh>(
                               builder: (ctx,newstate,child){
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: TextApp2('اطلاعات بیمار', 18, ColorTitleText, true),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
+                                return SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextApp2('اطلاعات بیمار', 14, ColorTitleText, true),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
                                         child: TextField(
+                                          textDirection: TextDirection.rtl, // جهت کلی متن
+                                          textAlign: TextAlign.right, // متن ورودی راست‌چین باشد
                                           controller: TextConName,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            fontFamily: 'rob',
+                                          style: TextStyle(
+                                              fontSize: 12
                                           ),
                                           decoration: InputDecoration(
                                             labelText: 'نام و نام خانوادگی',
@@ -333,33 +333,42 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: TextField(
-                                        controller: TextConCode,
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                        ),
-                                        keyboardType: TextInputType.phone,
-                                        decoration: InputDecoration(
-                                          labelText: 'کد ملی',
-                                          disabledBorder:OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(8)
-                                          ),
-                                          border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(8)
-                                          ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextField(
+                                          textDirection: TextDirection.rtl, // جهت کلی متن
+                                          textAlign: TextAlign.right, // متن ورودی راست‌چین باشد
+                                          controller: TextConCode,
+                                          maxLength: 10,
 
+                                          style: const TextStyle(
+                                            fontSize: 12,
+
+                                          ),
+                                          keyboardType: TextInputType.phone,
+                                          decoration: InputDecoration(
+                                            labelText: 'کد ملی',
+                                            disabledBorder:OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(8)
+                                            ),
+                                            border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(8)
+                                            ),
+
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
                                         child: TextField(
+                                          textDirection: TextDirection.rtl, // جهت کلی متن
+                                          textAlign: TextAlign.right, // متن ورودی راست‌چین باشد
                                           controller: TextConAge,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: 'rob',
+                                          ),
+                                          keyboardType: TextInputType.phone,
                                           decoration: InputDecoration(
                                             labelText: 'سن',
                                             disabledBorder:OutlineInputBorder(
@@ -372,13 +381,12 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                        padding: const EdgeInsets.all(16.0),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
                                         child: Directionality(
                                           textDirection: TextDirection.rtl,
                                           child: DropdownButtonFormField(
-                                            value:  dropdownvalue,
+                                            value: Notifi.dropdownvalue,
                                             decoration: const InputDecoration(
                                               border: OutlineInputBorder(
                                                 borderRadius:   BorderRadius.all(
@@ -399,36 +407,38 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                                               );
                                             }).toList(),
                                             onChanged: (value) {
-                                              dropdownvalue=value!;
+                                              Notifi.setdropdownvalue(value.toString());
                                             },
                                           ),
-                                        )),
+                                        ),
+                                      ),
 
-                                    Container(
-                                      width: wid,
-                                      margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
-                                      child: ElevatedButton(onPressed: (){
-                                        RunAddP(context);
-                                      },
-                                          style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(ColorApp),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(8)),
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8.0),
-                                                  )
-                                              )
-                                          ),
-                                          child:Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Text('ثبت بیمار',
-                                              style: TextStyle(color:Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold),),
-                                          )),
-                                    ),
-                                    SizedBox(height: 8,)
-                                  ],
+                                      Container(
+                                        width: wid,
+                                        margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+                                        child: ElevatedButton(onPressed: (){
+                                          RunAddP(context);
+                                        },
+                                            style: ButtonStyle(
+                                                backgroundColor: MaterialStateProperty.all(ColorApp),
+                                                padding: MaterialStateProperty.all(EdgeInsets.all(4)),
+                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                    )
+                                                )
+                                            ),
+                                            child:Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text('ثبت بیمار',
+                                                style: TextStyle(color:Colors.white,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold),),
+                                            )),
+                                      ),
+                                      SizedBox(height: 8,)
+                                    ],
+                                  ),
                                 );
                               },
 

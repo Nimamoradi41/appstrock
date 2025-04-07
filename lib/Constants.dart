@@ -18,6 +18,19 @@ const Color BtnColorgreen=Color(0xff008000);
 const Color BtnColorred=Color(0xffef233c);
 
 
+bool containsNumber(String input) {
+  return RegExp(r'\d').hasMatch(input);
+}
+
+String convertPersianNumbersToEnglish(String input) {
+  const Map<String, String> persianToEnglish = {
+    '۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4',
+    '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9'
+  };
+
+  return input.split('').map((char) => persianToEnglish[char] ?? char).join();
+}
+
 
 void GoNextPage(BuildContext context,dynamic Screen) {
   Navigator.of(context).push(MaterialPageRoute(builder: (context) => Screen));
@@ -63,7 +76,6 @@ Future<bool>   ShowAllow(BuildContext context,String BodyText) async{
                       SizedBox(height: 16,),
                       Row(
                         children: [
-
                           Expanded(child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             child: ElevatedButton(onPressed: (){
@@ -73,7 +85,7 @@ Future<bool>   ShowAllow(BuildContext context,String BodyText) async{
                             },
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(Colors.white),
-                                    padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                    padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(8.0),
@@ -82,15 +94,15 @@ Future<bool>   ShowAllow(BuildContext context,String BodyText) async{
                                     )
                                 ),
                                 child:const Padding(
-                                  padding: EdgeInsets.all(10.0),
+                                  padding: EdgeInsets.all(8.0),
                                   child: Text('خیر',
                                     style: TextStyle(color:BtnColorgreen,
-                                        fontSize: 16,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold),),
                                 )),
                           )),
                           Expanded(child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
                             child: ElevatedButton(
                                 onPressed: (){
                                   Navigator.pop(context);
@@ -100,7 +112,7 @@ Future<bool>   ShowAllow(BuildContext context,String BodyText) async{
                                 },
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(BtnColorgreen),
-                                    padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                    padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(8.0),
@@ -108,10 +120,10 @@ Future<bool>   ShowAllow(BuildContext context,String BodyText) async{
                                     )
                                 ),
                                 child:Padding(
-                                  padding: const EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.all(8.0),
                                   child: Text('بله',
                                     style: TextStyle(color:Colors.white,
-                                        fontSize: 16,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold),),
                                 )),
                           )),

@@ -408,10 +408,6 @@ class ApiServiceResident{
       'Trop': Str[7]['selected_answer'].toString()=='0'?'false':'true',
     });
 
-
-
-
-
     print(request.fields.toString());
 
 
@@ -1042,6 +1038,82 @@ class ApiServiceResident{
     return login;
   }
 
+  static Future<ModelLogin> reset(String idPa,BuildContext context)
+  async {
+    var login;
+
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? UserId;
+
+    // UserId
+
+    if(prefs.getString('UserId')!=null)
+    {
+      UserId=prefs.getString('UserId')!;
+    }
+
+    var request = http.MultipartRequest('POST',
+        Uri.parse('https://api.appstrok.ir/Patients/ResetInformationpatientId'));
+    request.fields.addAll({
+      'patientId': idPa,
+      'userId': UserId.toString(),
+    });
+
+
+
+
+
+
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+        Navigator.pop(context);
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+
+
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelLogin data= await  modelLoginFromJson(str);
+        login=data;
+      }else {
+        ShowErrorMsg(context,response.reasonPhrase.toString());
+
+      }
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+
+    } on Error catch (e)
+    {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    return login;
+  }
+
   static Future<ModelLogin> UploadImage(String idPa,BuildContext context,Uint8List Image,String nameFile)
   async {
     var login;
@@ -1327,9 +1399,6 @@ class ApiServiceResident{
 
 
 
-
-
-      print(response.statusCode.toString());
       if(response.statusCode==200)
       {
         String str= await response.stream.bytesToString();

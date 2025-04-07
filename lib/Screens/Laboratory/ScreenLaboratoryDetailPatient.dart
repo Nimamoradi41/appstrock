@@ -338,7 +338,7 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                  ),
                                 Container(
                                   width: wid,
-                                  margin: const EdgeInsets.all(8),
+                                  margin: const EdgeInsets.all(4),
                                   child: ElevatedButton(
                                       onPressed: (){
                                         if(Notifi.patientItem.is724IsComplete==true)
@@ -373,7 +373,7 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                           Notifi.patientItem.labIsComplete!?
                                           MaterialStateProperty.all(Colors.white):
                                           MaterialStateProperty.all(ColorApp),
-                                          padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                          padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                               Notifi.patientItem.labIsComplete ==null?
                                               RoundedRectangleBorder(
@@ -390,7 +390,7 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                           )
                                       ),
                                       child:Padding(
-                                        padding: const EdgeInsets.all(10.0),
+                                        padding: const EdgeInsets.all(8.0),
                                         child: Text(
                                           Notifi.patientItem.labIsComplete == null ?
                                           'تکمیل فرم':
@@ -403,7 +403,7 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
                                               Colors.white:
                                               Notifi.patientItem.labIsComplete! ?
                                               ColorApp : Colors.white,
-                                              fontSize: 16,
+                                              fontSize: 12,
                                               fontWeight: FontWeight.bold),),
                                       )),
                                 ),

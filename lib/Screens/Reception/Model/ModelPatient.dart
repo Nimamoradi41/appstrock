@@ -96,7 +96,7 @@ class ModelPatient {
   bool?  c20;
   bool?  c21;
   bool?  c22;
-  bool?  trop;
+  bool  trop;
   int?  bs;
 
 

@@ -127,7 +127,7 @@ class ItemPatientNew extends StatelessWidget {
     print(ItemsP.nationalCode.toString());
     return Container(
       width: wid,
-      margin: EdgeInsets.all(6),
+      margin: EdgeInsets.all(4),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),

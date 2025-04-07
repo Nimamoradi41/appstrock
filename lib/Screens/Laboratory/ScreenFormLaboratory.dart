@@ -50,6 +50,15 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
     textControllerTrop.text=widget.Trop.toString();
     textControllerWBC.text=widget.wbc.toString();
     textControllerHB.text=widget.hb.toString();
+
+    if(widget.Trop=="true")
+      {
+        _handleRadioValueChange("Positive");
+      }else{
+      _handleRadioValueChange("Negative");
+    }
+
+
   }
 
   Future Run()async{
@@ -60,7 +69,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
 
         if(CrInt>10||CrInt<0)
         {
-          showToast("Cr not Valid",
+          showToast(" باید بین 0 تا 10 باشد"+" Cr ",
               position: StyledToastPosition.top,
               context:context);
           return ;
@@ -73,7 +82,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
       var PLTInt=int.parse(textControllerPLT.text);
       if(PLTInt>1000000||PLTInt<1000)
       {
-        showToast("PLT not Valid",
+        showToast("باید بین 1000 تا 1000000 باشد"+" PLT ",
             position: StyledToastPosition.top,
             context:context);
         return ;
@@ -87,7 +96,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
 
       if(PTInt>100||PTInt<10)
       {
-        showToast("PTT not Valid",
+        showToast(" باید بین 10 تا 100 باشد "+" PTT ",
             position: StyledToastPosition.top,
             context:context);
         return ;
@@ -101,7 +110,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
 
       if(INRInt>10||INRInt<1)
       {
-        showToast("INR not Valid",
+        showToast( "باید بین 1 تا 10 باشد"+" INR ",
             position: StyledToastPosition.top,
             context:context);
         return ;
@@ -114,7 +123,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
       var HBInt=int.parse(textControllerHB.text);
       if(HBInt>20||HBInt<5)
       {
-        showToast("HB not Valid",
+        showToast("باید بین 5 تا 20 باشد"+" HB ",
             position: StyledToastPosition.top,
             context:context);
         return ;
@@ -127,7 +136,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
       var WBCInt=int.parse(textControllerWBC.text);
       if(WBCInt>30000||WBCInt<1000)
       {
-        showToast("WBC not Valid",
+        showToast("باید بین 1000 تا 30000 باشد"+" WBC ",
             position: StyledToastPosition.top,
             context:context);
         return ;
@@ -225,168 +234,177 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: TextField(
-                                          maxLines: 1,
-                                          maxLength: 3,
-                                          keyboardType: TextInputType.number,
-                                          controller: textControllerBun,
-                                          decoration: InputDecoration(
-                                            labelText: 'Bun',
-                                            labelStyle: TextStyle(
-                                                color: ColorApp
-                                            ),
-                                            counterText: "",
-
-                                            enabledBorder: outlinedBorderBlack,
-                                            focusedBorder: outlinedBorderPurple,
-
-
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: TextField(
+                                        maxLines: 1,
+                                        maxLength: 3,
+                                        keyboardType: TextInputType.number,
+                                        controller: textControllerBun,
+                                        style: const TextStyle(
+                                            fontFamily: 'rob',
+                                            fontSize: 12
+                                        ),
+                                        decoration: InputDecoration(
+                                          labelText: 'Bun',
+                                          labelStyle: TextStyle(
+                                              color: ColorApp
                                           ),
+                                          counterText: "",
+
+                                          enabledBorder: outlinedBorderBlack,
+                                          focusedBorder: outlinedBorderPurple,
+
+
                                         ),
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: TextField(
-                                          maxLines: 1,
-                                          keyboardType: TextInputType.text,
-                                          controller: textControllerCr,
-                                          decoration: InputDecoration(
-                                            labelText: 'Cr',
-                                            labelStyle: TextStyle(
-                                                color: ColorApp
-                                            ),
-                                            counterText: "",
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: TextField(
+                                        maxLines: 1,
+                                        keyboardType: TextInputType.text,
+                                        style: const TextStyle(
+                                            fontFamily: 'rob',
+                                            fontSize: 12
+                                        ),
+                                        controller: textControllerCr,
 
-                                            enabledBorder: outlinedBorderBlack,
-                                            focusedBorder: outlinedBorderPurple,
-
-
+                                        decoration: InputDecoration(
+                                          labelText: 'Cr',
+                                          labelStyle: TextStyle(
+                                              color: ColorApp
                                           ),
+                                          counterText: "",
+
+                                          enabledBorder: outlinedBorderBlack,
+                                          focusedBorder: outlinedBorderPurple,
+
+
                                         ),
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: TextField(
-                                          maxLines: 1,
-                                          keyboardType: TextInputType.text,
-                                          controller: textControllerPLT,
-                                          decoration: InputDecoration(
-                                            labelText: 'PLT',
-                                            labelStyle: TextStyle(
-                                                color: ColorApp
-                                            ),
-                                            counterText: "",
-
-                                            enabledBorder: outlinedBorderBlack,
-                                            focusedBorder: outlinedBorderPurple,
-
-
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: TextField(
+                                        maxLines: 1,
+                                        style: const TextStyle(
+                                            fontFamily: 'rob',
+                                            fontSize: 12
+                                        ),
+                                        keyboardType: TextInputType.text,
+                                        controller: textControllerPLT,
+                                        decoration: InputDecoration(
+                                          labelText: 'PLT',
+                                          labelStyle: TextStyle(
+                                              color: ColorApp
                                           ),
+                                          counterText: "",
+
+                                          enabledBorder: outlinedBorderBlack,
+                                          focusedBorder: outlinedBorderPurple,
+
+
                                         ),
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: TextField(
-                                          maxLines: 1,
-                                          keyboardType: TextInputType.number,
-                                          controller: textControllerPT,
-                                          decoration: InputDecoration(
-                                            labelText: 'PTT',
-                                            labelStyle: TextStyle(
-                                                color: ColorApp
-                                            ),
-                                            counterText: "",
-
-                                            enabledBorder: outlinedBorderBlack,
-                                            focusedBorder: outlinedBorderPurple,
-
-
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: TextField(
+                                        maxLines: 1,
+                                        style: const TextStyle(
+                                            fontFamily: 'rob',
+                                            fontSize: 12
+                                        ),
+                                        keyboardType: TextInputType.number,
+                                        controller: textControllerPT,
+                                        decoration: InputDecoration(
+                                          labelText: 'PTT',
+                                          labelStyle: TextStyle(
+                                              color: ColorApp
                                           ),
+                                          counterText: "",
+
+                                          enabledBorder: outlinedBorderBlack,
+                                          focusedBorder: outlinedBorderPurple,
+
+
                                         ),
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: TextField(
-                                          maxLines: 1,
-                                          keyboardType: TextInputType.text,
-                                          controller: textControllerINR,
-                                          decoration: InputDecoration(
-                                            labelText: 'INR',
-                                            labelStyle: TextStyle(
-                                                color: ColorApp
-                                            ),
-                                            counterText: "",
-
-                                            enabledBorder: outlinedBorderBlack,
-                                            focusedBorder: outlinedBorderPurple,
-
-
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: TextField(
+                                        maxLines: 1,
+                                        style: const TextStyle(
+                                            fontFamily: 'rob',
+                                            fontSize: 12
+                                        ),
+                                        keyboardType: TextInputType.text,
+                                        controller: textControllerINR,
+                                        decoration: InputDecoration(
+                                          labelText: 'INR',
+                                          labelStyle: TextStyle(
+                                              color: ColorApp
                                           ),
+                                          counterText: "",
+
+                                          enabledBorder: outlinedBorderBlack,
+                                          focusedBorder: outlinedBorderPurple,
+
+
                                         ),
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: TextField(
-                                          maxLines: 1,
-                                          keyboardType: TextInputType.text,
-                                          controller: textControllerHB,
-                                          decoration: InputDecoration(
-                                            labelText: 'HB',
-                                            labelStyle: TextStyle(
-                                                color: ColorApp
-                                            ),
-                                            counterText: "",
-
-                                            enabledBorder: outlinedBorderBlack,
-                                            focusedBorder: outlinedBorderPurple,
-
-
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: TextField(
+                                        maxLines: 1,
+                                        style: const TextStyle(
+                                            fontFamily: 'rob',
+                                            fontSize: 12
+                                        ),
+                                        keyboardType: TextInputType.text,
+                                        controller: textControllerHB,
+                                        decoration: InputDecoration(
+                                          labelText: 'HB',
+                                          labelStyle: TextStyle(
+                                              color: ColorApp
                                           ),
+                                          counterText: "",
+
+                                          enabledBorder: outlinedBorderBlack,
+                                          focusedBorder: outlinedBorderPurple,
+
+
                                         ),
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: TextField(
-                                          maxLines: 1,
-                                          keyboardType: TextInputType.text,
-                                          controller: textControllerWBC,
-                                          decoration: InputDecoration(
-                                            labelText: 'WBC',
-                                            labelStyle: TextStyle(
-                                                color: ColorApp
-                                            ),
-                                            counterText: "",
-
-                                            enabledBorder: outlinedBorderBlack,
-                                            focusedBorder: outlinedBorderPurple,
-
-
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: TextField(
+                                        maxLines: 1,
+                                        style: const TextStyle(
+                                            fontFamily: 'rob',
+                                            fontSize: 12
+                                        ),
+                                        keyboardType: TextInputType.text,
+                                        controller: textControllerWBC,
+                                        decoration: InputDecoration(
+                                          labelText: 'WBC',
+                                          labelStyle: TextStyle(
+                                              color: ColorApp
                                           ),
+                                          counterText: "",
+
+                                          enabledBorder: outlinedBorderBlack,
+                                          focusedBorder: outlinedBorderPurple,
+
+
                                         ),
                                       ),
                                     ),
 
+                                    SizedBox(height: 8,),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -426,16 +444,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                     ),
                   ),
                 ),
-                // InkWell(
-                //   onTap: (){
-                //     _submitForm();
-                //   },
-                //   child: Container(
-                //     width: 100,
-                //     height: 100,
-                //     color: Colors.red,
-                //   ),
-                // ),
+
 
                 SizedBox(height: 8,),
 
@@ -449,18 +458,18 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                           },
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(ColorApp),
-                                  padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                  padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.circular(4.0),
                                       )
                                   )
                               ),
                               child:Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(8.0),
                                 child: Text( widget.ISEdit ? 'ویرایش فرم' :  'تکمیل فرم',
                                   style: TextStyle(color:Colors.white,
-                                      fontSize: 16,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.bold),),
                               )),
                         ),

@@ -74,6 +74,60 @@ class ApiServiceReception{
     return login;
   }
 
+  static Future<ModelListPatient> PatientListBetweenDate(String dateFrom,String dateTo,BuildContext context) async {
+    var login;
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients/PatientListBetweenDate'));
+    request.fields.addAll({
+      'startDate': dateFrom,
+      'endDate': dateTo,
+    });
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelListPatient data= await  modelListPatientFromJson(str);
+        login=data;
+      }else{
+        ShowErrorMsg(context,response.reasonPhrase.toString());
+
+      }
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+
+    } on Error catch (e)
+    {
+      print(e.toString());
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    return login;
+  }
+
   static Future<ModelLogin> editProfile(String id,String name,String code,String age,String gender,BuildContext context) async {
     var login;
 

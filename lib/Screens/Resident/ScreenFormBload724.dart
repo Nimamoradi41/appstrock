@@ -131,7 +131,6 @@ class _ScreenFormIsNot724State extends State<ScreenFormBload724> {
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
 
-
                 SizedBox(height: 16,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -139,27 +138,25 @@ class _ScreenFormIsNot724State extends State<ScreenFormBload724> {
                     TextApp('قند خون',18,Colors.black87,true),
                   ],
                 ),
-                Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: TextField(
-                    maxLines: 1,
-                    keyboardType: TextInputType.number,
-                    controller: textControllerGh,
-                    decoration: InputDecoration(
-                      labelText: '',
-                      labelStyle: TextStyle(
-                          color: ColorApp.withOpacity(0.5)
-                      ),
-                      counterText: "",
-
-                      enabledBorder: outlinedBorderBlack,
-                      focusedBorder: outlinedBorderPurple,
-
-
+                TextField(
+                  maxLines: 1,
+                  keyboardType: TextInputType.number,
+                  controller: textControllerGh,
+                  style: const TextStyle(
+                      fontFamily: 'rob',
+                      fontSize: 12
+                  ),
+                  decoration: InputDecoration(
+                    labelText: '',
+                    labelStyle: TextStyle(
+                        color: ColorApp.withOpacity(0.5)
                     ),
+                    counterText: "",
+                    enabledBorder: outlinedBorderBlack,
+                    focusedBorder: outlinedBorderPurple,
                   ),
                 ),
-                SizedBox(height: 16,),
+                SizedBox(height: 8,),
                 Spacer(),
 
 
@@ -176,8 +173,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormBload724> {
                 //     height: 120,
                 //     child: TextField(
                 //       keyboardType: TextInputType.number,
-                //       controller: textControllerGh,
-                //       decoration: InputDecoration(
+
                 //         labelText: 'توضیحات خود را وارد کنید',
                 //         labelStyle: TextStyle(
                 //             color: ColorApp.withOpacity(0.5)
@@ -202,7 +198,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormBload724> {
                           },
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(Colors.white),
-                                  padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                  padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(8.0),
@@ -211,8 +207,8 @@ class _ScreenFormIsNot724State extends State<ScreenFormBload724> {
                                   )
                               ),
                               child:Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: TextApp('بستن',16,ColorApp,true),
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextApp('بستن',12,ColorApp,true),
                               )),
                         ),
                       ),
@@ -231,7 +227,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormBload724> {
                           },
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(ColorApp),
-                                  padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                  padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8.0),
@@ -239,8 +235,8 @@ class _ScreenFormIsNot724State extends State<ScreenFormBload724> {
                                   )
                               ),
                               child:Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: TextApp('ثبت اطلاعات',16,Colors.white,true),
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextApp('ثبت اطلاعات',12,Colors.white,true),
                               )),
                         ),
                       ),

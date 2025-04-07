@@ -221,7 +221,7 @@ class _ScreenReceptionState extends State<ScreenReception> {
                                 },
                                     style: ButtonStyle(
                                         backgroundColor: MaterialStateProperty.all(Colors.redAccent),
-                                        padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                        padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                             RoundedRectangleBorder(
                                               borderRadius: BorderRadius.circular(8.0),
@@ -230,10 +230,10 @@ class _ScreenReceptionState extends State<ScreenReception> {
                                         )
                                     ),
                                     child:Padding(
-                                      padding: const EdgeInsets.all(10.0),
+                                      padding: const EdgeInsets.all(8.0),
                                       child: Text('بستن',
                                         style: TextStyle(color:Colors.white,
-                                            fontSize: 16,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.bold),),
                                     )),
                               ),
@@ -246,7 +246,7 @@ class _ScreenReceptionState extends State<ScreenReception> {
                                 },
                                     style: ButtonStyle(
                                         backgroundColor: MaterialStateProperty.all(Colorbutton),
-                                        padding: MaterialStateProperty.all(EdgeInsets.all(8)),
+                                        padding: MaterialStateProperty.all(EdgeInsets.all(4)),
                                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                             RoundedRectangleBorder(
                                               borderRadius: BorderRadius.circular(8.0),
@@ -255,10 +255,10 @@ class _ScreenReceptionState extends State<ScreenReception> {
                                         )
                                     ),
                                     child:Padding(
-                                      padding: const EdgeInsets.all(10.0),
+                                      padding: const EdgeInsets.all(8.0),
                                       child: Text('تکمیل اطلاعات',
                                         style: TextStyle(color:Colors.white,
-                                            fontSize: 16,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.bold),),
                                     )),
                               ),

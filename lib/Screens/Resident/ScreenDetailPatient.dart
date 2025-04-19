@@ -19,6 +19,7 @@ import 'ProviderResident/ProviderResidentDetaile.dart';
 import 'ScreenFormIs724.dart';
 import 'ScreenFormIsNot724.dart';
 import 'ScreenFormPreesBload724.dart';
+import 'ScreenFormReasonInjection.dart';
 
 
 
@@ -221,6 +222,28 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
     });
   }
 
+
+  Future   setInjectionReason(String id,BuildContext context,List<Map<String, dynamic>> Str) async
+  {
+    ShowLoadingApp(context);
+    // ignore: use_build_context_synchronously
+    var Data= await ApiServiceReception.SetInjectionReason(context,widget.patientItem.id.toString(),Str);
+    print(Data.toJson());
+
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+        Navigator.pop(context);
+      }else{
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+
+    Navigator.pop(context);
+  }
 
 
   void _formatElapsedTime() {
@@ -697,7 +720,6 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
     double hei=MediaQuery.of(context).size.height;
     wid=wid>600?600:wid;
     return
-
       SafeArea(
       child:
       Scaffold(
@@ -1007,6 +1029,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                         'تزریق نشود', title:
                                         ' :  وضعیت تزریق'
                                         ):Container(),
+
                                         Notifi.patientItem.isNot724==false?
                                         BoxInformation(value:Notifi.patientItem.labIsComplete == null  ?'تکمیل نشده است' :
                                         Notifi.patientItem.labIsComplete! ?
@@ -1021,14 +1044,12 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
 
                                                   ScreenFormLaboratory((p0){
                                                     Navigator.pop(context);
-                                                    if(Notifi.patientItem.labIsComplete!!
-                                                     )
+                                                    if(Notifi.patientItem.labIsComplete!!)
                                                     {
                                                       editLab(p0);
                                                     }else{
                                                       AddLab(p0);
                                                     }
-
                                                   },Notifi.patientItem.labIsComplete!!,
                                                       Notifi.patientItem.bun.toString(),
                                                       Notifi.patientItem.cr.toString(),
@@ -1067,6 +1088,8 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                             }
                                           },
                                         ):Container(),
+
+
                                         Notifi.patientItem.isNot724==false?
                                         BoxInformation(value:Notifi.patientItem.bloodPressure1 == 0  ?'تکمیل نشده است' :
                                         "${Notifi.patientItem.bloodPressure1}/${
@@ -1085,6 +1108,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                             }
                                           },
                                         ):Container(),
+
                                         Notifi.patientItem.isNot724==false?
                                         BoxInformation(value:Notifi.patientItem.timeOfInjection!.isEmpty  ?'تکمیل نشده است' :
                                         Notifi.patientItem.timeOfInjection.toString()
@@ -1207,6 +1231,66 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                       )),
                                 ),
 
+                                Notifi.patientItem.injectionType ==2 ?
+                                Row(
+                                  children: [
+                                    Expanded(child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: ElevatedButton(
+                                          onPressed: (){
+                                            GoNextPage(context, ScreenFormReasonInjection((p0) {
+                                              setInjectionReason(widget.patientItem.id.toString(),context,p0);
+                                            },
+                                              Notifi.patientItem.injectionType!=0?true:false,
+                                              Notifi.patientItem.c1!,
+                                              Notifi.patientItem.c2!,
+                                              Notifi.patientItem.c3!,
+                                              Notifi.patientItem.c4!,
+                                              Notifi.patientItem.c5!,
+                                              Notifi.patientItem.c6!,
+                                              Notifi.patientItem.c7!,
+                                              Notifi.patientItem.c8!,
+                                              Notifi.patientItem.c9!,
+                                              Notifi.patientItem.c10!,
+                                              Notifi.patientItem.c11!,
+                                              Notifi.patientItem.c12!,
+                                              Notifi.patientItem.c13!,
+                                              Notifi.patientItem.c14!,
+                                              Notifi.patientItem.c15!,
+                                              Notifi.patientItem.c16!,
+                                              Notifi.patientItem.c17!,
+                                              Notifi.patientItem.c18!,
+                                              Notifi.patientItem.c19!,
+                                              Notifi.patientItem.c20!,
+                                              Notifi.patientItem.c21!,
+                                              Notifi.patientItem.c22!,
+                                            ));
+                                          },
+                                          style: ButtonStyle(
+                                              backgroundColor:  MaterialStateProperty.all(ColorApp),
+                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
+                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(8.0),
+                                                  )
+                                              )
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              !Notifi.patientItem.notInjectingIsComplete!!?
+                                              'ثبت دلایل رد تزریق':'نمایش دلایل رد تزریق',
+                                              style: const TextStyle(
+                                                  color:
+                                                  Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold),),
+                                          )),
+                                    ),),
+                                  ],
+                                ):Container(),
+
+
                                 Notifi.patientItem.is724IsComplete!
                                     && Notifi.patientItem.isNot724!  ?
                                 Container(
@@ -1247,6 +1331,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                               fontWeight: FontWeight.bold),),
                                       )),
                                 ):Container(),
+
                                 Notifi.patientItem.is724IsComplete!
                                     && !Notifi.patientItem.isNot724?
                                 const Row(

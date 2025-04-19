@@ -25,6 +25,32 @@ class TextApp extends StatelessWidget {
       ),);
   }
 }
+
+class TextAppEnd extends StatelessWidget {
+
+  String Title;
+  double Fontsize;
+  Color Mcolor;
+  bool Isbold=false;
+
+
+  TextAppEnd(this.Title, this.Fontsize, this.Mcolor, this.Isbold);
+
+
+  @override
+  Widget build(BuildContext context) {
+    Fontsize=Fontsize-1;
+    return Text(Title,
+      textAlign: TextAlign.right,
+      style: TextStyle(
+          color: Mcolor,
+          fontSize: Fontsize,
+          fontWeight: Isbold==true?
+          FontWeight.bold:FontWeight.normal
+      ),);
+  }
+}
+
 class TextAppStartfredoka extends StatelessWidget {
 
   String Title;

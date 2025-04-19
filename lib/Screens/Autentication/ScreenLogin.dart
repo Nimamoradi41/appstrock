@@ -6,6 +6,7 @@ import 'package:appstrock/Screens/Teriazh/screen_teriazh.dart';
 import 'package:appstrock/Screens/sickcarrier/screen_sickcarrier.dart';
 import 'package:appstrock/Widgets/TextApp.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -177,79 +178,114 @@ class _ScreenLoginState extends State<ScreenLogin> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                textDirection: TextDirection.rtl, // جهت کلی متن
-                                textAlign: TextAlign.right, // متن ورودی راست‌چین باشد
-                                keyboardType: TextInputType.text,
-                                controller: textControllerName,
-                                style: const TextStyle(
-                                  fontFamily: 'rob',
-                                  fontSize: 13
-                                ),
-                                decoration: InputDecoration(
-                                  labelText: 'نام و نام خانوادگی',
-                                  labelStyle: TextStyle(
-                                      color: ColorApp
+                              child:
+                              Container(
+                                width: double.infinity,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: TextAppEnd(
+                                        'نام کاربری',14, ColorApp,false),
+                                      )  ,
+                                    SizedBox(height: 8),  // فاصله بین عنوان و فیلد
+                                TextField(
+                                  controller: textControllerName,
+                                  style: const TextStyle(
+                                    fontFamily: 'rob',
+                                    fontSize: 13,
                                   ),
-                                  alignLabelWithHint: true,
-                                  hintTextDirection: TextDirection.rtl,
-                                  counterText: "",
-
-                                  enabledBorder: outlinedBorderBlack,
-                                  focusedBorder: outlinedBorderPurple,
-
-
+                                  textAlign:   TextAlign.left,
+                                  textDirection:  TextDirection.ltr,
+                                  keyboardType: TextInputType.text,
+                                  inputFormatters: [
+                                    // فقط حروف انگلیسی و اعداد و کاراکترهای خاص مجاز هستند
+                                    FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9.,?!@# ]')), // فقط حروف انگلیسی و اعداد
+                                  ],
+                                  decoration: InputDecoration(
+                                    labelStyle: TextStyle(
+                                      color: ColorApp,
+                                    ),
+                                    counterText: "",
+                                    enabledBorder: outlinedBorderBlack,
+                                    focusedBorder: outlinedBorderPurple,
+                                  )
+                                )
+                                  ],
                                 ),
-                              ),
+                              )
                             ),
                             SizedBox(height: 8,),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                maxLines: 1,
-                                maxLength: 10,
-                                textDirection: TextDirection.rtl, // جهت کلی متن
-                                textAlign: TextAlign.right, // متن ورودی راست‌چین باشد
-                                keyboardType: TextInputType.phone,
-                                controller: textControllerNationalCode,
-                                style: const TextStyle(
-                                    fontSize: 13
-                                ),
-                                decoration: InputDecoration(
-                                  labelText: 'کد ملی',
-                                  labelStyle: TextStyle(
-                                      color: ColorApp
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: TextAppEnd(
+                                        'کد ملی',14, ColorApp,false),
                                   ),
-                                  counterText: "",
-                                  enabledBorder: outlinedBorderBlack,
-                                  focusedBorder: outlinedBorderPurple,
-                                ),
+                                  TextField(
+                                    maxLines: 1,
+                                    maxLength: 10,
+                                    textDirection: TextDirection.ltr, // جهت کلی متن
+                                    textAlign: TextAlign.left, // متن ورودی راست‌چین باشد
+                                    keyboardType: TextInputType.phone,
+                                    controller: textControllerNationalCode,
+                                    style: const TextStyle(
+                                        fontSize: 13
+                                    ),
+                                    decoration: InputDecoration(
+                                      labelStyle: TextStyle(
+                                          color: ColorApp
+                                      ),
+                                      counterText: "",
+                                      enabledBorder: outlinedBorderBlack,
+                                      focusedBorder: outlinedBorderPurple,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                maxLines: 1,
-                                textDirection: TextDirection.rtl, // جهت کلی متن
-                                textAlign: TextAlign.right, // متن ورودی راست‌چین باشد
-                                keyboardType: TextInputType.name,
-                                controller: textControllerNationalPass,
-                                style: const TextStyle(
-                                    fontFamily: 'rob',
-                                    fontSize: 13
+                              child:  Container(
+                                width: double.infinity,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: TextAppEnd(
+                                          'رمز عبور',14, ColorApp,false),
+                                    )  ,
+                                    SizedBox(height: 8),  // فاصله بین عنوان و فیلد
+                                    TextField(
+                                        controller: textControllerName,
+                                        style: const TextStyle(
+                                          fontFamily: 'rob',
+                                          fontSize: 13,
+                                        ),
+                                        textAlign:   TextAlign.left,
+                                        textDirection:  TextDirection.ltr,
+                                        keyboardType: TextInputType.text,
+                                        inputFormatters: [
+                                          // فقط حروف انگلیسی و اعداد و کاراکترهای خاص مجاز هستند
+                                          FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9.,?!@# ]')), // فقط حروف انگلیسی و اعداد
+                                        ],
+                                        decoration: InputDecoration(
+                                          labelStyle: TextStyle(
+                                            color: ColorApp,
+                                          ),
+                                          counterText: "",
+                                          enabledBorder: outlinedBorderBlack,
+                                          focusedBorder: outlinedBorderPurple,
+                                        )
+                                    )
+                                  ],
                                 ),
-                                decoration: InputDecoration(
-                                  labelText: 'رمز عبور',
-                                  labelStyle: TextStyle(
-                                      color: ColorApp
-                                  ),
-                                  counterText: "",
-                                  enabledBorder: outlinedBorderBlack,
-                                  focusedBorder: outlinedBorderPurple,
-
-
-                                ),
-                              ),
+                              )
                             ),
 
 
@@ -283,7 +319,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                     borderRadius: BorderRadius.circular(8.0),
                                   )
                               )
-                          ),
+                           ),
                           child:Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text('ورود',

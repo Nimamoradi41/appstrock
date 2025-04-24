@@ -68,12 +68,12 @@ class _ScreenRigesterState extends State<ScreenRigester> {
     }
 
 
-    var check=checkMeliCode(textControllerNationalCode.text.toString());
-    if(!check)
-      {
-        ShowErrorMsg(context,'کدملی اشتباه است');
-        return;
-      }
+    // var check=checkMeliCode(textControllerNationalCode.text.toString());
+    // if(!check)
+    //   {
+    //     ShowErrorMsg(context,'کدملی اشتباه است');
+    //     return;
+    //   }
 
 
     if(textControllerPhoneNumber.text.isEmpty)
@@ -319,7 +319,7 @@ class _ScreenRigesterState extends State<ScreenRigester> {
                                   textDirection: TextDirection.ltr, // جهت کلی متن
                                   textAlign: TextAlign.left, // متن ورودی راست‌چین باشد
                                   keyboardType: TextInputType.phone,
-                                  controller: textControllerNationalCode,
+                                  controller: textControllerPhoneNumber,
                                   style: const TextStyle(
                                       fontSize: 13
                                   ),
@@ -349,7 +349,7 @@ class _ScreenRigesterState extends State<ScreenRigester> {
                                     )  ,
                                     SizedBox(height: 8),  // فاصله بین عنوان و فیلد
                                     TextField(
-                                        controller: textControllerName,
+                                        controller: textControllerPassWord,
                                         style: const TextStyle(
                                           fontFamily: 'rob',
                                           fontSize: 13,

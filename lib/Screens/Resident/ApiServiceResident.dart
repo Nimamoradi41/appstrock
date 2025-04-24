@@ -1290,6 +1290,89 @@ class ApiServiceResident{
   }
 
 
+  static Future<ModelNeetToCt> signalTest(BuildContext context)
+  async {
+    var login;
+
+
+
+
+    var request = http.MultipartRequest('GET',
+        Uri.parse('https://api.appstrok.ir/Patients/signal'));
+
+
+
+
+
+
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+
+
+      print(response.statusCode.toString());
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelNeetToCt data= await  modelNeetToCtFromJson(str);
+        login=data;
+      }
+      if(response.statusCode==400)
+      {
+        String? strw= await response.reasonPhrase;
+        String str= await response.stream.bytesToString();
+        ModelNeetToCt data= await  modelNeetToCtFromJson(str);
+        print(data.message.toString());
+        login=data;
+      }
+      if(response.statusCode==403)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelNeetToCt data= await  modelNeetToCtFromJson(str);
+        login=data;
+      }
+
+
+      else {
+        ShowErrorMsg(context,response.reasonPhrase.toString());
+
+      }
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+
+    } on Error catch (e)
+    {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    return login;
+  }
+
+
   static Future<ModelConst> Not724(String idPa,BuildContext context)
   async {
     var login;

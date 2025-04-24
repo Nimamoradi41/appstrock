@@ -262,7 +262,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                     )  ,
                                     SizedBox(height: 8),  // فاصله بین عنوان و فیلد
                                     TextField(
-                                        controller: textControllerName,
+                                        controller: textControllerNationalPass,
                                         style: const TextStyle(
                                           fontFamily: 'rob',
                                           fontSize: 13,

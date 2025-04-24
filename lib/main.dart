@@ -12,6 +12,7 @@ import 'package:appstrock/scr.dart';
 import 'package:appstrock/test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'Constants.dart';
 import 'Screens/Atend/ProviderAtend/ProviderAtend.dart';
 import 'Screens/Atend/ProviderAtend/ProviderAtendDetaile.dart';
@@ -25,21 +26,25 @@ import 'Screens/Laboratory/ScreenFormLaboratory.dart';
 import 'Screens/Laboratory/ScreenLaboratoryDetailPatient.dart';
 import 'Screens/Laboratory/screen_Laboratory.dart';
 import 'Screens/Reception/ProviderReception/ProviderReception.dart';
-
+import 'Screens/Resident/ApiServiceResident.dart';
 import 'Screens/Resident/ProviderResident/ProviderResident.dart';
 import 'Screens/Resident/ProviderResident/ProviderResidentDetaile.dart';
+import 'Screens/Resident/ProviderResident/ProviderTimers.dart';
 import 'Screens/Resident/ScreenDetailPatient.dart';
 import 'Screens/Resident/ScreenFormImage724.dart';
 import 'Screens/Resident/ScreenFormIs724.dart';
 import 'Screens/Resident/ScreenFormIsNot724.dart';
 import 'Screens/Resident/ScreenFormNIHS.dart';
 import 'Screens/Resident/ScreenFormReasonInjection.dart';
+import 'Screens/SignalRService.dart';
 import 'Screens/SplashScreen.dart';
 import 'Screens/Strok/ProviderStrok/ProviderStrok.dart';
 import 'Screens/Teriazh/ProviderTeraizh.dart';
 import 'Screens/sickcarrier/ProviderSickCarrier/ProviderSickCarrier.dart';
 import 'Screens/sickcarrier/screen_sickcarrier.dart';
+import 'Widgets/StaticWidget.dart';
 import 'Widgets/TextApp.dart';
+import 'Widgets/testt.dart';
 
 void main() {
   runApp(  MultiProvider(
@@ -54,6 +59,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => ProviderAtendDetaile()),
         ChangeNotifierProvider(create: (context) => ProviderTeraizh()),
         ChangeNotifierProvider(create: (context) => ProviderStrok()),
+        ChangeNotifierProvider(create: (context) => ProviderTimers()),
       ],
       child: MyApp()));
 }
@@ -64,6 +70,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // SignalRService().initConnection();
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -71,108 +84,19 @@ class _MyAppState extends State<MyApp> {
           fontFamily: 'iransans'
       ),
       debugShowCheckedModeBanner: false,
-      home: SplashScreen());
-      // home: ScreenFormReasonInjection((p0) {
-      //
-      // },
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true,
-      //  true
-      // ));
-      // home: ScreenFormLaboratory((p0){
-      // },false,
-      //    '',
-      //     '',
-      //     '',
-      //     '',
-      //     '',
-      //     '',
-      //     '',
-      //     '',
-      //     false
-      // ));
-      // home: ScreenCodeOtp('','','',1,'',''));
-      // home: ScreenFormLaboratory((p0) { }, ISEdit, Bun, Cr, PLT, PT, INR, Trop, isAtend));
-      // home: ScreenListImages("1"));
-      // home: ScreenFormImage724());
-      // home: ScreenEms());
-      // home: ScreenFormLaboratory((p0){
-      //   print('AA');
-      // },false));
-      //   home: ScreenFormIs724((p){
-      //
-      //   }));
-      //   home: ScreenFormImage724());
-        // home: ScreenDetailPatient(
-        //     ModelPatient(id: 14, fullName: 'Ahmad bagheri',
-        //     nationalCode: '4845154444', age: '34', gender: 'Female',
-        //     timeOfAddToSystem: '14:30', dateOfAddToSystem: '1402/01/01',
-        //     needToMRI: false, isNot724: false,
-        //         needToCT: false, IsNIHSS: false,
-        //         IsLab: false, timeOfAddLabotory: '',
-        //         ResonNot: '', Is724: false,
-        //         AddReasonNot724: false,
-        //         timeOfAddResident: '',
-        //         TimeFss: '', TimeLKW: '',
-        //         DateFSS: '', DateLKW: '', IsUnknow: false, dateOfAddToStart: '', AtendSeen: false),context));
-      //   home: ScreenFormNIHS((c){
-      //
-      //
-      //   },false));
-      // home: test(),
-      // home: ExamForm(),
-      // home: Scaffold(
-      //   body: Column(
-      //     children: [
-      //       Center(
-      //         child: InkWell(
-      //           onTap: (){
-      //            Run(context);
-      //           },
-      //           child: Container(
-      //             width: 100,
-      //             height: 100,
-      //             color: Colors.black87,
-      //           ),
-      //         ),
-      //       )
-      //     ],
-      //   ),
-      // ),
-      // home: ScreenCodeOtp(),
-      // home: scr(),
-      // home: ScreenEms('jbjb','55',true));
+        routes: {
+          '/home': (context) => SplashScreen(),    // صفحه اصلی
+          '/screen': (context) => staticWidget2(), // صفحه دوم
+        },
+      home: SplashScreen()
       // home: ScreenRigester());
-      // home: ScreenEms(),
-      // home: Screen_Teriazh());
-      // home: ScreenReception('Nima','+6+6',true));
-      // home: ScreenSickCarrier());
-      // home: ScreenReception(),
-      // home: ScreenResident(context));
-      // home: ScreenLaboratory());
-      // home: ScreenAtend(context));
-      // home: ScreenDetailPatient(),
-      // home: ScreenSickCarrier(),
+      // home: testt()
+    );
+
+  }
+
+  void test()
+  {
 
   }
 }

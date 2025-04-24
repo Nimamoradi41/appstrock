@@ -11,11 +11,13 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../Constants.dart';
+import '../../Widgets/StaticWidget.dart';
 import '../../Widgets/TextApp.dart';
 import '../../components/BoxInformation.dart';
 import '../Reception/ApiServiceReception.dart';
 import '../Reception/Model/ModelPatient.dart';
 import 'ProviderResident/ProviderResidentDetaile.dart';
+import 'ProviderResident/ProviderTimers.dart';
 import 'ScreenFormIs724.dart';
 import 'ScreenFormIsNot724.dart';
 import 'ScreenFormPreesBload724.dart';
@@ -78,8 +80,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
   Future AddNIHS(List<Map<String, dynamic>> Str,int score)async{
 
     ShowLoadingApp(context);
-    var Data= await ApiServiceResident.AddNihs(widget.patientItem.id.toString(),
-        context,Str,score);
+    var Data= await ApiServiceResident.AddNihs(widget.patientItem.id.toString(), context,Str,score);
 
     if(Data!=null)
     {
@@ -117,8 +118,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
   Future editNIHS(List<Map<String, dynamic>> Str,int score)async{
 
     ShowLoadingApp(context);
-    var Data= await ApiServiceResident.editNihs(widget.patientItem.id.toString(),
-        context,Str,score);
+    var Data= await ApiServiceResident.editNihs(widget.patientItem.id.toString(), context,Str,score);
 
     if(Data!=null)
     {
@@ -250,16 +250,14 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient> with SingleTi
     int hours = _elapsedTime.inHours;
     int minutes = _elapsedTime.inMinutes % 60;
     int seconds = _elapsedTime.inSeconds % 60;
-
-    Notifi.setTimeEffect("${hours.abs()}:${minutes.abs()}:${seconds.abs()}");
+    providerTimer.updateTimerSymptomOnset("${hours.abs()}:${minutes.abs()}:${seconds.abs()}");
   }
 
   void _formatElapsedTimeFss() {
     int hours = _elapsedTimeFss.inHours;
     int minutes = _elapsedTimeFss.inMinutes % 60;
     int seconds = _elapsedTimeFss.inSeconds % 60;
-
-    Notifi.setTimeEffectFss("${hours.abs()}:${minutes.abs()}:${seconds.abs()}");
+    providerTimer.updateTimerSymptomRecognition("${hours.abs()}:${minutes.abs()}:${seconds.abs()}");
   }
 
   Duration _elapsedTime = Duration.zero;
@@ -365,7 +363,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
         });
   }
     Timer? _timer;
-    Timer? _timer2;
+
   // var TimeEffect=0.0;
 
   // var TimeTaInjection=0.0;
@@ -404,24 +402,20 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
   void startTimerEffect() {
     const oneSec =   Duration(seconds: 1);
     _timer = Timer.periodic(
-      oneSec,
-          (Timer timer) {
-
+      oneSec,(Timer timer) {
             if(Notifi.patientItem.isFinished!)
             {
               _timer!.cancel();
-              _timer2!.cancel();
             }
         TimeAriveToHospital=TimeAriveToHospital+1;
         var date2=Duration(seconds: TimeAriveToHospital.toInt());
-
 
         int hours2 = date2.inSeconds ~/ 3600;
         int minutes2 = (date2.inSeconds % 3600) ~/ 60;
         int remainingSeconds2 = date2.inSeconds % 60;
 
 
-        if( Notifi.patientItem.signsStartTS!=0)
+        if(Notifi.patientItem.signsStartTS!=0)
         {
           var date=DateTime.fromMillisecondsSinceEpoch(Notifi.patientItem.signsStartTS!!);
 
@@ -441,37 +435,18 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
         }
 
         TimeAriveToHospitalStr =Convert_Time(hours2.toString(),minutes2.toString(),remainingSeconds2.toString());
-
-
-        Notifi.setTimeAriveToHospital(TimeAriveToHospitalStr);
+        providerTimer.updateTimerArriveToHospital(TimeAriveToHospitalStr);
+        // Notifi.setTimeAriveToHospital(TimeAriveToHospitalStr);
 
       },
     );
   }
-  void startTimerAriveToHospital() {
-    const oneSec =   Duration(seconds: 1);
-    _timer2 = Timer.periodic(
-      oneSec,
-          (Timer timer) {
-        TimeAriveToHospital=TimeAriveToHospital+1;
-        var date=Duration(seconds: TimeAriveToHospital.toInt());
-        int hours = date.inSeconds ~/ 3600;
-        int minutes = (date.inSeconds % 3600) ~/ 60;
-        int remainingSeconds = date.inSeconds % 60;
-        TimeAriveToHospitalStr =Convert_Time(hours.toString(),minutes.toString(),remainingSeconds.toString());
-        Notifi.setTimeAriveToHospital(TimeAriveToHospitalStr);
-      },
-    );
-  }
+
   @override
   void dispose() {
-    _controller.dispose(); // رها کردن منابع انیمیشن کنترلر
-    if(_timer2!=null)
-      {
-        _timer2?.cancel();
-      }
 
-    if(_timer2!=null)
+
+    if(_timer!=null)
     {
       _timer?.cancel();
     }
@@ -479,9 +454,8 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
     super.dispose();
 
   }
-  late AnimationController _controller;
-  late Animation<Color?> _colorAnimationRed;
-  late Animation<Color?> _colorAnimationGreen;
+
+   late ProviderTimers providerTimer;
   Future RunPressBload(String Blod1,String Blod2)async{
 
     ShowLoadingApp(context);
@@ -566,22 +540,8 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
   @override
   void initState() {
     super.initState();
-    // تنظیم کردن یک انیمیشن کنترلر با مدت زمان ۱ ثانیه
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 1000),
-    )..repeat(reverse: true);
-
-    // تنظیم کردن انیمیشن برای تغییر رنگ جراغ
-    _colorAnimationRed = ColorTween(
-      begin: Colors.red,
-      end: Colors.black12,
-    ).animate(_controller);
-
-    _colorAnimationGreen = ColorTween(
-      begin: Colors.green,
-      end: Colors.black12,
-    ).animate(_controller);
+    providerTimer = Provider.of<ProviderTimers>(context, listen: false);
+    Notifi=Provider.of<ProviderResidentDetaile>(context, listen: false);
 
     DateTime now = new DateTime.now();
 
@@ -637,7 +597,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
     }
   }
 
-  Future uploadImage(String idPa)async    {
+  Future uploadImage(String idPa)async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String UserId='';
@@ -658,7 +618,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
     }
   }
 
-  AddTimeInjection(){
+   AddTimeInjection(){
     showModalBottomSheet(context: context,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
@@ -680,7 +640,6 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
         });
   }
 
-
    Future getInfoOfPatient()async{
     Jalali date=Jalali.now();
     String formattedDate =
@@ -697,6 +656,10 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
 
         Notifi.setItems(finded);
         isLoading=false;
+        setState(() {
+
+        });
+
         if( Notifi.patientItem.signsStartTSFSS!=0)
         {
           _formatElapsedTimeFss();
@@ -715,12 +678,10 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
   }
   @override
   Widget build(BuildContext context) {
-    Notifi=Provider.of<ProviderResidentDetaile>(context);
     double wid=MediaQuery.of(context).size.width;
     double hei=MediaQuery.of(context).size.height;
     wid=wid>600?600:wid;
-    return
-      SafeArea(
+    return SafeArea(
       child:
       Scaffold(
         body: Center(
@@ -755,10 +716,6 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                     {
                                       _timer!.cancel();
                                     }
-                                  if(_timer2!=null)
-                                  {
-                                    _timer2!.cancel();
-                                  }
                                   Navigator.pop(context);
                                 },
                                 child: Icon(Icons.arrow_back,color: Colors.white,size: 30,),
@@ -786,28 +743,8 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           SizedBox(width: 2,),
-                                          AnimatedBuilder(
-                                            animation:  Notifi.patientItem!.seenByAttend! ?
-
-                                            _colorAnimationGreen:
-                                            _colorAnimationRed
-                                            ,
-                                            builder: (context, child) {
-                                              return Container(
-                                                decoration: BoxDecoration(
-                                                    color:  Notifi.patientItem!.seenByAttend! ? _colorAnimationGreen.value:_colorAnimationRed.value,
-                                                    shape: BoxShape.circle
-                                                ),
-                                                width: 10,
-                                                height: 10,
-
-                                              );
-                                            },
-                                          ),
-                                          SizedBox(width: 2,),
-                                          TextApp(  Notifi.patientItem!.seenByAttend!?
-                                          'دکتر متخصص مشاهده کرده است'
-                                              : 'دکتر متخصص مشاهده نکرده است', 10,
+                                          TextApp(Notifi.patientItem!.seenByAttend!?
+                                          'دکتر متخصص مشاهده کرده است': 'دکتر متخصص مشاهده نکرده است', 10,
                                               Notifi.patientItem!.seenByAttend!? Colors.green :
                                               Colors.red, true),
                                           SizedBox(width: 2,)
@@ -933,213 +870,238 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                         ),
 
                                         Notifi.patientItem.isFinished==false?
-                                        BoxInformation(value:Notifi.oldTime2, title:
-                                        ' :  تایمر بر اساس زمان ثبت در سیستم'
+                                        Consumer<ProviderTimers>(
+                                          builder: (context, provider, child) {
+                                            return   BoxInformation(value:provider.timerArriveToHospital, title:
+                                            ' :  تایمر بر اساس زمان ثبت در سیستم'
+                                            );
+                                          },
                                         ):Container(),
-
 
                                         Notifi.patientItem.is724IsComplete!
                                             && !Notifi.patientItem.isFinished! &&
                                             Notifi.patientItem.signsStartTime!.isNotEmpty &&
                                             Notifi.patientItem.signsStartTSFSS==0?
-                                        BoxInformation(value:Notifi.oldTime, title:
-                                        ' :  تایمر بر اساس زمان شروع علائم'
+                                        Consumer<ProviderTimers>(
+                                          builder: (context, provider, child) {
+                                            return   Column(
+                                              children: [
+                                                BoxInformation(value:provider.timerTimerSymptomOnset, title:
+                                                ' :  تایمر بر اساس زمان شروع علائم'
+                                                ),
+                                              ],
+                                            );
+                                          },
                                         ):Container(),
 
                                         Notifi.patientItem.is724IsComplete!
                                             && !Notifi.patientItem.isFinished! && Notifi.patientItem.signsStartTSFSS!=0  ?
-                                        BoxInformation(value:Notifi.oldTimeFSS, title:
-                                        ' :  تایمر بر اساس دیدن علائم'
-                                        ):Container(),
-
-                                        BoxInformation(
-                                            value:Notifi.patientItem.dateOfAddToSystem == null ?
-                                        'نامشخص' : Notifi.patientItem.dateOfAddToSystem!,
-                                            title:' :  تاریخ ثبت در سیستم'),
-
-                                        Notifi.patientItem.signsStartTime!.isNotEmpty?
-                                        BoxInformation(
-                                           value:  "${Notifi.patientItem.signsStartTime} "
-                                            "${Notifi.patientItem.signsStartDate} ",
-                                           title:   ' :  زمان و تاریخ شروع علائم '
-                                        ):Container(),
-
-                                        Notifi.patientItem.dateFinishShamsi!.isNotEmpty?
-                                        BoxInformation(value:  "${Notifi.patientItem.dateFinishShamsi} "
-                                            "${Notifi.patientItem.timeFinish} ",title:   ' :  زمان و تاریخ پایان کار '
-                                        ):Container(),
-
-                                        Notifi.patientItem.needToCT||Notifi.patientItem.needToMRI?
-                                        BoxInformation(value:  Notifi.patientItem.needToCT?
-                                        'CTScan': 'MRI', title:
-                                            ' :  وضعیت'
-                                        ):Container(),
-
-                                        Notifi.patientItem.isNot724==false?
-                                        BoxInformation(value:   !Notifi.patientItem.nihsIsComplete!?
-                                        'تکمیل نشده است':
-                                        Notifi.patientItem.nihsSubscore.toString(),
-                                            title:
-                                            ' :  وضعیت  NIHSS',
-                                          onTap: (){
-                                            if(Notifi.patientItem.is724IsComplete==false)
-                                            {
-                                              return ;
-                                            }
-
-                                            GoNextPage(context,ScreenFormNIHS((p0,s) {
-                                              Navigator.pop(context);
-                                              if(Notifi.patientItem!.nihsIsComplete!!)
-                                              {
-                                                editNIHS(p0,s);
-                                              }else{
-                                                AddNIHS(p0,s);
-                                              }
-                                            },Notifi.patientItem.nihsIsComplete!,
-                                              Notifi.patientItem.n_1_a!,
-                                              Notifi.patientItem.n_1_b!,
-                                              Notifi.patientItem.n_1_c!,
-                                              Notifi.patientItem.n_2!,
-                                              Notifi.patientItem.n_3!,
-                                              Notifi.patientItem.n_4!,
-                                              Notifi.patientItem.n_5_a!,
-                                              Notifi.patientItem.n_5_b!,
-                                              Notifi.patientItem.n_6_a!,
-                                              Notifi.patientItem.n_6_b!,
-                                              Notifi.patientItem.n_7!,
-                                              Notifi.patientItem.n_8!,
-                                              Notifi.patientItem.n_9!,
-                                              Notifi.patientItem.n_10!,
-                                              Notifi.patientItem.n_11!,
-                                              false,
-                                              Notifi.patientItem.nihsSubscore!!,
-
-                                            ));
+                                        Consumer<ProviderTimers>(
+                                          builder: (context, provider, child) {
+                                            return   BoxInformation(value:provider.timerSymptomRecognition, title:
+                                            ' :  تایمر بر اساس دیدن علائم'
+                                            );
                                           },
                                         ):Container(),
 
-                                        Notifi.patientItem.signsStartTSFSS!=0 && Notifi.patientItem.lkwDate.isNotEmpty ?
-                                        BoxInformation(value:   "${Notifi.patientItem.lkwDate} ${Notifi.patientItem.lkwTime}", title:
-                                        ' :  LKW'
-                                        ):Container(),
 
-                                        Notifi.patientItem.injectionType!=0?
-                                        BoxInformation(value:Notifi.patientItem.injectionType==1?
-                                        'تزریق بشود':
-                                        'تزریق نشود', title:
-                                        ' :  وضعیت تزریق'
-                                        ):Container(),
+                                        Consumer<ProviderResidentDetaile>(
+                                          builder: (context, provider, child) {
+                                            return    Column(
+                                              children: [
 
-                                        Notifi.patientItem.isNot724==false?
-                                        BoxInformation(value:Notifi.patientItem.labIsComplete == null  ?'تکمیل نشده است' :
-                                        Notifi.patientItem.labIsComplete! ?
-                                        'تکمیل شده است':
-                                        'تکمیل نشده است'
-                                            , title:
-                                            ' :  فرم آزمایشگاه',
-                                          onTap: (){
-                                            if(Notifi.patientItem.is724IsComplete==true)
-                                            {
-                                              GoNextPage(context,
+                                                BoxInformation(
+                                                    value:Notifi.patientItem.dateOfAddToSystem == null ?
+                                                    'نامشخص' : Notifi.patientItem.dateOfAddToSystem!,
+                                                    title:' :  تاریخ ثبت در سیستم'),
 
-                                                  ScreenFormLaboratory((p0){
-                                                    Navigator.pop(context);
-                                                    if(Notifi.patientItem.labIsComplete!!)
+                                                Notifi.patientItem.signsStartTime!.isNotEmpty?
+                                                BoxInformation(
+                                                    value:  "${Notifi.patientItem.signsStartTime} "
+                                                        "${Notifi.patientItem.signsStartDate} ",
+                                                    title:   ' :  زمان و تاریخ شروع علائم '
+                                                ):Container(),
+
+                                                Notifi.patientItem.dateFinishShamsi!.isNotEmpty?
+                                                BoxInformation(value:  "${Notifi.patientItem.dateFinishShamsi} "
+                                                    "${Notifi.patientItem.timeFinish} ",title:   ' :  زمان و تاریخ پایان کار '
+                                                ):Container(),
+
+                                                Notifi.patientItem.needToCT||Notifi.patientItem.needToMRI?
+                                                BoxInformation(value:  Notifi.patientItem.needToCT?
+                                                'CTScan': 'MRI', title:
+                                                ' :  وضعیت'
+                                                ):Container(),
+
+                                                Notifi.patientItem.isNot724==false?
+                                                BoxInformation(value:   !Notifi.patientItem.nihsIsComplete!?
+                                                'تکمیل نشده است':
+                                                Notifi.patientItem.nihsSubscore.toString(),
+                                                  title:
+                                                  ' :  وضعیت  NIHSS',
+                                                  onTap: (){
+                                                    if(Notifi.patientItem.is724IsComplete==false)
                                                     {
-                                                      editLab(p0);
-                                                    }else{
-                                                      AddLab(p0);
+                                                      return ;
                                                     }
-                                                  },Notifi.patientItem.labIsComplete!!,
-                                                      Notifi.patientItem.bun.toString(),
-                                                      Notifi.patientItem.cr.toString(),
-                                                      Notifi.patientItem.plt.toString(),
-                                                      Notifi.patientItem.pt.toString(),
-                                                      Notifi.patientItem.inr.toString(),
-                                                      Notifi.patientItem.trop.toString(),
-                                                      Notifi.patientItem.hb.toString(),
-                                                      Notifi.patientItem.wbc.toString(),
-                                                      false
-                                                  ));
-                                            }
+
+                                                    GoNextPage(context,ScreenFormNIHS((p0,s) {
+                                                      if(Notifi.patientItem.nihsIsComplete)
+                                                      {
+                                                        editNIHS(p0,s);
+                                                      }else{
+                                                        AddNIHS(p0,s);
+                                                      }
+                                                    },Notifi.patientItem.nihsIsComplete,
+                                                      Notifi.patientItem.n_1_a,
+                                                      Notifi.patientItem.n_1_b,
+                                                      Notifi.patientItem.n_1_c,
+                                                      Notifi.patientItem.n_2,
+                                                      Notifi.patientItem.n_3,
+                                                      Notifi.patientItem.n_4,
+                                                      Notifi.patientItem.n_5_a,
+                                                      Notifi.patientItem.n_5_b,
+                                                      Notifi.patientItem.n_6_a,
+                                                      Notifi.patientItem.n_6_b,
+                                                      Notifi.patientItem.n_7,
+                                                      Notifi.patientItem.n_8,
+                                                      Notifi.patientItem.n_9,
+                                                      Notifi.patientItem.n_10,
+                                                      Notifi.patientItem.n_11,
+                                                      false,
+                                                      Notifi.patientItem.nihsSubscore,
+                                                    ));
+
+
+                                                  },
+                                                ):Container(),
+
+                                                Notifi.patientItem.signsStartTSFSS!=0 && Notifi.patientItem.lkwDate.isNotEmpty ?
+                                                BoxInformation(value:   "${Notifi.patientItem.lkwDate} ${Notifi.patientItem.lkwTime}", title:
+                                                ' :  LKW'
+                                                ):Container(),
+
+                                                Notifi.patientItem.injectionType!=0?
+                                                BoxInformation(value:Notifi.patientItem.injectionType==1?
+                                                'تزریق بشود':
+                                                'تزریق نشود', title:
+                                                ' :  وضعیت تزریق'
+                                                ):Container(),
+
+                                                Notifi.patientItem.isNot724==false?
+                                                BoxInformation(value:Notifi.patientItem.labIsComplete == null  ?'تکمیل نشده است' :
+                                                Notifi.patientItem.labIsComplete! ?
+                                                'تکمیل شده است':
+                                                'تکمیل نشده است'
+                                                  , title:
+                                                  ' :  فرم آزمایشگاه',
+                                                  onTap: (){
+                                                    GoNextPage(context,staticWidget2());
+
+                                                    // if(Notifi.patientItem.is724IsComplete==true)
+                                                    // {
+                                                    //   GoNextPage(context,
+                                                    //       ScreenFormLaboratory((p0){
+                                                    //         Navigator.pop(context);
+                                                    //         if(Notifi.patientItem.labIsComplete)
+                                                    //         {
+                                                    //           editLab(p0);
+                                                    //         }else{
+                                                    //           AddLab(p0);
+                                                    //         }
+                                                    //       },Notifi.patientItem.labIsComplete,
+                                                    //           Notifi.patientItem.bun.toString(),
+                                                    //           Notifi.patientItem.cr.toString(),
+                                                    //           Notifi.patientItem.plt.toString(),
+                                                    //           Notifi.patientItem.pt.toString(),
+                                                    //           Notifi.patientItem.inr.toString(),
+                                                    //           Notifi.patientItem.trop.toString(),
+                                                    //           Notifi.patientItem.hb.toString(),
+                                                    //           Notifi.patientItem.wbc.toString(),
+                                                    //           false
+                                                    //       ));
+                                                    // }
+                                                  },
+                                                ):Container(),
+
+                                                Notifi.patientItem.labIsComplete!?
+                                                BoxInformation(value:"${Notifi.patientItem.labInsertDate} - "
+                                                    "${Notifi.patientItem.labInsertTime}", title:
+                                                ' : زمان ثبت  فرم آزمایشگاه'
+                                                ):Container(),
+
+                                                Notifi.patientItem.isNot724==false?
+                                                BoxInformation(value:Notifi.patientItem.bs == 0  ?'تکمیل نشده است' :
+                                                Notifi.patientItem.bs.toString()
+                                                  , title:
+                                                  ' :  قند خون',
+                                                  onTap: (){
+                                                    if( Notifi.patientItem.is724IsComplete==true
+                                                    ){
+                                                      GoNextPage(context,  ScreenFormBload724(
+                                                          Notifi.patientItem.id.toString(),
+                                                          false,(p0){
+                                                        var item= p0[0]['bload'].toString();
+                                                        RunBload(item);
+                                                      }));
+                                                    }
+                                                  },
+                                                ):Container(),
+
+
+                                                Notifi.patientItem.isNot724==false?
+                                                BoxInformation(value:Notifi.patientItem.bloodPressure1 == 0  ?'تکمیل نشده است' :
+                                                "${Notifi.patientItem.bloodPressure1}/${
+                                                    Notifi.patientItem.bloodPressure2}"
+                                                  , title:
+                                                  ' :  فشار خون',
+                                                  onTap: (){
+                                                    if( Notifi.patientItem.is724IsComplete==true
+                                                    ){
+                                                      GoNextPage(context,ScreenFormPreesBload724(
+                                                          Notifi.patientItem.id.toString(),false,(p0){
+                                                        var bload1= p0[0]['bload1'].toString();
+                                                        var bload2= p0[0]['bload2'].toString();
+                                                        RunPressBload(bload1,bload2);
+                                                      }));
+                                                    }
+                                                  },
+                                                ):Container(),
+
+                                                Notifi.patientItem.isNot724==false?
+                                                BoxInformation(value:Notifi.patientItem.timeOfInjection!.isEmpty  ?'تکمیل نشده است' :
+                                                Notifi.patientItem.timeOfInjection.toString()
+                                                  , title:
+                                                  ' :  زمان تزریق',
+                                                  onTap: (){
+                                                    if(Notifi.patientItem.timeOfInjection!.isEmpty&&Notifi.patientItem.is724IsComplete!)
+                                                    {
+                                                      AddTimeInjection();
+                                                    }
+                                                  },
+                                                ):Container(),
+
+
+
+                                                Notifi.patientItem.otn.isEmpty?
+                                                Container():
+                                                BoxInformation(value:Notifi.patientItem.otn, title:
+                                                ' :  OTN'
+                                                ),
+
+                                                Notifi.patientItem.dtn.isNotEmpty?
+                                                BoxInformation(value:Notifi.patientItem.dtn, title:
+                                                ' :  DTN'
+                                                ):Container(),
+
+                                                Notifi.patientItem.ftn.isNotEmpty?
+                                                BoxInformation(value:Notifi.patientItem.ftn, title:
+                                                ' :  FTN'
+                                                ):Container(),
+                                              ],
+                                            );
                                           },
-                                        ):Container(),
-
-                                        Notifi.patientItem.labIsComplete!?
-                                        BoxInformation(value:"${Notifi.patientItem.labInsertDate} - "
-                                            "${Notifi.patientItem.labInsertTime}", title:
-                                        ' : زمان ثبت  فرم آزمایشگاه'
-                                        ):Container(),
-
-                                        Notifi.patientItem.isNot724==false?
-                                        BoxInformation(value:Notifi.patientItem.bs == 0  ?'تکمیل نشده است' :
-                                        Notifi.patientItem.bs.toString()
-                                          , title:
-                                          ' :  قند خون',
-                                          onTap: (){
-                                            if( Notifi.patientItem.is724IsComplete==true
-                                            ){
-                                              GoNextPage(context,  ScreenFormBload724(
-                                                  Notifi.patientItem.id.toString(),
-                                                  false,(p0){
-                                                var item= p0[0]['bload'].toString();
-                                                RunBload(item);
-                                              }));
-                                            }
-                                          },
-                                        ):Container(),
-
-
-                                        Notifi.patientItem.isNot724==false?
-                                        BoxInformation(value:Notifi.patientItem.bloodPressure1 == 0  ?'تکمیل نشده است' :
-                                        "${Notifi.patientItem.bloodPressure1}/${
-                                            Notifi.patientItem.bloodPressure2}"
-                                          , title:
-                                          ' :  فشار خون',
-                                          onTap: (){
-                                            if( Notifi.patientItem.is724IsComplete==true
-                                            ){
-                                              GoNextPage(context,ScreenFormPreesBload724(
-                                                  Notifi.patientItem.id.toString(),false,(p0){
-                                                var bload1= p0[0]['bload1'].toString();
-                                                var bload2= p0[0]['bload2'].toString();
-                                                RunPressBload(bload1,bload2);
-                                              }));
-                                            }
-                                          },
-                                        ):Container(),
-
-                                        Notifi.patientItem.isNot724==false?
-                                        BoxInformation(value:Notifi.patientItem.timeOfInjection!.isEmpty  ?'تکمیل نشده است' :
-                                        Notifi.patientItem.timeOfInjection.toString()
-                                          , title:
-                                          ' :  زمان تزریق',
-                                          onTap: (){
-                                            if(Notifi.patientItem.timeOfInjection!.isEmpty&&Notifi.patientItem.is724IsComplete!)
-                                            {
-                                              AddTimeInjection();
-                                            }
-                                          },
-                                        ):Container(),
-
-
-
-                                        Notifi.patientItem.otn.isEmpty?
-                                        Container():
-                                        BoxInformation(value:Notifi.patientItem.otn, title:
-                                        ' :  OTN'
                                         ),
-
-                                        Notifi.patientItem.dtn.isNotEmpty?
-                                        BoxInformation(value:Notifi.patientItem.dtn, title:
-                                        ' :  DTN'
-                                        ):Container(),
-
-                                        Notifi.patientItem.ftn.isNotEmpty?
-                                        BoxInformation(value:Notifi.patientItem.ftn, title:
-                                        ' :  FTN'
-                                        ):Container(),
-
 
 
 

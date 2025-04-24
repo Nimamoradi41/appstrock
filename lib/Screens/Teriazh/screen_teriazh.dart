@@ -194,26 +194,18 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children:   [
                             InkWell(
-                              onTap: () {
-                                ClearAllDate();
+                              onTap: () async {
+                                var flag= await ShowAllow(context,"آیا از حساب خود خارج میشوید ؟");
+                                if(flag)
+                                {
+                                  ClearAllDate();
+                                }
                               } ,
                               child: const RotatedBox(
                                 quarterTurns: 90,
                                 child: Padding(
                                   padding: EdgeInsets.all(16.0),
                                   child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
-                                ),
-                              ),
-                            ),
-                              RotatedBox(
-                              quarterTurns: 0,
-                              child: InkWell(
-                                onTap: (){
-                                  GoNextPage(context, screen_EditProfile());
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Icon(Icons.person,color: Colors.white,size: 30,),
                                 ),
                               ),
                             ),

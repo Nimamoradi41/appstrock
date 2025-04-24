@@ -125,7 +125,6 @@ class _ScreenEmsState extends State<ScreenEms> {
      ShowLoadingApp(context);
      // ignore: use_build_context_synchronously
      var Data= await ApiServiceReception.ChangeShiftStatus(context);
-     print(Data.toJson());
 
      if(Data!=null)
      {
@@ -199,12 +198,19 @@ class _ScreenEmsState extends State<ScreenEms> {
                            mainAxisAlignment: MainAxisAlignment.end,
                            children:   [
                              InkWell(
-                               onTap: () {
+                               onTap: ()  async{
                                  if(widget.isAtend)
                                    {
                                      Navigator.pop(context);
                                    }else{
-                                   ClearAllDate();
+
+                                   var flag= await ShowAllow(context,"آیا از حساب خود خارج میشوید ؟");
+                                   if(flag)
+                                   {
+                                     ClearAllDate();
+                                   }
+
+
                                  }
 
                                } ,
@@ -216,18 +222,18 @@ class _ScreenEmsState extends State<ScreenEms> {
                                  ),
                                ),
                              ),
-                              RotatedBox(
-                               quarterTurns: 0,
-                               child: InkWell(
-                                 onTap: (){
-                                   GoNextPage(context, screen_EditProfile());
-                                 },
-                                 child: Padding(
-                                   padding: EdgeInsets.all(16.0),
-                                   child: Icon(Icons.person,color: Colors.white,size: 30,),
-                                 ),
-                               ),
-                             ),
+                             //  RotatedBox(
+                             //   quarterTurns: 0,
+                             //   child: InkWell(
+                             //     onTap: (){
+                             //       GoNextPage(context, screen_EditProfile());
+                             //     },
+                             //     child: Padding(
+                             //       padding: EdgeInsets.all(16.0),
+                             //       child: Icon(Icons.person,color: Colors.white,size: 30,),
+                             //     ),
+                             //   ),
+                             // ),
                                Expanded(child:
                              Padding(
                                  padding: EdgeInsets.all(16.0),

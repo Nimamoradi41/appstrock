@@ -832,34 +832,34 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> {
                                               return ;
                                             }
 
-                                            GoNextPage(context,ScreenFormNIHS((p0,s) {
-                                              Navigator.pop(context);
-                                              if(Notifi.patientItem!.nihsIsComplete!!)
-                                              {
-                                                editNIHS(p0,s);
-                                              }else{
-                                                AddNIHS(p0,s);
-                                              }
-                                            },Notifi.patientItem.nihsIsComplete!,
-                                              Notifi.patientItem.n_1_a!,
-                                              Notifi.patientItem.n_1_b!,
-                                              Notifi.patientItem.n_1_c!,
-                                              Notifi.patientItem.n_2!,
-                                              Notifi.patientItem.n_3!,
-                                              Notifi.patientItem.n_4!,
-                                              Notifi.patientItem.n_5_a!,
-                                              Notifi.patientItem.n_5_b!,
-                                              Notifi.patientItem.n_6_a!,
-                                              Notifi.patientItem.n_6_b!,
-                                              Notifi.patientItem.n_7!,
-                                              Notifi.patientItem.n_8!,
-                                              Notifi.patientItem.n_9!,
-                                              Notifi.patientItem.n_10!,
-                                              Notifi.patientItem.n_11!,
-                                              false,
-                                              Notifi.patientItem.nihsSubscore!!,
-
-                                            ));
+                                            // GoNextPage(context,ScreenFormNIHS((p0,s) {
+                                            //   Navigator.pop(context);
+                                            //   if(Notifi.patientItem!.nihsIsComplete!!)
+                                            //   {
+                                            //     editNIHS(p0,s);
+                                            //   }else{
+                                            //     AddNIHS(p0,s);
+                                            //   }
+                                            // },Notifi.patientItem.nihsIsComplete!,
+                                            //   Notifi.patientItem.n_1_a!,
+                                            //   Notifi.patientItem.n_1_b!,
+                                            //   Notifi.patientItem.n_1_c!,
+                                            //   Notifi.patientItem.n_2!,
+                                            //   Notifi.patientItem.n_3!,
+                                            //   Notifi.patientItem.n_4!,
+                                            //   Notifi.patientItem.n_5_a!,
+                                            //   Notifi.patientItem.n_5_b!,
+                                            //   Notifi.patientItem.n_6_a!,
+                                            //   Notifi.patientItem.n_6_b!,
+                                            //   Notifi.patientItem.n_7!,
+                                            //   Notifi.patientItem.n_8!,
+                                            //   Notifi.patientItem.n_9!,
+                                            //   Notifi.patientItem.n_10!,
+                                            //   Notifi.patientItem.n_11!,
+                                            //   false,
+                                            //   Notifi.patientItem.nihsSubscore!!,
+                                            //
+                                            // ));
                                           },
                                         ):Container(),
 

@@ -32,9 +32,17 @@ String convertPersianNumbersToEnglish(String input) {
 }
 
 
-void GoNextPage(BuildContext context,dynamic Screen) {
-  Navigator.of(context).push(MaterialPageRoute(builder: (context) => Screen));
-}
+  void GoNextPage(BuildContext context,dynamic Screen) {
+    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => Screen));
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+        Screen,
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
+      ),
+    );
+  }
 
 
 void GoNextPageGameOver(BuildContext context,dynamic Screen) {
@@ -192,13 +200,14 @@ Future<void> ShowLoadingApp(BuildContext context) async {
     builder: (BuildContext context) {
       double wid=MediaQuery.of(context).size.width;
       wid=wid>600?600:wid;
-      return Scaffold(
+      return const Scaffold(
         backgroundColor: Colors.transparent ,
         body:  Center(
-          child: LoadingAnimationWidget.halfTriangleDot(
-            color: ColorApp,
-            size: 100,
-          ),
+          // child: LoadingAnimationWidget.halfTriangleDot(
+          //   color: ColorApp,
+          //   size: 100,
+          // ),
+          child: CircularProgressIndicator()
         )
       );
     },

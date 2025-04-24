@@ -287,29 +287,15 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                 ),
                               )
                             ),
-
-
-
-
-
-
-
-
-
-
-
                           ],
                         ),
                       ),
                     ),
                     SizedBox(height: 32,),
-
                     Container(
                       width: wid*0.9,
                       child: ElevatedButton(onPressed: (){
-
                         RunLogin(context);
-
                       },
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(ColorApp),

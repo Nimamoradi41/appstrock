@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
@@ -313,72 +314,104 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
                                         child: TextApp2('اطلاعات بیمار', 14, ColorTitleText, true),
                                       ),
                                       Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child:
+                                          Container(
+                                            width: double.infinity,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextAppEnd(
+                                                      'نام و نام خانوادگی',14, ColorApp,false),
+                                                )  ,
+                                                SizedBox(height: 8),
+                                                TextField(
+                                                    controller: TextConName,
+                                                    style: const TextStyle(
+                                                      fontFamily: 'rob',
+                                                      fontSize: 13,
+                                                    ),
+                                                    textAlign:   TextAlign.right,
+                                                    textDirection:  TextDirection.rtl,
+                                                    keyboardType: TextInputType.text,
+                                                    inputFormatters: [
+                                                      FilteringTextInputFormatter.allow(RegExp(r'[۰-۹0-9\u0600-\u06CC ]')),
+                                                    ],
+                                                    decoration: InputDecoration(
+                                                      labelStyle: const TextStyle(
+                                                        color: ColorApp,
+                                                      ),
+                                                      counterText: "",
+                                                      enabledBorder: outlinedBorderBlack,
+                                                      focusedBorder: outlinedBorderPurple,
+                                                    )
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                      ),
+                                      Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: TextField(
-                                          textDirection: TextDirection.rtl, // جهت کلی متن
-                                          textAlign: TextAlign.right, // متن ورودی راست‌چین باشد
-                                          controller: TextConName,
-                                          style: TextStyle(
-                                              fontSize: 12
-                                          ),
-                                          decoration: InputDecoration(
-                                            labelText: 'نام و نام خانوادگی',
-                                            disabledBorder:OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(8)
+                                        child: Column(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: TextAppEnd(
+                                                  'کد ملی',14, ColorApp,false),
                                             ),
-                                            border: OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(8)
+                                            TextField(
+                                              maxLines: 1,
+                                              maxLength: 10,
+                                              textDirection: TextDirection.ltr, // جهت کلی متن
+                                              textAlign: TextAlign.left, // متن ورودی راست‌چین باشد
+                                              keyboardType: TextInputType.phone,
+                                              controller: TextConCode,
+                                              style: const TextStyle(
+                                                  fontSize: 13
+                                              ),
+                                              decoration: InputDecoration(
+                                                labelStyle: TextStyle(
+                                                    color: ColorApp
+                                                ),
+                                                counterText: "",
+                                                enabledBorder: outlinedBorderBlack,
+                                                focusedBorder: outlinedBorderPurple,
+                                              ),
                                             ),
-
-                                          ),
+                                          ],
                                         ),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: TextField(
-                                          textDirection: TextDirection.rtl, // جهت کلی متن
-                                          textAlign: TextAlign.right, // متن ورودی راست‌چین باشد
-                                          controller: TextConCode,
-                                          maxLength: 10,
-
-                                          style: const TextStyle(
-                                            fontSize: 12,
-
-                                          ),
-                                          keyboardType: TextInputType.phone,
-                                          decoration: InputDecoration(
-                                            labelText: 'کد ملی',
-                                            disabledBorder:OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(8)
+                                        child: Column(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: TextAppEnd(
+                                                  'سن',14, ColorApp,false),
                                             ),
-                                            border: OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(8)
+                                            TextField(
+                                              maxLines: 1,
+                                              maxLength: 10,
+                                              textDirection: TextDirection.ltr, // جهت کلی متن
+                                              textAlign: TextAlign.left, // متن ورودی راست‌چین باشد
+                                              keyboardType: TextInputType.phone,
+                                              controller: TextConAge,
+                                              style: const TextStyle(
+                                                  fontSize: 13
+                                              ),
+                                              decoration: InputDecoration(
+                                                labelStyle: TextStyle(
+                                                    color: ColorApp
+                                                ),
+                                                counterText: "",
+                                                enabledBorder: outlinedBorderBlack,
+                                                focusedBorder: outlinedBorderPurple,
+                                              ),
                                             ),
-
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: TextField(
-                                          textDirection: TextDirection.rtl, // جهت کلی متن
-                                          textAlign: TextAlign.right, // متن ورودی راست‌چین باشد
-                                          controller: TextConAge,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            fontFamily: 'rob',
-                                          ),
-                                          keyboardType: TextInputType.phone,
-                                          decoration: InputDecoration(
-                                            labelText: 'سن',
-                                            disabledBorder:OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(8)
-                                            ),
-                                            border: OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(8)
-                                            ),
-
-                                          ),
+                                          ],
                                         ),
                                       ),
                                       Padding(

@@ -3,6 +3,7 @@ import 'package:appstrock/Screens/Autentication/ApiServiceAutentication.dart';
 import 'package:appstrock/Screens/Ems/screen_ems.dart';
 import 'package:appstrock/Screens/Teriazh/screen_teriazh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -32,14 +33,14 @@ class _ScreenRigesterState extends State<ScreenRigester> {
   var items = [
     'فوریت های پزشکی',
     'تریاژ',
-    'پذیرش',
-    'بیماربر',
+    // 'پذیرش',
+    // 'بیماربر',
     'دکتر متخصص',
-    'آزمایشگاه',
+    // 'آزمایشگاه',
     'رزیدنت',
-    'استروک',
-    'تصویر برداری',
-    'سوپروایزور',
+    // 'استروک',
+    // 'تصویر برداری',
+    // 'سوپروایزور',
   ];
 
 
@@ -203,60 +204,75 @@ class _ScreenRigesterState extends State<ScreenRigester> {
                           ),
 
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextField(
-                                maxLines: 1,
-                                controller: textControllerName,
-                                keyboardType: TextInputType.text,
-                                style: const TextStyle(
-                                    fontFamily: 'rob'
+                              padding: const EdgeInsets.all(8.0),
+                              child:
+                              Container(
+                                width: double.infinity,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: TextAppEnd(
+                                          'نام کاربری',14, ColorApp,false),
+                                    )  ,
+                                    SizedBox(height: 8),  // فاصله بین عنوان و فیلد
+                                    TextField(
+                                        controller: textControllerName,
+                                        style: const TextStyle(
+                                          fontFamily: 'rob',
+                                          fontSize: 13,
+                                        ),
+                                        textAlign:   TextAlign.left,
+                                        textDirection:  TextDirection.ltr,
+                                        keyboardType: TextInputType.text,
+                                        inputFormatters: [
+                                          // فقط حروف انگلیسی و اعداد و کاراکترهای خاص مجاز هستند
+                                          FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9.,?!@# ]')), // فقط حروف انگلیسی و اعداد
+                                        ],
+                                        decoration: InputDecoration(
+                                          labelStyle: TextStyle(
+                                            color: ColorApp,
+                                          ),
+                                          counterText: "",
+                                          enabledBorder: outlinedBorderBlack,
+                                          focusedBorder: outlinedBorderPurple,
+                                        )
+                                    )
+                                  ],
                                 ),
-                                decoration: InputDecoration(
-                                  labelText: 'نام و نام خانوادگی',
-                                  labelStyle: TextStyle(
-                                      color: ColorApp,
-                                      fontSize: 13
-                                  ),
-                                  counterText: "",
-
-                                  enabledBorder: outlinedBorderBlack,
-                                  focusedBorder: outlinedBorderPurple,
-
-
-                                ),
-                              ),
-                            ),
+                              )
                           ),
                           SizedBox(height: 8,),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextField(
-                                maxLines: 1,
-                                controller: textControllerNationalCode,
-                                keyboardType: TextInputType.phone,
-                                textAlign: TextAlign.start,
-                                style: const TextStyle(
-                                    fontFamily: 'rob',
-                                    fontSize: 13
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextAppEnd(
+                                      'کد ملی',14, ColorApp,false),
                                 ),
-                                decoration: InputDecoration(
-                                  labelText: 'کد ملی',
-                                  labelStyle: const TextStyle(
-                                      color: ColorApp,
+                                TextField(
+                                  maxLines: 1,
+                                  maxLength: 10,
+                                  textDirection: TextDirection.ltr, // جهت کلی متن
+                                  textAlign: TextAlign.left, // متن ورودی راست‌چین باشد
+                                  keyboardType: TextInputType.phone,
+                                  controller: textControllerNationalCode,
+                                  style: const TextStyle(
                                       fontSize: 13
                                   ),
-                                  counterText: "",
-
-                                  enabledBorder: outlinedBorderBlack,
-                                  focusedBorder: outlinedBorderPurple,
-
-
+                                  decoration: InputDecoration(
+                                    labelStyle: TextStyle(
+                                        color: ColorApp
+                                    ),
+                                    counterText: "",
+                                    enabledBorder: outlinedBorderBlack,
+                                    focusedBorder: outlinedBorderPurple,
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                           Padding(
@@ -290,63 +306,79 @@ class _ScreenRigesterState extends State<ScreenRigester> {
                               )),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextField(
-                                maxLines: 1,
-                                maxLength: 11,
-                                controller: textControllerPhoneNumber,
-                                keyboardType: TextInputType.phone,
-                                style: const TextStyle(
-                                    fontFamily: 'rob'
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextAppEnd(
+                                      'شماره تلفن',14, ColorApp,false),
                                 ),
-                                decoration: InputDecoration(
-                                  labelText: 'شماره تلفن',
-                                  labelStyle: TextStyle(
-                                      color: ColorApp,
+                                TextField(
+                                  maxLines: 1,
+                                  maxLength: 11,
+                                  textDirection: TextDirection.ltr, // جهت کلی متن
+                                  textAlign: TextAlign.left, // متن ورودی راست‌چین باشد
+                                  keyboardType: TextInputType.phone,
+                                  controller: textControllerNationalCode,
+                                  style: const TextStyle(
                                       fontSize: 13
                                   ),
-                                  counterText: "",
-
-                                  enabledBorder: outlinedBorderBlack,
-                                  focusedBorder: outlinedBorderPurple,
-
+                                  decoration: InputDecoration(
+                                    labelStyle: TextStyle(
+                                        color: ColorApp
+                                    ),
+                                    counterText: "",
+                                    enabledBorder: outlinedBorderBlack,
+                                    focusedBorder: outlinedBorderPurple,
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextField(
-                                maxLines: 1,
-                                style: const TextStyle(
-                                    fontFamily: 'rob',
-                                    fontSize: 13
+                              padding: const EdgeInsets.all(8.0),
+                              child:  Container(
+                                width: double.infinity,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: TextAppEnd(
+                                          'رمز عبور',14, ColorApp,false),
+                                    )  ,
+                                    SizedBox(height: 8),  // فاصله بین عنوان و فیلد
+                                    TextField(
+                                        controller: textControllerName,
+                                        style: const TextStyle(
+                                          fontFamily: 'rob',
+                                          fontSize: 13,
+                                        ),
+                                        textAlign:   TextAlign.left,
+                                        textDirection:  TextDirection.ltr,
+                                        keyboardType: TextInputType.text,
+                                        inputFormatters: [
+                                          // فقط حروف انگلیسی و اعداد و کاراکترهای خاص مجاز هستند
+                                          FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9.,?!@# ]')), // فقط حروف انگلیسی و اعداد
+                                        ],
+                                        decoration: InputDecoration(
+                                          labelStyle: TextStyle(
+                                            color: ColorApp,
+                                          ),
+                                          counterText: "",
+                                          enabledBorder: outlinedBorderBlack,
+                                          focusedBorder: outlinedBorderPurple,
+                                        )
+                                    )
+                                  ],
                                 ),
-                                controller: textControllerPassWord,
-                                keyboardType: TextInputType.text,
-                                decoration: InputDecoration(
-                                  labelText: 'رمز عبور',
-                                  labelStyle: TextStyle(
-                                      color: ColorApp
-                                  ),
-                                  counterText: "",
-
-                                  enabledBorder: outlinedBorderBlack,
-                                  focusedBorder: outlinedBorderPurple,
-
-                                ),
-                              ),
-                            ),
+                              )
                           ),
                         ],
                       ),
                     ),
                   ),
                   SizedBox(height: 32,),
-
 
                   Container(
                     width: wid*0.9,

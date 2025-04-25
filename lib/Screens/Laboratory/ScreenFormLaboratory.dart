@@ -42,6 +42,13 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
   @override
   void initState() {
     super.initState();
+    checkData();
+  }
+
+  bool isLoading=true;
+
+  Future checkData()async{
+
     textControllerBun.text=widget.Bun.toString();
     textControllerCr.text=widget.Cr.toString();
     textControllerPLT.text=widget.PLT.toString();
@@ -52,15 +59,16 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
     textControllerHB.text=widget.hb.toString();
 
     if(widget.Trop=="true")
-      {
-        _handleRadioValueChange("Positive");
-      }else{
+    {
+      _handleRadioValueChange("Positive");
+    }else{
       _handleRadioValueChange("Negative");
     }
+    isLoading=false;
+    setState(() {
 
-
+    });
   }
-
   Future Run()async{
 
     if(textControllerCr.text.isNotEmpty)
@@ -179,7 +187,13 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
             width: wid,
             height: double.infinity,
             color: BackGroundApp,
-            child: Column(
+            child:  isLoading ?
+            const SizedBox(
+                width: 100,
+                height: 100,
+                child: CircularProgressIndicator(
+                )):
+            Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Expanded(
@@ -262,11 +276,12 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                                       padding: const EdgeInsets.all(4.0),
                                       child: TextField(
                                         maxLines: 1,
-                                        keyboardType: TextInputType.text,
+                                        keyboardType: TextInputType.number,
                                         style: const TextStyle(
                                             fontFamily: 'rob',
                                             fontSize: 12
                                         ),
+
                                         controller: textControllerCr,
 
                                         decoration: InputDecoration(
@@ -291,7 +306,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                                             fontFamily: 'rob',
                                             fontSize: 12
                                         ),
-                                        keyboardType: TextInputType.text,
+                                        keyboardType: TextInputType.number,
                                         controller: textControllerPLT,
                                         decoration: InputDecoration(
                                           labelText: 'PLT',
@@ -339,7 +354,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                                             fontFamily: 'rob',
                                             fontSize: 12
                                         ),
-                                        keyboardType: TextInputType.text,
+                                        keyboardType: TextInputType.number,
                                         controller: textControllerINR,
                                         decoration: InputDecoration(
                                           labelText: 'INR',
@@ -363,7 +378,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                                             fontFamily: 'rob',
                                             fontSize: 12
                                         ),
-                                        keyboardType: TextInputType.text,
+                                        keyboardType: TextInputType.number,
                                         controller: textControllerHB,
                                         decoration: InputDecoration(
                                           labelText: 'HB',
@@ -387,7 +402,7 @@ class _ExamFormState extends State<ScreenFormLaboratory> {
                                             fontFamily: 'rob',
                                             fontSize: 12
                                         ),
-                                        keyboardType: TextInputType.text,
+                                        keyboardType: TextInputType.number,
                                         controller: textControllerWBC,
                                         decoration: InputDecoration(
                                           labelText: 'WBC',

@@ -69,9 +69,25 @@ class ScreenFormNIHS extends StatefulWidget {
 class _ExamFormState extends State<ScreenFormNIHS> {
   List<QuestionAnswer> questions = [];
 
+  bool isLoading=true;
+
   @override
   void initState() {
     super.initState();
+    checkData();
+  }
+
+
+
+  Future Run() async {
+    _submitForm();
+  }
+
+  int Selected1 = 0;
+  int Score = 0;
+
+
+  Future  checkData()async{
     int n_1_aNumber = 0;
     int n_1_bNumber = 0;
     int n_1_cNumber = 0;
@@ -249,16 +265,9 @@ class _ExamFormState extends State<ScreenFormNIHS> {
         correctIndex: 0,
         selectedAnswer: widget.ISEdit ? n_11Number : 0));
 
+    isLoading=false;
     setState(() {});
   }
-
-  Future Run() async {
-    _submitForm();
-  }
-
-  int Selected1 = 0;
-  int Score = 0;
-
   @override
   Widget build(BuildContext context) {
     double wid = MediaQuery.of(context).size.width;
@@ -270,7 +279,8 @@ class _ExamFormState extends State<ScreenFormNIHS> {
             width: wid,
             height: double.infinity,
             color: Colors.white,
-            child: Column(
+            child: isLoading?const CircularProgressIndicator():
+            Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Expanded(
@@ -331,7 +341,7 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 8,
                         ),
                         Expanded(
@@ -342,9 +352,9 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                                   index, questions[index], questions, Score,
                                   () {
                                 int i = 0;
-                                questions.forEach((element) {
+                                for (var element in questions) {
                                   i = i + element.selectedAnswer!!;
-                                });
+                                }
                                 Score = i;
                                 setState(() {});
                               });
@@ -355,14 +365,14 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 widget.isAtend
                     ? Container()
                     : Column(
                         children: [
-                          Container(
+                          SizedBox(
                             width: wid * 0.9,
                             child: ElevatedButton(
                                 onPressed: () {
@@ -383,14 +393,14 @@ class _ExamFormState extends State<ScreenFormNIHS> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     widget.ISEdit ? 'ویرایش' : 'تکمیل فرم',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 )),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
                         ],

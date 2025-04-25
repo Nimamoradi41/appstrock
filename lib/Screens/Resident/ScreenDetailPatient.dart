@@ -470,9 +470,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
       if(Data.success)
       {
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-        Notifi.patientItem.bloodPressure1= int.parse(Blod1);
-        Notifi.patientItem.bloodPressure2=int.parse(Blod2);
-        Notifi.setItems(Notifi.patientItem);
+        getInfoOfPatient();
       }else{
         // ignore: use_build_context_synchronously
         ShowErrorMsg(context, Data.message);
@@ -487,21 +485,8 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
     {
       if(Data.success)
       {
-        Notifi.patientItem.labIsComplete=true;
-        Notifi.patientItem.bun=Str[0]['selected_answer'].toString();
-        Notifi.patientItem.cr=Str[1]['selected_answer'].toString();
-        Notifi.patientItem.plt=Str[2]['selected_answer'].toString();
-        Notifi.patientItem.pt=Str[3]['selected_answer'].toString();
-        Notifi.patientItem.inr=Str[4]['selected_answer'].toString();
-        Notifi.patientItem.hb=Str[5]['selected_answer'].toString();
-        Notifi.patientItem.wbc=Str[6]['selected_answer'].toString();
-        Notifi.patientItem.trop=Str[7]['selected_answer'].toString()=='0'?false:true;
-
-
-        Notifi.setItems(Notifi.patientItem);
-        // ignore: use_build_context_synchronously
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-        Navigator.pop(context);
+        getInfoOfPatient();
 
       }else{
         ShowErrorMsg(context, Data.message);
@@ -515,20 +500,8 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
     {
       if(Data.success)
       {
-        Notifi.patientItem.labIsComplete=true;
-        Notifi.patientItem.bun=Str[0]['selected_answer'].toString();
-        Notifi.patientItem.cr=Str[1]['selected_answer'].toString();
-        Notifi.patientItem.plt=Str[2]['selected_answer'].toString();
-        Notifi.patientItem.pt=Str[3]['selected_answer'].toString();
-        Notifi.patientItem.inr=Str[4]['selected_answer'].toString();
-        Notifi.patientItem.hb=Str[5]['selected_answer'].toString();
-        Notifi.patientItem.wbc=Str[6]['selected_answer'].toString();
-        Notifi.patientItem.trop=Str[7]['selected_answer'].toString()=='0'?false:true;
-        Notifi.setItems(Notifi.patientItem);
-        // ignore: use_build_context_synchronously
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-        Navigator.pop(context);
-
+        getInfoOfPatient();
       }else{
         ShowErrorMsg(context, Data.message);
       }
@@ -566,8 +539,7 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
       if(Data.success)
       {
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-        Notifi.patientItem.bs= int.parse(Blod);
-        Notifi.setItems(Notifi.patientItem);
+        getInfoOfPatient();
       }else{
         ShowErrorMsg(context, Data.message);
       }
@@ -585,11 +557,8 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
     {
       if(Data.success)
       {
-        Notifi.patientItem.timeOfInjection=Time;
-        Notifi.setItems(Notifi.patientItem);
-        getInfoOfPatient();
-        Navigator.pop(context);
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+        getInfoOfPatient();
       }else{
         // ignore: use_build_context_synchronously
         ShowErrorMsg(context, Data.message);
@@ -641,6 +610,11 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
   }
 
    Future getInfoOfPatient()async{
+    isLoading=true;
+    setState(() {
+
+    });
+
     Jalali date=Jalali.now();
     String formattedDate =
         '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
@@ -996,31 +970,29 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                                   , title:
                                                   ' :  فرم آزمایشگاه',
                                                   onTap: (){
-                                                    GoNextPage(context,staticWidget2());
-
-                                                    // if(Notifi.patientItem.is724IsComplete==true)
-                                                    // {
-                                                    //   GoNextPage(context,
-                                                    //       ScreenFormLaboratory((p0){
-                                                    //         Navigator.pop(context);
-                                                    //         if(Notifi.patientItem.labIsComplete)
-                                                    //         {
-                                                    //           editLab(p0);
-                                                    //         }else{
-                                                    //           AddLab(p0);
-                                                    //         }
-                                                    //       },Notifi.patientItem.labIsComplete,
-                                                    //           Notifi.patientItem.bun.toString(),
-                                                    //           Notifi.patientItem.cr.toString(),
-                                                    //           Notifi.patientItem.plt.toString(),
-                                                    //           Notifi.patientItem.pt.toString(),
-                                                    //           Notifi.patientItem.inr.toString(),
-                                                    //           Notifi.patientItem.trop.toString(),
-                                                    //           Notifi.patientItem.hb.toString(),
-                                                    //           Notifi.patientItem.wbc.toString(),
-                                                    //           false
-                                                    //       ));
-                                                    // }
+                                                    if(Notifi.patientItem.is724IsComplete==true)
+                                                    {
+                                                      GoNextPage(context,
+                                                          ScreenFormLaboratory((p0){
+                                                            Navigator.pop(context);
+                                                            if(Notifi.patientItem.labIsComplete)
+                                                            {
+                                                              editLab(p0);
+                                                            }else{
+                                                              AddLab(p0);
+                                                            }
+                                                          },Notifi.patientItem.labIsComplete,
+                                                              Notifi.patientItem.bun.toString(),
+                                                              Notifi.patientItem.cr.toString(),
+                                                              Notifi.patientItem.plt.toString(),
+                                                              Notifi.patientItem.pt.toString(),
+                                                              Notifi.patientItem.inr.toString(),
+                                                              Notifi.patientItem.trop.toString(),
+                                                              Notifi.patientItem.hb.toString(),
+                                                              Notifi.patientItem.wbc.toString(),
+                                                              false
+                                                          ));
+                                                    }
                                                   },
                                                 ):Container(),
 
@@ -1102,9 +1074,6 @@ Future  AddRequestIs724(bool IsUnkown,String TimeStart,String DateStart
                                             );
                                           },
                                         ),
-
-
-
                                       ],
                                      ),
                                    ),

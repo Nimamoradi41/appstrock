@@ -198,8 +198,13 @@ class _ScreenAtendState extends State<ScreenAtend> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                               InkWell(
-                              onTap: (){
-                                ClearAllDate();
+                              onTap: ()async{
+                                var flag= await ShowAllow(context,"آیا از حساب خود خارج میشوید ؟");
+                                if(flag)
+                                {
+                                  ClearAllDate();
+                                }
+
                               },
                               child: const RotatedBox(
                                 quarterTurns: 90,
@@ -349,7 +354,16 @@ class _ScreenAtendState extends State<ScreenAtend> {
                                     itemBuilder: (ctx,item){
                                       return InkWell(
                                           onTap: () async {
-                                            GoNextPage(context,ScreenDetailPatientAtend(ItemsP[item],context));
+                                            await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ScreenDetailPatientAtend(ItemsP[item], context),
+                                              ),
+                                            );
+
+                                            RunListP(context, true);
+
+
                                           },
                                           child: ItemPatientNew(wid: wid,ItemsP: ItemsP[item],));
                                     },

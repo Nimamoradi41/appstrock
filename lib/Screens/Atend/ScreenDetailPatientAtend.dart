@@ -33,29 +33,23 @@ class ScreenDetailPatientAtend extends StatefulWidget {
 class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with WidgetsBindingObserver {
 
 
-  Future NeedToCT(BuildContext context)async{
-
-
-    DateTime? TimeStart;
+  Future NeedToCT(BuildContext context) async {
     ShowLoadingApp(context);
     // ignore: use_build_context_synchronously
     var Data= await ApiServiceResident.NeedToCT(widget.patientItem.id.toString(),context);
     Navigator.pop(context);
-    if(Data!=null)
+    if(Data.success)
     {
-      if(Data.success)
-      {
-        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-        getInfoOfPatient();
+      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      getInfoOfPatient();
 
-      }else{
-        // ignore: use_build_context_synchronously
-        ShowErrorMsg(context, Data.message);
-      }
+    }else{
+      // ignore: use_build_context_synchronously
+      ShowErrorMsg(context, Data.message);
     }
 
   }
-  Future NeedToMRI(BuildContext context)async{
+  Future NeedToMRI(BuildContext context) async {
 
     ShowLoadingApp(context);
 
@@ -75,8 +69,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
       }
     }
   }
-  String    Convert_Time(String Hour,String Minute,String Seconds)
-  {
+
+  String    Convert_Time(String Hour,String Minute,String Seconds) {
     var temp_Hour="";
     var temp_Min="";
     var temp_Seconds="";
@@ -103,7 +97,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
 
 
   }
-  Future editNIHS(List<Map<String, dynamic>> Str,int score)async{
+
+  Future editNIHS(List<Map<String, dynamic>> Str,int score)async {
 
     ShowLoadingApp(context);
     var Data= await ApiServiceResident.editNihs(widget.patientItem.id.toString(),
@@ -121,29 +116,25 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
       }
     }
   }
-  Future AddNIHS(List<Map<String, dynamic>> Str,int score)async{
+
+  Future AddNIHS(List<Map<String, dynamic>> Str,int score)async {
 
     ShowLoadingApp(context);
-    var Data= await ApiServiceResident.AddNihs(widget.patientItem.id.toString(),
-        context,Str,score);
+    var Data= await ApiServiceResident.AddNihs(widget.patientItem.id.toString(), context,Str,score);
 
-    if(Data!=null)
+    if(Data.success)
     {
-      if(Data.success)
-      {
-        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-        getInfoOfPatient();
-      }else{
-        // ignore: use_build_context_synchronously
-        ShowErrorMsg(context, Data.message);
-      }
+      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      getInfoOfPatient();
+    }else{
+      // ignore: use_build_context_synchronously
+      ShowErrorMsg(context, Data.message);
     }
 
 
   }
 
-  Future   seenByAtend(String id,BuildContext context) async
-  {
+  Future   seenByAtend(String id,BuildContext context) async {
     ShowLoadingApp(context);
     var Data= await ApiServiceReception.SeenByAtend(context,widget.patientItem.id.toString());
 
@@ -163,8 +154,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
     Navigator.pop(context);
 
   }
-  Future   setInjectionTrue(String id,BuildContext context) async
-  {
+
+  Future   setInjectionTrue(String id,BuildContext context) async {
     ShowLoadingApp(context);
     // ignore: use_build_context_synchronously
     var Data= await ApiServiceReception.SetInjectionStatus(context,widget.patientItem.id.toString(),true);
@@ -184,7 +175,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
 
     Navigator.pop(context);
   }
-
 
   Future   setInjectionReason(String id,BuildContext context,List<Map<String, dynamic>> Str) async
   {
@@ -392,13 +382,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
     providerTimer = Provider.of<ProviderTimers>(context, listen: false);
     Notifi = Provider.of<ProviderAtendDetaile>(context, listen: false);
 
-    // if(!widget.patientItem.isFinished!)
-    // {
-    //   startTimer();
-    // }
 
     getInfoOfPatient();
-
 
     // اتصال اولیه
     SignalRService().initConnection();
@@ -469,8 +454,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
         ShowErrorMsg(context, Data.message);
       }
     }
-
-
   }
 
   bool isLoading=true;
@@ -481,6 +464,10 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
 
   Future getInfoOfPatient()async{
     Jalali date=Jalali.now();
+    isLoading=true;
+    setState(() {
+
+    });
     String formattedDate =
         '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
     // ignore: use_build_context_synchronously
@@ -598,7 +585,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                             ),
                             InkWell(
                               onTap: (){
-                                getInfoOfPatient();
+                                reset();
                               },
                               child: const Padding(
                                 padding: EdgeInsets.all(16.0),
@@ -626,7 +613,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                             ):Container(),
                               const Expanded(child:
                               Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
 
@@ -828,7 +815,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                                                     }
 
                                                     GoNextPage(context,ScreenFormNIHS((p0,s) {
-                                                      Navigator.pop(context);
                                                       if(Notifi.patientItem.nihsIsComplete)
                                                       {
                                                         editNIHS(p0,s);
@@ -981,63 +967,63 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                                         ),
 
 
-                                        Notifi.patientItem.is724IsComplete! &&
-                                            !Notifi.patientItem.isNot724!  &&
-                                            !Notifi.patientItem.needToMRI!  &&
-                                            !Notifi.patientItem.needToCT! ?
-                                        Row(
-                                          children: [
-
-                                            Expanded(child: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                              child: ElevatedButton(
-
-                                                  onPressed: (){
-                                                    NeedToCT(context);
-
-                                                  },
-                                                  style: ButtonStyle(
-                                                      backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                                      padding: MaterialStateProperty.all(EdgeInsets.all(4)),
-                                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                          RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(8.0),
-                                                          )
-                                                      )
-                                                  ),
-                                                  child:const Padding(
-                                                    padding: EdgeInsets.all(8.0),
-                                                    child: Text('CT',
-                                                      style: TextStyle(color:Colors.white,
-                                                          fontSize: 12,
-                                                          fontWeight: FontWeight.bold),),
-                                                  )),
-                                            )),
-                                            Expanded(child: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                              child: ElevatedButton(onPressed: (){
-                                                NeedToMRI(context);
-                                              },
-                                                  style: ButtonStyle(
-                                                      backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                                      padding: MaterialStateProperty.all(EdgeInsets.all(4)),
-                                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                          RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(8.0),
-                                                          )
-                                                      )
-                                                  ),
-                                                  child:Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: Text('MRI',
-                                                      style: TextStyle(color:Colors.white,
-                                                          fontSize: 12,
-                                                          fontWeight: FontWeight.bold),),
-                                                  )),
-                                            ))
-                                          ],
-                                        ):Container(),
-                                        Container(),
+                                        // Notifi.patientItem.is724IsComplete! &&
+                                        //     !Notifi.patientItem.isNot724!  &&
+                                        //     !Notifi.patientItem.needToMRI!  &&
+                                        //     !Notifi.patientItem.needToCT! ?
+                                        // Row(
+                                        //   children: [
+                                        //
+                                        //     Expanded(child: Padding(
+                                        //       padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                        //       child: ElevatedButton(
+                                        //
+                                        //           onPressed: (){
+                                        //             NeedToCT(context);
+                                        //
+                                        //           },
+                                        //           style: ButtonStyle(
+                                        //               backgroundColor: MaterialStateProperty.all(BtnColorred),
+                                        //               padding: MaterialStateProperty.all(EdgeInsets.all(4)),
+                                        //               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                        //                   RoundedRectangleBorder(
+                                        //                     borderRadius: BorderRadius.circular(8.0),
+                                        //                   )
+                                        //               )
+                                        //           ),
+                                        //           child:const Padding(
+                                        //             padding: EdgeInsets.all(8.0),
+                                        //             child: Text('CT',
+                                        //               style: TextStyle(color:Colors.white,
+                                        //                   fontSize: 12,
+                                        //                   fontWeight: FontWeight.bold),),
+                                        //           )),
+                                        //     )),
+                                        //     Expanded(child: Padding(
+                                        //       padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                        //       child: ElevatedButton(onPressed: (){
+                                        //         NeedToMRI(context);
+                                        //       },
+                                        //           style: ButtonStyle(
+                                        //               backgroundColor: MaterialStateProperty.all(BtnColorred),
+                                        //               padding: MaterialStateProperty.all(EdgeInsets.all(4)),
+                                        //               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                        //                   RoundedRectangleBorder(
+                                        //                     borderRadius: BorderRadius.circular(8.0),
+                                        //                   )
+                                        //               )
+                                        //           ),
+                                        //           child:Padding(
+                                        //             padding: const EdgeInsets.all(8.0),
+                                        //             child: Text('MRI',
+                                        //               style: TextStyle(color:Colors.white,
+                                        //                   fontSize: 12,
+                                        //                   fontWeight: FontWeight.bold),),
+                                        //           )),
+                                        //     ))
+                                        //   ],
+                                        // ):Container(),
+                                        // Container(),
                                       ],
                                     ),
                                   ),
@@ -1205,6 +1191,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                                       child: ElevatedButton(
                                           onPressed: (){
                                             GoNextPage(context, ScreenFormReasonInjection((p0) {
+                                              Navigator.pop(context);
                                               setInjectionReason(widget.patientItem.id.toString(),context,p0);
                                             },
                                               Notifi.patientItem.injectionType!=0?true:false,

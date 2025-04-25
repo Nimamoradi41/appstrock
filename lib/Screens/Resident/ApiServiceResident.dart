@@ -1046,18 +1046,11 @@ class ApiServiceResident{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? UserId;
 
-    // UserId
-
-    if(prefs.getString('UserId')!=null)
-    {
-      UserId=prefs.getString('UserId')!;
-    }
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/ResetInformationpatientId'));
+        Uri.parse('https://api.appstrok.ir/Patients/ResetInformation'));
     request.fields.addAll({
       'patientId': idPa,
-      'userId': UserId.toString(),
     });
 
 
@@ -1078,13 +1071,18 @@ class ApiServiceResident{
       if(response.statusCode==200)
       {
         String str= await response.stream.bytesToString();
+        ModelLogin data= await  modelLoginFromJson(str);
+        login=data;
+      }
+
+      if(response.statusCode==400)
+      {
+        String str= await response.stream.bytesToString();
         print(str);
         ModelLogin data= await  modelLoginFromJson(str);
         login=data;
-      }else {
-        ShowErrorMsg(context,response.reasonPhrase.toString());
-
       }
+
     }  on SocketException catch (e) {
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
 
@@ -1096,17 +1094,6 @@ class ApiServiceResident{
     {
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

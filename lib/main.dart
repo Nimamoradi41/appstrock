@@ -36,7 +36,6 @@ import 'Screens/Resident/ScreenFormIs724.dart';
 import 'Screens/Resident/ScreenFormIsNot724.dart';
 import 'Screens/Resident/ScreenFormNIHS.dart';
 import 'Screens/Resident/ScreenFormReasonInjection.dart';
-import 'Screens/SignalRService.dart';
 import 'Screens/SplashScreen.dart';
 import 'Screens/Strok/ProviderStrok/ProviderStrok.dart';
 import 'Screens/Teriazh/ProviderTeraizh.dart';

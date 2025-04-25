@@ -46,11 +46,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     var Data = await ApiServiceResident.NeedToCT(
         widget.patientItem.id.toString(), context);
     if (Data.success) {
-      Notifi.patientItem.needToCT = true;
-      Notifi.setItems(Notifi.patientItem);
-      Navigator.pop(context);
-      // ignore: use_build_context_synchronously
-      ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
+      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      getInfoOfPatient();
     } else {
       // ignore: use_build_context_synchronously
       ShowErrorMsg(context, Data.message);
@@ -65,11 +62,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
         widget.patientItem.id.toString(), context);
 
     if (Data.success) {
-      Notifi.patientItem.needToMRI = true;
-      Notifi.setItems(Notifi.patientItem);
-      Navigator.pop(context);
-      // ignore: use_build_context_synchronously
-      ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
+      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      getInfoOfPatient();
     } else {
       // ignore: use_build_context_synchronously
       ShowErrorMsg(context, Data.message);
@@ -83,27 +77,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
 
     if (Data != null) {
       if (Data.success) {
-        Notifi.patientItem.nihsIsComplete = true;
-        Notifi.patientItem.n_1_a = Str[0]['selected_answer'].toString();
-        Notifi.patientItem.n_1_b = Str[1]['selected_answer'].toString();
-        Notifi.patientItem.n_1_c = Str[2]['selected_answer'].toString();
-        Notifi.patientItem.n_2 = Str[3]['selected_answer'].toString();
-        Notifi.patientItem.n_3 = Str[4]['selected_answer'].toString();
-        Notifi.patientItem.n_4 = Str[5]['selected_answer'].toString();
-        Notifi.patientItem.n_5_a = Str[6]['selected_answer'].toString();
-        Notifi.patientItem.n_5_b = Str[7]['selected_answer'].toString();
-        Notifi.patientItem.n_6_a = Str[8]['selected_answer'].toString();
-        Notifi.patientItem.n_6_b = Str[9]['selected_answer'].toString();
-        Notifi.patientItem.n_6_b = Str[9]['selected_answer'].toString();
-        Notifi.patientItem.n_7 = Str[10]['selected_answer'].toString();
-        Notifi.patientItem.n_8 = Str[11]['selected_answer'].toString();
-        Notifi.patientItem.n_9 = Str[12]['selected_answer'].toString();
-        Notifi.patientItem.n_10 = Str[13]['selected_answer'].toString();
-        Notifi.patientItem.n_11 = Str[14]['selected_answer'].toString();
-        Notifi.patientItem.nihsSubscore = int.parse(score.toString());
-        Notifi.setItems(Notifi.patientItem);
-        // ignore: use_build_context_synchronously
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+        getInfoOfPatient();
       } else {
         // ignore: use_build_context_synchronously
         ShowErrorMsg(context, Data.message);
@@ -118,26 +93,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
 
     if (Data != null) {
       if (Data.success) {
-        Notifi.patientItem.nihsIsComplete = true;
-        Notifi.patientItem.n_1_a = Str[0]['selected_answer'].toString();
-        Notifi.patientItem.n_1_b = Str[1]['selected_answer'].toString();
-        Notifi.patientItem.n_1_c = Str[2]['selected_answer'].toString();
-        Notifi.patientItem.n_2 = Str[3]['selected_answer'].toString();
-        Notifi.patientItem.n_3 = Str[4]['selected_answer'].toString();
-        Notifi.patientItem.n_4 = Str[5]['selected_answer'].toString();
-        Notifi.patientItem.n_5_a = Str[6]['selected_answer'].toString();
-        Notifi.patientItem.n_5_b = Str[7]['selected_answer'].toString();
-        Notifi.patientItem.n_6_a = Str[8]['selected_answer'].toString();
-        Notifi.patientItem.n_6_b = Str[9]['selected_answer'].toString();
-        Notifi.patientItem.n_6_b = Str[9]['selected_answer'].toString();
-        Notifi.patientItem.n_7 = Str[10]['selected_answer'].toString();
-        Notifi.patientItem.n_8 = Str[11]['selected_answer'].toString();
-        Notifi.patientItem.n_9 = Str[12]['selected_answer'].toString();
-        Notifi.patientItem.n_10 = Str[13]['selected_answer'].toString();
-        Notifi.patientItem.n_11 = Str[14]['selected_answer'].toString();
-        Notifi.patientItem.nihsSubscore = int.parse(score.toString());
-        Notifi.setItems(Notifi.patientItem);
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+        getInfoOfPatient();
       } else {
         // ignore: use_build_context_synchronously
         ShowErrorMsg(context, Data.message);
@@ -149,16 +106,10 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     var timestamp = DateTime.now().millisecondsSinceEpoch;
     var Data = await ApiServiceResident.SetNot724(
         widget.patientItem.id.toString(), context, false, timestamp.toString());
-    Navigator.pop(context);
     if (Data != null) {
       if (Data.success) {
-        Notifi.patientItem.isNot724 = true;
-        Notifi.patientItem.is724IsComplete = true;
-        Notifi.patientItem.isFinished = true;
-        Notifi.patientItem.isNot724IsComplete = true;
-        Notifi.setItems(Notifi.patientItem);
-        // ignore: use_build_context_synchronously
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+        getInfoOfPatient();
       } else {
         // ignore: use_build_context_synchronously
         ShowErrorMsg(context, Data.message);
@@ -178,13 +129,12 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
         MisdiagnosisOfEms,
         OverTime);
     Navigator.pop(context);
+    Navigator.pop(context);
     if (Data != null) {
       if (Data.success) {
-        Notifi.patientItem.isNot724 = true;
-        Notifi.patientItem.is724IsComplete = true;
-        Notifi.setItems(Notifi.patientItem);
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-        Navigator.pop(context);
+        getInfoOfPatient();
+
       } else {
         // ignore: use_build_context_synchronously
         ShowErrorMsg(context, Data.message);
@@ -247,6 +197,14 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
         "${hours.abs()}:${minutes.abs()}:${seconds.abs()}");
   }
 
+  void _formatElapsedTimeArriveToHospital() {
+    int hours = _elapsedTimeArriveToHospital.inHours;
+    int minutes = _elapsedTimeArriveToHospital.inMinutes % 60;
+    int seconds = _elapsedTimeArriveToHospital.inSeconds % 60;
+    providerTimer.updateTimerArriveToHospital(
+        "${hours.abs()}:${minutes.abs()}:${seconds.abs()}");
+  }
+
   void _formatElapsedTimeFss() {
     int hours = _elapsedTimeFss.inHours;
     int minutes = _elapsedTimeFss.inMinutes % 60;
@@ -255,6 +213,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
         "${hours.abs()}:${minutes.abs()}:${seconds.abs()}");
   }
 
+  Duration _elapsedTimeArriveToHospital = Duration.zero;
   Duration _elapsedTime = Duration.zero;
   Duration _elapsedTimeFss = Duration.zero;
   late DateTime TimeEffect;
@@ -286,6 +245,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
         timestamp,
         timestampLKW,
         timestampFSS);
+    Navigator.pop(context);
     Navigator.pop(context);
     if (Data != null) {
       if (Data.success) {
@@ -384,12 +344,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
         if (Notifi.patientItem.isFinished!) {
           _timer!.cancel();
         }
-        TimeAriveToHospital = TimeAriveToHospital + 1;
-        var date2 = Duration(seconds: TimeAriveToHospital.toInt());
-
-        int hours2 = date2.inSeconds ~/ 3600;
-        int minutes2 = (date2.inSeconds % 3600) ~/ 60;
-        int remainingSeconds2 = date2.inSeconds % 60;
 
         if (Notifi.patientItem.signsStartTS != 0) {
           var date = DateTime.fromMillisecondsSinceEpoch(
@@ -400,18 +354,23 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
           _formatElapsedTime();
         }
 
-        if (Notifi.patientItem.signsStartTSFSS != 0) {
+        if (Notifi.patientItem.insertTimeTS != 0) {
           var date = DateTime.fromMillisecondsSinceEpoch(
-              Notifi.patientItem.signsStartTSFSS!!);
+              Notifi.patientItem.insertTimeTS!!);
+
+          _elapsedTimeArriveToHospital = DateTime.now().difference(date);
+
+          _formatElapsedTimeArriveToHospital();
+        }
+
+        if (Notifi.patientItem.signsStartTSFSS != 0) {
+          var date = DateTime.fromMillisecondsSinceEpoch(Notifi.patientItem.signsStartTSFSS!!);
 
           _elapsedTimeFss = DateTime.now().difference(date);
 
           _formatElapsedTimeFss();
         }
 
-        TimeAriveToHospitalStr = Convert_Time(hours2.toString(),
-            minutes2.toString(), remainingSeconds2.toString());
-        providerTimer.updateTimerArriveToHospital(TimeAriveToHospitalStr);
         // Notifi.setTimeAriveToHospital(TimeAriveToHospitalStr);
       },
     );
@@ -472,16 +431,11 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-     providerTimer = Provider.of<ProviderTimers>(context, listen: false);
+    providerTimer = Provider.of<ProviderTimers>(context, listen: false);
     Notifi = Provider.of<ProviderResidentDetaile>(context, listen: false);
 
-    DateTime now = new DateTime.now();
 
-    if (!widget.patientItem.isFinished!) {
-      TimeAriveToHospital = ((now.millisecondsSinceEpoch / 1000) -
-          (widget.patientItem.insertTimeTS! / 1000));
-      startTimer();
-    }
+
     getInfoOfPatient();
 
     // اتصال اولیه
@@ -569,6 +523,9 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
         });
   }
 
+  bool isTimerRunning() {
+    return _timer != null && _timer!.isActive;
+  }
   Future getInfoOfPatient() async {
     isLoading = true;
     setState(() {});
@@ -589,16 +546,11 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
         isLoading = false;
         setState(() {});
 
-        if (Notifi.patientItem.signsStartTSFSS != 0) {
-          _formatElapsedTimeFss();
-        }
-
-        if (Notifi.patientItem.signsStartTS != 0) {
-          _formatElapsedTime();
-        }
-
         if (!Notifi.patientItem.isFinished!) {
-          startTimer();
+          if(!isTimerRunning())
+          {
+            startTimer();
+          }
         } else {
           if (_timer != null) {
             _timer!.cancel();
@@ -617,8 +569,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     SignalRService().isPageActive = false;
     SignalRService().disconnect();
 
-    if (_timer != null) {
-      _timer?.cancel();
+    if (_timer != null && _timer!.isActive) {
+      _timer!.cancel();
     }
     super.dispose();
   }
@@ -697,9 +649,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                     ),
                                     Expanded(
                                         child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
                                         Notifi.patientItem.is724IsComplete! &&
@@ -935,17 +886,10 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                                   : Container(),
 
 
-                                              Notifi.patientItem
-                                                          .is724IsComplete! &&
-                                                      !Notifi.patientItem
-                                                          .isFinished! &&
-                                                      Notifi
-                                                          .patientItem
-                                                          .signsStartTime!
-                                                          .isNotEmpty &&
-                                                      Notifi.patientItem
-                                                              .signsStartTSFSS ==
-                                                          0
+                                              Notifi.patientItem.is724IsComplete! &&
+                                                  !Notifi.patientItem.isFinished! &&
+                                                      Notifi.patientItem.signsStartTime!.isNotEmpty &&
+                                                      Notifi.patientItem.signsStartTSFSS == 0
                                                   ? Consumer<ProviderTimers>(
                                                       builder: (context,
                                                           provider, child) {
@@ -1046,17 +990,16 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                                               title:
                                                                   ' :  وضعیت  NIHSS',
                                                               onTap: () {
-                                                                if (Notifi
-                                                                        .patientItem
-                                                                        .is724IsComplete ==
-                                                                    false) {
-                                                                  return;
-                                                                }
-
                                                                 GoNextPage(
                                                                     context,
                                                                     ScreenFormNIHS(
                                                                       (p0, s) {
+
+                                                                        if(Notifi.patientItem.is724IsComplete==false)
+                                                                        {
+                                                                          return ;
+                                                                        }
+
                                                                         if (Notifi
                                                                             .patientItem
                                                                             .nihsIsComplete) {

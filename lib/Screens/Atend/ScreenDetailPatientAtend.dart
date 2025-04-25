@@ -40,7 +40,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
     ShowLoadingApp(context);
     // ignore: use_build_context_synchronously
     var Data= await ApiServiceResident.NeedToCT(widget.patientItem.id.toString(),context);
-
+    Navigator.pop(context);
     if(Data!=null)
     {
       if(Data.success)
@@ -58,17 +58,11 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
   Future NeedToMRI(BuildContext context)async{
 
     ShowLoadingApp(context);
-    // Future.delayed(Duration(seconds: 3),(){
-    //   widget.modelPatient.needToMRI=true;
-    //   Notifi.setItems(widget.modelPatient);
-    //   Navigator.pop(context);
-    //   // ignore: use_build_context_synchronously
-    //   ShowSuccesMsg(widget.MainCtx, 'عملیات با موفقیت انجام شد');
-    // });
 
     // ignore: use_build_context_synchronously
     var Data= await ApiServiceResident.NeedToMRI(widget.patientItem.id.toString(),context);
 
+    Navigator.pop(context);
     if(Data!=null)
     {
       if(Data.success)
@@ -152,7 +146,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
   {
     ShowLoadingApp(context);
     var Data= await ApiServiceReception.SeenByAtend(context,widget.patientItem.id.toString());
-    print(Data.toJson());
+
 
     if(Data!=null)
     {
@@ -174,7 +168,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
     ShowLoadingApp(context);
     // ignore: use_build_context_synchronously
     var Data= await ApiServiceReception.SetInjectionStatus(context,widget.patientItem.id.toString(),true);
-    print(Data.toJson());
+
 
     if(Data!=null)
     {
@@ -252,10 +246,11 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
   var TimeEffectStr="0";
   var TimeAriveToHospital=0.0;
   var TimeAriveToHospitalStr="0";
-  late Timer _timer;
+  Timer? _timer;
   double FinalTime=0;
   double FinalTime2=0;
   Duration _elapsedTimeFss = Duration.zero;
+  Duration _elapsedTimeArriveToHospital = Duration.zero;
    late DateTime TimeEffect;
 
   void _formatElapsedTimeFss() {
@@ -272,20 +267,11 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
     _timer = Timer.periodic(
       oneSec,
           (Timer timer) {
-        // TimeEffect=TimeEffect+1;
-        TimeAriveToHospital=TimeAriveToHospital+1;
-
-        // var date=Duration(seconds: TimeEffect.toInt());
-        var date2=Duration(seconds: TimeAriveToHospital.toInt());
-
-        int hours2 = date2.inSeconds ~/ 3600;
-        int minutes2 = (date2.inSeconds % 3600) ~/ 60;
-        int remainingSeconds2 = date2.inSeconds % 60;
 
 
         if( Notifi.patientItem.signsStartTS!=0)
         {
-          var date=DateTime.fromMillisecondsSinceEpoch(widget.patientItem.signsStartTS!!);
+          var date=DateTime.fromMillisecondsSinceEpoch(Notifi.patientItem.signsStartTS!!);
           _elapsedTime   = DateTime.now().difference(date);
           _formatElapsedTime();
         }
@@ -299,14 +285,25 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
           _formatElapsedTimeFss();
         }
 
-        TimeAriveToHospitalStr =Convert_Time(hours2.toString(),minutes2.toString(),remainingSeconds2.toString());
+        if (Notifi.patientItem.insertTimeTS != 0) {
+          var date = DateTime.fromMillisecondsSinceEpoch(Notifi.patientItem.insertTimeTS!!);
 
-        providerTimer.updateTimerArriveToHospital(TimeAriveToHospitalStr);
+          _elapsedTimeArriveToHospital = DateTime.now().difference(date);
+
+          _formatElapsedTimeArriveToHospital();
+        }
 
       },
     );
   }
 
+  void _formatElapsedTimeArriveToHospital() {
+    int hours = _elapsedTimeArriveToHospital.inHours;
+    int minutes = _elapsedTimeArriveToHospital.inMinutes % 60;
+    int seconds = _elapsedTimeArriveToHospital.inSeconds % 60;
+    providerTimer.updateTimerArriveToHospital(
+        "${hours.abs()}:${minutes.abs()}:${seconds.abs()}");
+  }
   AddReasonInjection(){
     showModalBottomSheet(context: context,
         shape: RoundedRectangleBorder(
@@ -359,8 +356,9 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
     SignalRService().isPageActive = false;
     SignalRService().disconnect();
 
-    if (_timer != null) {
-      _timer?.cancel();
+    if (_timer != null && _timer!.isActive) {
+      _timer!.cancel();
+      print("❌ تایمر متوقف شد");
     }
     super.dispose();
   }
@@ -389,28 +387,15 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
 
     WidgetsBinding.instance.addObserver(this);
 
-    DateTime now = new DateTime.now();
+
 
     providerTimer = Provider.of<ProviderTimers>(context, listen: false);
     Notifi = Provider.of<ProviderAtendDetaile>(context, listen: false);
 
-    if( !widget.patientItem.isFinished!)
-    {
-      TimeAriveToHospital=((now.millisecondsSinceEpoch/1000)-(widget.patientItem.insertTimeTS!/1000));
-
-      if(widget.patientItem.injectionTimeTS!=0)
-      {
-        TimeTaInjection=((now.millisecondsSinceEpoch/1000)-(widget.patientItem.injectionTimeTS!/1000));
-      }
-
-      if( widget.patientItem.signsStartTS!=0)
-      {
-        _formatElapsedTime();
-      }
-
-
-      startTimer();
-    }
+    // if(!widget.patientItem.isFinished!)
+    // {
+    //   startTimer();
+    // }
 
     getInfoOfPatient();
 
@@ -490,6 +475,10 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
 
   bool isLoading=true;
 
+  bool isTimerRunning() {
+    return _timer != null && _timer!.isActive;
+  }
+
   Future getInfoOfPatient()async{
     Jalali date=Jalali.now();
     String formattedDate =
@@ -508,18 +497,13 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
         isLoading = false;
         setState(() {});
 
-        if (Notifi.patientItem.signsStartTSFSS != 0) {
-          _formatElapsedTimeFss();
-        }
-
-        if (Notifi.patientItem.signsStartTS != 0) {
-          _formatElapsedTime();
-        }
-
         Notifi.setLoading(false);
 
         if (!Notifi.patientItem.isFinished!) {
-          startTimer();
+          if(!isTimerRunning())
+            {
+              startTimer();
+            }
         } else {
           if (_timer != null) {
             _timer!.cancel();
@@ -643,6 +627,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                               const Expanded(child:
                               Row(
                               mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
 
                                 Padding(
@@ -758,30 +743,28 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                                             'نامشخص':Notifi.patientItem.timeOfAddToSystem, title: ' :  زمان ثبت در سیستم'
                                         ),
 
-                                        Notifi.patientItem.isFinished==false? Consumer<ProviderTimers>(
+                                        Notifi.patientItem.isFinished==false?
+                                        Consumer<ProviderTimers>(
                                           builder: (context,
                                               provider, child) {
                                             return BoxInformation(
-                                                value: provider
-                                                    .timerArriveToHospital,
-                                                title:
-                                                ' :  تایمر بر اساس زمان ثبت در سیستم');
+                                                value: provider.timerArriveToHospital,
+                                                title: ' :  تایمر بر اساس زمان ثبت در سیستم');
                                           },
                                         )
                                             : Container(),
 
-                                        Notifi.patientItem.is724IsComplete!
-                                            && !Notifi.patientItem.isFinished! &&
+                                             Notifi.patientItem.is724IsComplete! &&
+                                            !Notifi.patientItem.isFinished! &&
                                             Notifi.patientItem.signsStartTime!.isNotEmpty &&
-                                            Notifi.patientItem.signsStartTSFSS==0?
+                                            Notifi.patientItem.signsStartTSFSS == 0?
                                         Consumer<ProviderTimers>(
                                           builder: (context,
                                               provider, child) {
                                             return Column(
                                               children: [
                                                 BoxInformation(
-                                                    value: provider
-                                                        .timerTimerSymptomOnset,
+                                                    value: provider.timerTimerSymptomOnset,
                                                     title:
                                                     ' :  تایمر بر اساس زمان شروع علائم'),
                                               ],

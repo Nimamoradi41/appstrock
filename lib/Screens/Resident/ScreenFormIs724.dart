@@ -371,10 +371,16 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
   }
 
+  bool isLoading=true;
   @override
   void initState()
   {
     super.initState();
+    checkData();
+
+  }
+
+  Future checkData()async{
     DateNowKnow=Jalali.now();
     _selectedJalaliDate=Jalali.now();
     year=DateNowKnow.year;
@@ -427,9 +433,6 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
     // -----------------------
 
-
-
-
     // -----------------------
 
     TimeNowUnKnowFss=TimeOfDay.now();
@@ -444,8 +447,9 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
 
     // -----------------------
 
-
-
+    isLoading=false;
+    setState(() {
+    });
   }
 
   @override
@@ -455,7 +459,9 @@ class _ScreenFormIsNot724State extends State<ScreenFormIs724> {
     return Center(
       child: Container(
         width: wid,
-        child: Padding(
+        child:
+         isLoading ? CircularProgressIndicator():
+        Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

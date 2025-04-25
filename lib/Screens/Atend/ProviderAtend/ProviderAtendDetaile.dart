@@ -9,9 +9,7 @@ class ProviderAtendDetaile extends ChangeNotifier{
 
   late ModelPatient patientItem;
   bool status=false;
-  String oldTime="";
-  String oldTime2="";
-  String oldTimeFSS="";
+
   // String oldTime3="";
    void setItems(ModelPatient newitem)
    {
@@ -25,37 +23,10 @@ class ProviderAtendDetaile extends ChangeNotifier{
     notifyListeners();
   }
 
-
-  void setTimeEffectFss(String newTime)
-  {
-    oldTimeFSS=newTime;
-    notifyListeners();
-  }
-
   void setstatus(bool newst)
   {
     status=newst;
     notifyListeners();
   }
-
-  void setTimeEffect(String newTime)
-  {
-    oldTime=newTime;
-    notifyListeners();
-  }
-
-  void setTimeAriveToHospital(String newTime)
-  {
-    oldTime2=newTime;
-    notifyListeners();
-  }
-
-  // void setTimeInje(String newTime)
-  // {
-  //   oldTime3=newTime;
-  //   notifyListeners();
-  // }
-
-
 
 }

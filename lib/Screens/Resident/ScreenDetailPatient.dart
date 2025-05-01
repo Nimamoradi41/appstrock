@@ -17,6 +17,7 @@ import '../../Widgets/TextApp.dart';
 import '../../components/BoxInformation.dart';
 import '../Reception/ApiServiceReception.dart';
 import '../Reception/Model/ModelPatient.dart';
+import '../WebImagePicker.dart';
 import 'ProviderResident/ProviderResidentDetaile.dart';
 import 'ProviderResident/ProviderTimers.dart';
 import 'ScreenFormIs724.dart';
@@ -306,8 +307,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
   Timer? _timer;
 
   // var TimeEffect=0.0;
-
   // var TimeTaInjection=0.0;
+
   var TimeTaInjectionStr = '0';
   var TimeEffectStr = "0";
   var TimeAriveToHospital = 0.0;
@@ -464,12 +465,11 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     }
   }
 
-  Future RequestAddTimeInjection(String Time) async {
+  Future RequestAddTimeInjection(String Time,String timeStamp ) async {
     ShowLoadingApp(context);
     // ignore: use_build_context_synchronously
-    var timestamp = DateTime.now().millisecondsSinceEpoch;
     var Data = await ApiServiceResident.TimeOfInjection(
-        widget.patientItem.id.toString(), context, Time, timestamp);
+        widget.patientItem.id.toString(), context, Time, timeStamp.toString());
     Navigator.pop(context);
     if (Data != null) {
       if (Data.success) {
@@ -491,15 +491,25 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     if (prefs.getString('UserId') != null) {
       UserId = prefs.getString('UserId')!;
     }
-    final String url =
-        'https://web.appstrok.ir/UploadFile?UserId=$UserId&PatientId=$idPa';
 
-    // const url = 'https://web.appstrok.ir/UploadFile?UserId=$UserId&PatientId='+86;
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+
+    GoNextPage(context, WebImagePicker(Notifi.patientItem.fullName,Notifi.patientItem.age,Notifi.patientItem.nationalCode,Notifi.patientItem.gender,Notifi.patientItem.id.toString()));
+
+
+    // // UserID 2
+    // // idPa 26
+    //
+    // print('UserID ' +UserId);
+    // print('idPa ' +idPa);
+    // final String url = 'https://Upload.appstrok.ir/UploadFile?UserId=$UserId&PatientId=$idPa';
+    //
+    // // const url = 'https://web.appstrok.ir/UploadFile?UserId=$UserId&PatientId='+86;
+    //
+    // if (await canLaunch(url)) {
+    //   await launch(url);
+    // } else {
+    //   throw 'Could not launch $url';
+    // }
   }
 
   AddTimeInjection() {
@@ -516,7 +526,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                   margin: EdgeInsets.only(top: 16),
                   child: ScreenFormTimeInjection((pa) async {
                     RequestAddTimeInjection(
-                        pa[0]['selected_answer'].toString());
+                        pa[0]['selected_answer'].toString(),pa[1]['selected_answer'].toString());
                   })),
             ],
           );
@@ -526,6 +536,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
   bool isTimerRunning() {
     return _timer != null && _timer!.isActive;
   }
+
   Future getInfoOfPatient() async {
     isLoading = true;
     setState(() {});
@@ -1270,13 +1281,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                                               title:
                                                                   ' :  زمان تزریق',
                                                               onTap: () {
-                                                                if (Notifi
-                                                                        .patientItem
-                                                                        .timeOfInjection!
-                                                                        .isEmpty &&
-                                                                    Notifi
-                                                                        .patientItem
-                                                                        .is724IsComplete!) {
+                                                                if (Notifi.patientItem.timeOfInjection!.isEmpty &&
+                                                                    Notifi.patientItem.is724IsComplete!) {
                                                                   AddTimeInjection();
                                                                 }
                                                               },
@@ -1668,4 +1674,5 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
       ),
     );
   }
+
 }

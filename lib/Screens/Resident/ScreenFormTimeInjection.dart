@@ -30,6 +30,14 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
     });
 
 
+    answers.add({
+      'question': "2",
+      'selected_answer': timeStampSelected.toString(),
+    });
+
+
+
+
 
     if (widget.onClose != null) {
       widget.onClose(answers);
@@ -47,6 +55,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
 
 
   String TimeNowKnowStr="";
+  String timeStampSelected="";
 
   Future PersianTimeCalender(bool Type,bool LKW)async{
     var picked = await showPersianTimePicker(
@@ -67,11 +76,24 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
 
     if(picked!=null)
     {
+      // ساختن DateTime از تاریخ امروز و ساعتی که انتخاب کردی
+      final now = DateTime.now();
+      final selectedDateTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        picked.hour,
+        picked.minute,
+      );
+
+      // تبدیل به timestamp (بر حسب میلی‌ثانیه)
+      final timestamp = selectedDateTime.millisecondsSinceEpoch;
+
       TimeNowKnow=picked;
+      timeStampSelected=timestamp.toString();
       TimeNowKnowStr="${TimeNowKnow.hour}:${TimeNowKnow.minute}";
       TimeNowKnowStr=Convert_Time(TimeNowKnow.hour.toString(),TimeNowKnow.minute.toString());
       setState(() {});
-
     }
 
 
@@ -154,11 +176,6 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
                                     SizedBox(width: 4,)
                                   ],
                                 ),
-
-
-
-
-
                               ],
                             ),
                           ),

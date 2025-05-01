@@ -364,8 +364,7 @@ class ApiServiceReception{
     }
 
 
-    var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/SetInjectionStatus'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients/SetInjectionStatus'));
     request.fields.addAll({
       'id': patientId,
       'userId': UserId.toString(),
@@ -389,7 +388,6 @@ class ApiServiceReception{
         login=data;
       }else{
         ShowErrorMsg(context,response.reasonPhrase.toString());
-
       }
     }  on SocketException catch (e) {
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');

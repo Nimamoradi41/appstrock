@@ -114,9 +114,7 @@ class _ScreenListImagesState extends State<ScreenListImages> {
                           ),
                         ],
                       )),
-                      SizedBox(
-                        width: 8,
-                      ),
+                      const SizedBox(width: 8,),
                       TextApp(': ارسال شده توسط ', 12, Colors.black38,true)
                     ],
                   ),

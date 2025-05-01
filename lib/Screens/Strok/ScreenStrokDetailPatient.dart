@@ -38,30 +38,29 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
 
   Future  RequestAddTimeInjection(String Time)async{
 
-
-    ShowLoadingApp(context);
-    // ignore: use_build_context_synchronously
-    var  timestamp=DateTime.now().millisecondsSinceEpoch;
-    var Data= await ApiServiceResident.TimeOfInjection(widget.patientItem.id.toString(),context,Time,timestamp);
-    Navigator.pop(context);
-    if(Data!=null)
-    {
-      if(Data.success)
-      {
-
-        Notifi.patientItem!.timeOfInjection=Time;
-
-
-        Notifi.setItem(Notifi.patientItem);
-
-
-        // ignore: use_build_context_synchronously
-        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-      }else{
-        // ignore: use_build_context_synchronously
-        ShowErrorMsg(context, Data.message);
-      }
-    }
+    //
+    // ShowLoadingApp(context);
+    // // ignore: use_build_context_synchronously
+    //  var Data= await ApiServiceResident.TimeOfInjection(widget.patientItem.id.toString(),context,Time,timestamp);
+    // Navigator.pop(context);
+    // if(Data!=null)
+    // {
+    //   if(Data.success)
+    //   {
+    //
+    //     Notifi.patientItem!.timeOfInjection=Time;
+    //
+    //
+    //     Notifi.setItem(Notifi.patientItem);
+    //
+    //
+    //     // ignore: use_build_context_synchronously
+    //     ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+    //   }else{
+    //     // ignore: use_build_context_synchronously
+    //     ShowErrorMsg(context, Data.message);
+    //   }
+    // }
 
   }
   AddTimeInjection(){

@@ -1180,7 +1180,7 @@ class ApiServiceResident{
 
 
 
-  static Future<ModelNeetToCt> TimeOfInjection(String idPa,BuildContext context,String Time, int timestamp)
+  static Future<ModelNeetToCt> TimeOfInjection(String idPa,BuildContext context,String Time, String timestamp)
   async {
     var login;
 
@@ -1201,7 +1201,7 @@ class ApiServiceResident{
       'PatientId': idPa,
       'UserId': UserId.toString(),
       'Time': Time,
-      'InjectionTimeTS': timestamp.toString(),
+      'InjectionTimeTS': timestamp,
     });
 
 

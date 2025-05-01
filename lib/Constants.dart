@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -214,6 +215,29 @@ Future<void> ShowLoadingApp(BuildContext context) async {
   );
 }
 // Loading in All App
+
+
+MediaType getMediaType(String fileName) {
+  final ext = fileName.toLowerCase().split('.').last;
+
+  switch (ext) {
+    case 'png':
+      return MediaType('image', 'png');
+    case 'jpg':
+    case 'jpeg':
+      return MediaType('image', 'jpeg');
+    case 'gif':
+      return MediaType('image', 'gif');
+    case 'bmp':
+      return MediaType('image', 'bmp');
+    case 'webp':
+      return MediaType('image', 'webp');
+    case 'pdf':
+      return MediaType('application', 'pdf');
+    default:
+      return MediaType('application', 'octet-stream'); // حالت پیش‌فرض برای فایل‌های ناشناس
+  }
+}
 
 
 // todo ShowErrors

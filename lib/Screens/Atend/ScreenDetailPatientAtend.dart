@@ -18,6 +18,7 @@ import '../Resident/ProviderResident/ProviderTimers.dart';
 import '../Resident/ScreenFormBload724.dart';
 import '../Resident/ScreenFormPreesBload724.dart';
 import '../Resident/ScreenFormReasonInjection.dart';
+import '../Resident/ScreenFormTimeInjection.dart';
 import 'ProviderAtend/ProviderAtendDetaile.dart';
 
 
@@ -42,7 +43,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
     {
       ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
       getInfoOfPatient();
-
     }else{
       // ignore: use_build_context_synchronously
       ShowErrorMsg(context, Data.message);
@@ -242,6 +242,44 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
   Duration _elapsedTimeFss = Duration.zero;
   Duration _elapsedTimeArriveToHospital = Duration.zero;
    late DateTime TimeEffect;
+  Future RequestAddTimeInjection(String Time,String timeStamp ) async {
+    ShowLoadingApp(context);
+    // ignore: use_build_context_synchronously
+    var Data = await ApiServiceResident.TimeOfInjection(
+        widget.patientItem.id.toString(), context, Time, timeStamp.toString());
+    Navigator.pop(context);
+    if (Data != null) {
+      if (Data.success) {
+        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+        getInfoOfPatient();
+      } else {
+        // ignore: use_build_context_synchronously
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+  }
+
+
+  AddTimeInjection() {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+        ),
+        builder: (ctx) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                  margin: EdgeInsets.only(top: 16),
+                  child: ScreenFormTimeInjection((pa) async {
+                    RequestAddTimeInjection(
+                        pa[0]['selected_answer'].toString(),pa[1]['selected_answer'].toString());
+                  })),
+            ],
+          );
+        });
+  }
 
   void _formatElapsedTimeFss() {
     int hours = _elapsedTimeFss.inHours;
@@ -941,7 +979,12 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                                                 Notifi.patientItem.timeOfInjection.toString()
                                                   , title:
                                                   ' :  زمان تزریق',
-                                                  onTap: null,
+                                                  onTap: (){
+                                                    if (Notifi.patientItem.timeOfInjection!.isEmpty &&
+                                                        Notifi.patientItem.is724IsComplete!) {
+                                                      AddTimeInjection();
+                                                    }
+                                                  },
                                                 ):Container(),
 
                                                 Notifi.patientItem.otn.isEmpty?

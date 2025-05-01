@@ -39,6 +39,7 @@ import 'Screens/Resident/ScreenFormReasonInjection.dart';
 import 'Screens/SplashScreen.dart';
 import 'Screens/Strok/ProviderStrok/ProviderStrok.dart';
 import 'Screens/Teriazh/ProviderTeraizh.dart';
+import 'Screens/WebImagePicker.dart';
 import 'Screens/sickcarrier/ProviderSickCarrier/ProviderSickCarrier.dart';
 import 'Screens/sickcarrier/screen_sickcarrier.dart';
 import 'Widgets/StaticWidget.dart';
@@ -88,6 +89,7 @@ class _MyAppState extends State<MyApp> {
           '/screen': (context) => staticWidget2(), // صفحه دوم
         },
       home: SplashScreen()
+      // home: WebImagePicker('نیما','27','1742778887','مرد','541541')
       // home: ScreenRigester());
       // home: testt()
     );

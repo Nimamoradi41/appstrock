@@ -92,22 +92,22 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
     // چاپ تاریخ جلالی با فرمت مورد نظر
     print('تاریخ جلالی فعلی: $formattedDate');
 
-    // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
-
-    if(Data!=null)
-    {
-      if(Data.success)
-      {
-
-        var finded=Data.data.firstWhere((element) => element.id==widget.patientItem.id);
-        Notifi.setItem(finded);
-        Notifi.setLoading(false);
-      }else{
-        // ignore: use_build_context_synchronously
-        ShowErrorMsg(context, Data.message);
-      }
-    }
+    // // ignore: use_build_context_synchronously
+    // var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
+    //
+    // if(Data!=null)
+    // {
+    //   if(Data.success)
+    //   {
+    //
+    //     var finded=Data.data.firstWhere((element) => element.id==widget.patientItem.id);
+    //     Notifi.setItem(finded);
+    //     Notifi.setLoading(false);
+    //   }else{
+    //     // ignore: use_build_context_synchronously
+    //     ShowErrorMsg(context, Data.message);
+    //   }
+    // }
   }
   @override
   void initState() {

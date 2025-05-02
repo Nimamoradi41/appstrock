@@ -61,26 +61,26 @@ class _ScreenLaboratoryState extends State<ScreenLaboratory> {
     // چاپ تاریخ جلالی با فرمت مورد نظر
     print('تاریخ جلالی فعلی: $formattedDate');
 
-    // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
-
-
-
-
-
-    if(Data!=null)
-    {
-      if(Data.success)
-      {
-        print('object3');
-        print(Data.data.length.toString());
-        Notifi.setItems(Data.data);
-      }else{
-        showToast(Data.message,
-            position: StyledToastPosition.top,
-            context:context);
-      }
-    }
+    // // ignore: use_build_context_synchronously
+    // var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
+    //
+    //
+    //
+    //
+    //
+    // if(Data!=null)
+    // {
+    //   if(Data.success)
+    //   {
+    //     print('object3');
+    //     print(Data.data.length.toString());
+    //     Notifi.setItems(Data.data);
+    //   }else{
+    //     showToast(Data.message,
+    //         position: StyledToastPosition.top,
+    //         context:context);
+    //   }
+    // }
   }
 
 

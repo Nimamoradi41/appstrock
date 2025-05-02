@@ -67,23 +67,23 @@ class _ScreenLaboratoryState extends State<ScreenStrock> {
     print('تاریخ جلالی فعلی: $formattedDate');
 
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
+    // var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
 
 
 
 
 
-    if(Data!=null)
-    {
-      if(Data.success)
-      {
-        Notifi.setItems(Data.data);
-      }else{
-        showToast(Data.message,
-            position: StyledToastPosition.top,
-            context:context);
-      }
-    }
+    // if(Data!=null)
+    // {
+    //   if(Data.success)
+    //   {
+    //     Notifi.setItems(Data.data);
+    //   }else{
+    //     showToast(Data.message,
+    //         position: StyledToastPosition.top,
+    //         context:context);
+    //   }
+    // }
   }
 
 

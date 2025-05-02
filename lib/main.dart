@@ -75,7 +75,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // SignalRService().initConnection();
   }
   @override
   Widget build(BuildContext context) {
@@ -84,11 +83,7 @@ class _MyAppState extends State<MyApp> {
           fontFamily: 'iransans'
       ),
       debugShowCheckedModeBanner: false,
-        routes: {
-          '/home': (context) => SplashScreen(),    // صفحه اصلی
-          '/screen': (context) => staticWidget2(), // صفحه دوم
-        },
-      home: SplashScreen()
+      home: const SplashScreen()
       // home: WebImagePicker('نیما','27','1742778887','مرد','541541')
       // home: ScreenRigester());
       // home: testt()

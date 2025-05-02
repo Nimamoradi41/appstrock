@@ -189,11 +189,12 @@ class ApiServiceReception{
   }
 
 
-  static Future<ModelListPatient> ListPatientLab(String Date,BuildContext context) async {
+  static Future<ModelListPatient> ListPatientLab(String startDate,String endDate,BuildContext context) async {
     var login;
     var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients/PatientForAttend'));
     request.fields.addAll({
-      'date': Date,
+      'startDate': startDate,
+      'endDate': endDate,
     });
     try{
       http.StreamedResponse response = await request.send().timeout(

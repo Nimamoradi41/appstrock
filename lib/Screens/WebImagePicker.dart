@@ -33,10 +33,6 @@ class _WebImagePickerState extends State<WebImagePicker> {
   Future<void> uploadImage(Uint8List imageBytes, String fileName) async {
     final uri = Uri.parse("https://api.appstrok.ir/Patients/AddImages");
     final request = http.MultipartRequest('POST', uri);
-
-
-
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? UserId;
 

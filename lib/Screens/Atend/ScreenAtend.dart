@@ -56,7 +56,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
     String formattedDate =
         '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
+    var Data= await ApiServiceReception.ListPatientLab(formattedDate,formattedDate,context);
 
 
     if(refresh)
@@ -76,14 +76,18 @@ class _ScreenAtendState extends State<ScreenAtend> {
     }
   }
 
-  Future runListByDate(BuildContext context, Jalali date) async
+  String formattedDateFrom ='';
+  String formattedDateTo ='';
+
+  Future runListByDate(BuildContext context, Jalali dateFrom,Jalali dateTo) async
   {
+    formattedDateFrom =
+    '${dateFrom.year}/${dateFrom.month.toString().padLeft(2, '0')}/${dateFrom.day.toString().padLeft(2, '0')}';
 
-    String formattedDate =
-        '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
-
+    formattedDateTo =
+    '${dateTo.year}/${dateTo.month.toString().padLeft(2, '0')}/${dateTo.day.toString().padLeft(2, '0')}';
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
+    var Data= await ApiServiceReception.ListPatientLab(formattedDateFrom,formattedDateTo,context);
 
     if(Data!=null)
     {
@@ -106,9 +110,12 @@ class _ScreenAtendState extends State<ScreenAtend> {
       initialDate: Jalali.now(),
     );
     if(picked!=null) {
-      runListByDate(context,picked);
+
     }
   }
+
+  Jalali? dateFrom;
+  Jalali? dateTo;
 
 
   Future   ChangShift(bool StatusNew,BuildContext context) async
@@ -133,14 +140,39 @@ class _ScreenAtendState extends State<ScreenAtend> {
 
     Navigator.pop(context);
 
-
-
-
-
-
-
-
   }
+
+  Future persianDateCalenderTo(Jalali pickedFrom)async{
+    Jalali? pickedTo = await showPersianDatePicker(
+      context: context,
+      firstDate: Jalali(1385, 8),
+      lastDate: Jalali(1450, 9),
+      initialDate: dateTo==null? Jalali.now():dateTo!!,
+    );
+    dateFrom=pickedTo;
+
+    if(pickedTo!=null) {
+      runListByDate(context,pickedFrom,pickedTo);
+    }
+  }
+
+
+  Future persianDateCalenderFrom()async{
+    Jalali? pickedFrom = await showPersianDatePicker(
+      context: context,
+      firstDate: Jalali(1385, 8),
+      lastDate: Jalali(1450, 9),
+      initialDate: dateFrom==null? Jalali.now():dateFrom!!,
+    );
+
+    dateFrom=pickedFrom;
+
+    if(pickedFrom!=null) {
+      persianDateCalenderTo(pickedFrom);
+      // runListByDate(context,picked);
+    }
+  }
+
   Future ClearAllDate()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
@@ -211,6 +243,18 @@ class _ScreenAtendState extends State<ScreenAtend> {
                                 child: Padding(
                                   padding: EdgeInsets.all(16.0),
                                   child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
+                                ),
+                              ),
+                            ),
+                              RotatedBox(
+                              quarterTurns: 0,
+                              child: InkWell(
+                                onTap: (){
+                                  persianDateCalenderFrom();
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Icon(Icons.calendar_month,color: Colors.white,size: 30,),
                                 ),
                               ),
                             ),
@@ -357,7 +401,7 @@ class _ScreenAtendState extends State<ScreenAtend> {
                                             await Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => ScreenDetailPatientAtend(ItemsP[item], context),
+                                                builder: (context) => ScreenDetailPatientAtend(ItemsP[item],context,formattedDateFrom,formattedDateTo, ),
                                               ),
                                             );
 

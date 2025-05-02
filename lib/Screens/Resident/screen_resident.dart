@@ -86,15 +86,16 @@ class _ScreenResidentState extends State<ScreenResident> {
 
 
 
-
+  String formattedDateFrom ='';
+  String formattedDateTo ='';
   Future RunListP(BuildContext context) async
   {
     Jalali date=Jalali.now();
-    String formattedDate =
+      formattedDateFrom =
         '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
 
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatient(formattedDate,context);
+    var Data= await ApiServiceReception.ListPatient(formattedDateFrom,context);
 
 
     if(Data!=null)
@@ -114,12 +115,11 @@ class _ScreenResidentState extends State<ScreenResident> {
   Future runListByDate(BuildContext context, Jalali dateFrom,Jalali dateTo) async
   {
 
-    String formattedDateFrom =
+      formattedDateFrom =
         '${dateFrom.year}/${dateFrom.month.toString().padLeft(2, '0')}/${dateFrom.day.toString().padLeft(2, '0')}';
 
-    String formattedDateTo =
+      formattedDateTo =
         '${dateTo.year}/${dateTo.month.toString().padLeft(2, '0')}/${dateTo.day.toString().padLeft(2, '0')}';
-
 
     // ignore: use_build_context_synchronously
     var Data= await ApiServiceReception.PatientListBetweenDate(formattedDateFrom,formattedDateTo,context);
@@ -381,7 +381,8 @@ class _ScreenResidentState extends State<ScreenResident> {
                                 itemBuilder: (ctx,item){
                                   return InkWell(
                                       onTap: (){
-                                        GoNextPage(context,ScreenDetailPatient(ItemsP[item],context));
+                                        GoNextPage(context,ScreenDetailPatient(ItemsP[item],
+                                            context,formattedDateFrom,formattedDateTo));
                                       },
                                       child: ItemPatientNew(wid: wid,ItemsP: ItemsP[item],));
                                 },

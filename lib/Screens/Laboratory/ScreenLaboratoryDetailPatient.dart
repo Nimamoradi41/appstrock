@@ -89,21 +89,21 @@ class _ScreenDetailPatientState extends State<ScreenLaboratoryDetailPatient> {
     print('تاریخ جلالی فعلی: $formattedDate');
 
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
-
-    if(Data!=null)
-    {
-      if(Data.success)
-      {
-
-        var finded=Data.data.firstWhere((element) => element.id==widget.patientItem.id);
-        Notifi.setItems(finded);
-        Notifi.setLoading(false);
-      }else{
-        // ignore: use_build_context_synchronously
-        ShowErrorMsg(context, Data.message);
-      }
-    }
+    // var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
+    //
+    // if(Data!=null)
+    // {
+    //   if(Data.success)
+    //   {
+    //
+    //     var finded=Data.data.firstWhere((element) => element.id==widget.patientItem.id);
+    //     Notifi.setItems(finded);
+    //     Notifi.setLoading(false);
+    //   }else{
+    //     // ignore: use_build_context_synchronously
+    //     ShowErrorMsg(context, Data.message);
+    //   }
+    // }
   }
   Future editLab(List<Map<String, dynamic>> Str)async{
     ShowLoadingApp(context);

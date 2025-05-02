@@ -26,10 +26,12 @@ import 'ScreenFormPreesBload724.dart';
 import 'ScreenFormReasonInjection.dart';
 
 class ScreenDetailPatient extends StatefulWidget {
-  ScreenDetailPatient(this.patientItem, this.MainCtx);
+  ScreenDetailPatient(this.patientItem, this.MainCtx, this.formattedDateFrom,this. formattedDateTo);
 
   ModelPatient patientItem;
   BuildContext MainCtx;
+  String formattedDateFrom;
+  String formattedDateTo;
 
   @override
   State<ScreenDetailPatient> createState() => _ScreenDetailPatientState();
@@ -135,7 +137,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
       if (Data.success) {
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
         getInfoOfPatient();
-
       } else {
         // ignore: use_build_context_synchronously
         ShowErrorMsg(context, Data.message);
@@ -542,17 +543,15 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     setState(() {});
 
     Jalali date = Jalali.now();
-    String formattedDate =
-        '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+
 
     // ignore: use_build_context_synchronously
-    var Data = await ApiServiceReception.ListPatient(formattedDate, context);
+    var Data = await ApiServiceReception.PatientListBetweenDate(widget.formattedDateFrom,widget.formattedDateTo, context);
 
     if (Data != null) {
       if (Data.success) {
         var finded = Data.data
             .firstWhere((element) => element.id == widget.patientItem.id);
-
         Notifi.setItems(finded);
         isLoading = false;
         setState(() {});

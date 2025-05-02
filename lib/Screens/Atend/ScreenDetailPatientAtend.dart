@@ -25,9 +25,11 @@ import 'ProviderAtend/ProviderAtendDetaile.dart';
 
 
 class ScreenDetailPatientAtend extends StatefulWidget {
-  ScreenDetailPatientAtend(this.patientItem,this.MainCtx);
+  ScreenDetailPatientAtend(this.patientItem,this.MainCtx,this.formattedDateFrom,this.formattedDateTo);
   ModelPatient patientItem;
   BuildContext MainCtx;
+  String formattedDateFrom;
+  String formattedDateTo;
   @override
   State<ScreenDetailPatientAtend> createState() => _ScreenDetailPatientState();
 }
@@ -501,15 +503,12 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
   }
 
   Future getInfoOfPatient()async{
-    Jalali date=Jalali.now();
     isLoading=true;
     setState(() {
 
     });
-    String formattedDate =
-        '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatientLab(formattedDate,context);
+    var Data= await ApiServiceReception.ListPatientLab(widget.formattedDateFrom,widget.formattedDateTo,context);
 
 
     if(Data!=null)

@@ -1,5 +1,6 @@
 import 'dart:html' as html;
 import 'dart:typed_data';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,6 +33,8 @@ class _WebImagePickerState extends State<WebImagePicker> {
   Future<void> uploadImage(Uint8List imageBytes, String fileName) async {
     final uri = Uri.parse("https://api.appstrok.ir/Patients/AddImages");
     final request = http.MultipartRequest('POST', uri);
+
+
 
 
     SharedPreferences prefs = await SharedPreferences.getInstance();

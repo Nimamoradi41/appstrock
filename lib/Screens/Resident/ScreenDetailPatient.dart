@@ -439,13 +439,13 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
 
     getInfoOfPatient();
 
+    var connect=SignalRService();
     // اتصال اولیه
-    SignalRService().initConnection();
+    connect.initConnection();
 
-    // گوش دادن به پیام‌ها
-    SignalRService().messageStream.listen((message) {
+    connect.onMessageReceived = () {
       getInfoOfPatient();
-    });
+    };
   }
 
   Future RunBload(String Blod) async {

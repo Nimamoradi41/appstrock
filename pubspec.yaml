@@ -52,6 +52,8 @@ dependencies:
   persian_datetime_picker : any
 #  image_picker_web: any
   image_picker: any
+  excel: ^2.1.0
+  universal_html: ^2.2.3
 
 
   # The following adds the Cupertino Icons font to your application.

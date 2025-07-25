@@ -26,6 +26,31 @@ class TextApp extends StatelessWidget {
   }
 }
 
+class TextAppFromStart extends StatelessWidget {
+
+  String Title;
+  double Fontsize;
+  Color Mcolor;
+  bool Isbold=false;
+
+
+  TextAppFromStart(this.Title, this.Fontsize, this.Mcolor, this.Isbold);
+
+
+  @override
+  Widget build(BuildContext context) {
+    Fontsize=Fontsize-1;
+    return Text(Title,
+      textAlign: TextAlign.start,
+      style: TextStyle(
+          color: Mcolor,
+          fontSize: Fontsize,
+          fontWeight: Isbold==true?
+          FontWeight.bold:FontWeight.normal
+      ),);
+  }
+}
+
 class TextAppEnd extends StatelessWidget {
 
   String Title;

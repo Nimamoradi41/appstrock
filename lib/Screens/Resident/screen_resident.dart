@@ -76,7 +76,7 @@ class _ScreenResidentState extends State<ScreenResident> {
       lastDate: Jalali(1450, 9),
       initialDate: dateTo==null? Jalali.now():dateTo!!,
     );
-    dateFrom=pickedTo;
+    dateTo=pickedTo;
 
     if(pickedTo!=null) {
       runListByDate(context,pickedFrom,pickedTo);
@@ -94,6 +94,7 @@ class _ScreenResidentState extends State<ScreenResident> {
       formattedDateFrom =
         '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
 
+    formattedDateTo=formattedDateFrom;
     // ignore: use_build_context_synchronously
     var Data= await ApiServiceReception.ListPatient(formattedDateFrom,context);
 

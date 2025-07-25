@@ -120,6 +120,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     }
   }
 
+  // int compose
+
   Future AddResean(
       bool MisdiagnosisOfTriage, bool MisdiagnosisOfEms, bool OverTime) async {
     ShowLoadingApp(context);
@@ -176,7 +178,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     var Data = await ApiServiceReception.SetInjectionReason(
         context, widget.patientItem.id.toString(), Str);
 
-
     if (Data != null) {
       if (Data.success) {
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
@@ -186,7 +187,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
         ShowErrorMsg(context, Data.message);
       }
     }
-
 
     Navigator.pop(context);
   }
@@ -307,8 +307,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
 
   Timer? _timer;
 
-  // var TimeEffect=0.0;
-  // var TimeTaInjection=0.0;
+
 
   var TimeTaInjectionStr = '0';
   var TimeEffectStr = "0";
@@ -348,8 +347,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
         }
 
         if (Notifi.patientItem.signsStartTS != 0) {
-          var date = DateTime.fromMillisecondsSinceEpoch(
-              Notifi.patientItem.signsStartTS!!);
+          var date = DateTime.fromMillisecondsSinceEpoch(Notifi.patientItem.signsStartTS!!);
 
           _elapsedTime = DateTime.now().difference(date);
 
@@ -357,8 +355,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
         }
 
         if (Notifi.patientItem.insertTimeTS != 0) {
-          var date = DateTime.fromMillisecondsSinceEpoch(
-              Notifi.patientItem.insertTimeTS!!);
+          var date = DateTime.fromMillisecondsSinceEpoch(Notifi.patientItem.insertTimeTS!!);
 
           _elapsedTimeArriveToHospital = DateTime.now().difference(date);
 
@@ -436,8 +433,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     providerTimer = Provider.of<ProviderTimers>(context, listen: false);
     Notifi = Provider.of<ProviderResidentDetaile>(context, listen: false);
 
-
-
     getInfoOfPatient();
 
     var connect=SignalRService();
@@ -466,11 +461,11 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     }
   }
 
-  Future RequestAddTimeInjection(String Time,String timeStamp ) async {
+  Future RequestAddTimeInjection(String Time,String timeStamp,String medicen) async {
     ShowLoadingApp(context);
     // ignore: use_build_context_synchronously
     var Data = await ApiServiceResident.TimeOfInjection(
-        widget.patientItem.id.toString(), context, Time, timeStamp.toString());
+        widget.patientItem.id.toString(), context, Time, timeStamp.toString(),medicen);
     Navigator.pop(context);
     if (Data != null) {
       if (Data.success) {
@@ -527,8 +522,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                   margin: EdgeInsets.only(top: 16),
                   child: ScreenFormTimeInjection((pa) async {
                     RequestAddTimeInjection(
-                        pa[0]['selected_answer'].toString(),pa[1]['selected_answer'].toString());
-                  })),
+                        pa[0]['selected_answer'].toString(),pa[1]['selected_answer'].toString(),pa[2]['selected_answer'].toString());
+                  },Notifi.patientItem.medicine!)),
             ],
           );
         });
@@ -544,14 +539,12 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
 
     Jalali date = Jalali.now();
 
-
     // ignore: use_build_context_synchronously
     var Data = await ApiServiceReception.PatientListBetweenDate(widget.formattedDateFrom,widget.formattedDateTo, context);
 
     if (Data != null) {
       if (Data.success) {
-        var finded = Data.data
-            .firstWhere((element) => element.id == widget.patientItem.id);
+        var finded = Data.data.firstWhere((element) => element.id == widget.patientItem.id);
         Notifi.setItems(finded);
         isLoading = false;
         setState(() {});
@@ -571,6 +564,10 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
         ShowErrorMsg(context, Data.message);
       }
     }
+
+
+
+
   }
 
   @override
@@ -683,12 +680,12 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                                         width: 2,
                                                       ),
                                                       TextApp(
-                                                          Notifi.patientItem!
+                                                          Notifi.patientItem
                                                                   .seenByAttend!
                                                               ? 'دکتر متخصص مشاهده کرده است'
                                                               : 'دکتر متخصص مشاهده نکرده است',
                                                           10,
-                                                          Notifi.patientItem!
+                                                          Notifi.patientItem
                                                                   .seenByAttend!
                                                               ? Colors.green
                                                               : Colors.red,
@@ -872,6 +869,10 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                           child: Column(
                                             children: [
                                               BoxInformation(
+                                                  value: Notifi.patientItem.needToMT?'فعال':'غیر فعال',
+                                                  title:' :  MT وضعیت' ),
+
+                                              BoxInformation(
                                                   value: Notifi
                                                           .patientItem
                                                           .timeOfAddToSystem
@@ -909,7 +910,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                                                 value: provider
                                                                     .timerTimerSymptomOnset,
                                                                 title:
-                                                                    ' :  تایمر بر اساس زمان شروع علائم'),
+                                                                ' :  تایمر بر اساس زمان شروع علائم'),
                                                           ],
                                                         );
                                                       },
@@ -1280,6 +1281,12 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                                               title:
                                                                   ' :  زمان تزریق',
                                                               onTap: () {
+
+                                                                if(Notifi.patientItem.injectionType==2)
+                                                                {
+                                                                  return;
+                                                                }
+
                                                                 if (Notifi.patientItem.timeOfInjection!.isEmpty &&
                                                                     Notifi.patientItem.is724IsComplete!) {
                                                                   AddTimeInjection();
@@ -1287,6 +1294,47 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                                               },
                                                             )
                                                           : Container(),
+
+                                                      Notifi.patientItem
+                                                          .medicine !=0
+                                                          ? BoxInformation(
+                                                        value: Notifi.patientItem
+                                                            .medicine==1
+                                                            ? 'آلتپلاز':
+                                                        Notifi.patientItem
+                                                            .medicine==2
+                                                            ? 'تنکتپلاز':'آلتلایز(ایرانی)',
+                                                        title:
+                                                        ' : داروی تزریق شده',
+                                                        onTap: () {
+                                                          if (Notifi.patientItem.timeOfInjection!.isEmpty &&
+                                                              Notifi.patientItem.is724IsComplete!) {
+                                                            AddTimeInjection();
+                                                          }
+                                                        },
+                                                      )
+                                                          : Container(),
+
+                                                      Notifi.patientItem
+                                                          .recommendedMedication !=0
+                                                          ? BoxInformation(
+                                                        value: Notifi.patientItem
+                                                            .recommendedMedication==1
+                                                            ? 'آلتپلاز':
+                                                        Notifi.patientItem
+                                                            .recommendedMedication==2
+                                                            ? 'تنکتپلاز':'آلتلایز(ایرانی)',
+                                                        title:
+                                                        ' : داروی پیشنهاد شده توسط دکتر متخصص',
+                                                        onTap: () {
+                                                          if (Notifi.patientItem.timeOfInjection!.isEmpty &&
+                                                              Notifi.patientItem.is724IsComplete!) {
+                                                            AddTimeInjection();
+                                                          }
+                                                        },
+                                                      )
+                                                          : Container(),
+
                                                       Notifi.patientItem.otn
                                                               .isEmpty
                                                           ? Container()

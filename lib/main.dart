@@ -2,6 +2,7 @@
 
 import 'package:appstrock/Screens/Ems/ProviderEms/ProviderEms.dart';
 import 'package:appstrock/report/FirstReportScreen.dart';
+import 'package:appstrock/report/ProviderFirstReport.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +13,7 @@ import 'Screens/Reception/ProviderReception/ProviderReception.dart';
 import 'Screens/Resident/ProviderResident/ProviderResident.dart';
 import 'Screens/Resident/ProviderResident/ProviderResidentDetaile.dart';
 import 'Screens/Resident/ProviderResident/ProviderTimers.dart';
+import 'Screens/SplashScreen.dart';
 import 'Screens/Strok/ProviderStrok/ProviderStrok.dart';
 import 'Screens/Teriazh/ProviderTeraizh.dart';
 import 'Screens/sickcarrier/ProviderSickCarrier/ProviderSickCarrier.dart';
@@ -29,6 +31,7 @@ void main() {
     ChangeNotifierProvider(create: (context) => ProviderTeraizh()),
     ChangeNotifierProvider(create: (context) => ProviderStrok()),
     ChangeNotifierProvider(create: (context) => ProviderTimers()),
+    ChangeNotifierProvider(create: (context) => ProviderFirstReport()),
   ], child: MyApp()));
 }
 
@@ -49,8 +52,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         theme: ThemeData(fontFamily: 'iransans'),
         debugShowCheckedModeBanner: false,
-        // home: const SplashScreen()
-        home: const FirstReportScreen()
+        home:  const SplashScreen()
+        // home: const FirstReportScreen()
         // home: WebImagePicker('نیما','27','1742778887','مرد','541541')
         // home: ScreenRigester());
         // home: testt()

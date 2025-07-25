@@ -37,6 +37,7 @@ class ModelPatient {
   bool needToMRI;
   bool isNot724;
   bool needToCT;
+  bool needToMT;
   bool nihsIsComplete;
   bool? notInjectingIsComplete;
   bool? isFinished;
@@ -98,6 +99,8 @@ class ModelPatient {
   bool?  c22;
   bool  trop;
   int?  bs;
+  int?  medicine;
+  int?  recommendedMedication;
 
 
   ModelPatient({
@@ -200,6 +203,9 @@ class ModelPatient {
     required this.hb,
     required this.timeFinish,
     required this.dateFinishShamsi,
+    required this.needToMT,
+    required this.medicine,
+    required this.recommendedMedication,
   });
 
   factory ModelPatient.fromJson(Map<String, dynamic> json) => ModelPatient(
@@ -224,6 +230,7 @@ class ModelPatient {
     hb: json["hb"]?? '',
     fssDate: json["fssDate"]?? '',
     nihsSubscore: json["nihsSubscore"]?? 0,
+    recommendedMedication: json["recommendedMedication"]?? 0,
     lkwDate: json["lkwDate"]?? '',
     signsStartTSFSS: json["signsStartTSFSS"]?? 0,
     signsStartTSLKW: json["signsStartTSLKW"]?? 0,
@@ -240,10 +247,12 @@ class ModelPatient {
     dateOfAddToStart: json["dateOfAddToStart"]?? '',
     signsStartTime: json["signsStartTime"]?? '',
     injectionTimeTS: json["injectionTimeTS"]?? 0,
+    medicine: json["medicine"]?? 0,
     timeOfAddLabotory: json["timeOfAddLabotory"]?? '',
     timeOfInjection: json["timeOfInjection"]?? '',
     ResonNot: json["ResonNot"]??'',
     needToMRI: json["needToMRI"]??false,
+    needToMT: json["needToMT"]??false,
     c1: json["c1"]??false,
     c2: json["c2"]??false,
     c3: json["c3"]??false,

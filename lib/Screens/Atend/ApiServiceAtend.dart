@@ -101,55 +101,29 @@ class ApiServiceAtend{
         ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
       }) ;
 
-
-      print(response.statusCode.toString());
-      print(response.reasonPhrase.toString());
       if(response.statusCode==200)
       {
         String str= await response.stream.bytesToString();
-        print(str);
         ModelNeetToCt data= await  modelNeetToCtFromJson(str);
         login=data;
       }else {
         ShowErrorMsg(context,response.reasonPhrase.toString());
-
       }
     }  on SocketException catch (e) {
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
 
     } on TimeoutException catch (e) {
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
-
     } on Error catch (e)
     {
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     return login;
   }
 
-
-
   static Future<ModelImages> GetPatientImages(String id,BuildContext context) async {
     var login;
-
-
-
-
 
     var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients/GetPatientImages'));
     request.fields.addAll({
@@ -180,13 +154,5 @@ class ApiServiceAtend{
 
     return login;
   }
-
-
-
-
-
-
-
-
 
 }

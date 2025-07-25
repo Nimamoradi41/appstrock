@@ -8,8 +8,9 @@ import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 class ScreenFormTimeInjection extends StatefulWidget {
   late void Function(List<Map<String, String>>) onClose;
 
-  ScreenFormTimeInjection(this.onClose);
+  ScreenFormTimeInjection(this.onClose,this.medicineSelected);
 
+  int medicineSelected;
   @override
   State<ScreenFormTimeInjection> createState() => _ScreenFormIsNot724State();
 
@@ -18,9 +19,13 @@ class ScreenFormTimeInjection extends StatefulWidget {
 
 class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
   bool _checkBox1 = false;
-  bool _checkBox2 = false;
-  bool _checkBox3 = false;
 
+
+
+
+  String? selectedValue;
+
+  int selectedInt=0;
 
   void _submitForm() {
     List<Map<String, String>> answers = [];
@@ -33,6 +38,12 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
     answers.add({
       'question': "2",
       'selected_answer': timeStampSelected.toString(),
+    });
+
+
+    answers.add({
+      'question': "3",
+      'selected_answer': selectedInt.toString(),
     });
 
 
@@ -50,7 +61,6 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
   }
 
 
-
   late TimeOfDay TimeNowKnow;
 
 
@@ -61,7 +71,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
     var picked = await showPersianTimePicker(
       context: context,
       builder: (BuildContext context, Widget? child) {
-        return Directionality(
+        return  Directionality(
           textDirection: TextDirection.rtl,
           child: MediaQuery(
             data: MediaQuery.of(context)
@@ -124,6 +134,39 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
     super.initState();
     TimeNowKnow=TimeOfDay.now();
     TimeNowKnowStr=Convert_Time(TimeNowKnow.hour.toString(),TimeNowKnow.minute.toString());
+
+    // ساختن DateTime از تاریخ امروز و ساعتی که انتخاب کردی
+    final now = DateTime.now();
+    final selectedDateTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      now.hour,
+      now.minute,
+    );
+
+
+    final timestamp = selectedDateTime.millisecondsSinceEpoch;
+
+
+    timeStampSelected=timestamp.toString();
+
+
+    if(widget.medicineSelected==1)
+      {
+        selectedValue='آلتپلاز';
+      }
+
+    if(widget.medicineSelected==2)
+    {
+      selectedValue='تنکتپلاز';
+    }
+
+    if(widget.medicineSelected==3)
+    {
+      selectedValue='آلتلایز(ایرانی)';
+    }
+
   }
   @override
   Widget build(BuildContext context) {
@@ -148,16 +191,16 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
               SizedBox(height: 16,),
               Row(
                 children: [
-                  Expanded(child: InkWell(
-                    onTap: (){
-                      PersianTimeCalender(!_checkBox1,false);
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        TextApp2('زمان تزریق',14,Colors.black54,true),
-                        SizedBox(height: 8,),
-                        Container(
+                  Expanded(child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      TextApp2('زمان تزریق',14,Colors.black54,true),
+                      SizedBox(height: 8,),
+                      InkWell(
+                        onTap:  (){
+                          PersianTimeCalender(!_checkBox1,false);
+                        },
+                        child: Container(
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
@@ -180,8 +223,29 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: 8,),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.black12,width: 2)
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          child: Row(
+                            children: [
+                              Expanded(child: buildRadio('آلتپلاز',1)),
+                              Expanded(child:buildRadio('تنکتپلاز',2) ),
+                              Expanded(child: buildRadio('آلتلایز(ایرانی)',3))
+                            ],
+                          ),
+                        ),
+                      ),
+
+
+
+                    ],
                   )),
 
                 ],
@@ -244,4 +308,23 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
       ),
     );
   }
+
+  Widget buildRadio(String value,int data) {
+    return RadioListTile<String>(
+      title: Text(
+        value,
+        style: const TextStyle(fontSize: 12),
+      ),
+      value: value,
+      groupValue: selectedValue,
+      controlAffinity: ListTileControlAffinity.trailing, // دکمه سمت راست
+      onChanged: (val) {
+        setState(() {
+          selectedValue = val;
+          selectedInt=data;
+        });
+      },
+    );
+  }
+
 }

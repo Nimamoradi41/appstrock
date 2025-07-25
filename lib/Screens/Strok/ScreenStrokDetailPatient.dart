@@ -79,7 +79,7 @@ class _ScreenDetailPatientState extends State<ScreenStrokDetailPatient> {
 
                     RequestAddTimeInjection(pa[0]['selected_answer'].toString());
 
-                  })),
+                  },0)),
             ],
           );
 

@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:appstrock/Screens/Autentication/Models/ModelLogin.dart';
+import 'package:appstrock/report/model/ModelFirstReport.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:http/http.dart'as http;
@@ -13,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
 import '../Autentication/Models/ModelChangeshift.dart';
+import '../Resident/Models/ModelTimer.dart';
 import 'Model/ModelListPatient.dart';
 
 
@@ -188,6 +190,92 @@ class ApiServiceReception{
     return login;
   }
 
+  static Future<ModelTimer> timeNow(BuildContext context) async {
+    var login;
+
+    var request = http.MultipartRequest('GET', Uri.parse('https://api.appstrok.ir/Default/GetTime'));
+
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelTimer data= await  modelTimerFromJson(str);
+        login=data;
+      }else{
+        ShowErrorMsg(context,response.reasonPhrase.toString());
+
+      }
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+
+    } on Error catch (e) {
+      print(e.toString());
+      ShowErrorMsg(context, 'مشکلی در ارتباط با سرور به وجود آمده');
+    }
+
+
+    return login;
+  }
+
+  static Future<ModelFirstReport> firstReport(BuildContext context,String fromDate,String toDate) async {
+    var login;
+
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Report/GetPatientSummaryReport'));
+
+    request.fields.addAll({
+      'fromDate': fromDate,
+      'toDate': toDate,
+    });
+
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+
+
+
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelFirstReport data= await  modelReportFromJson(str);
+        login=data;
+      }else{
+        ShowErrorMsg(context,response.reasonPhrase.toString());
+
+      }
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+
+    } on Error catch (e) {
+      print(e.toString());
+      ShowErrorMsg(context, 'مشکلی در ارتباط با سرور به وجود آمده');
+    }
+
+
+    return login;
+  }
+
+
 
   static Future<ModelListPatient> ListPatientLab(String startDate,String endDate,BuildContext context) async {
     var login;
@@ -352,7 +440,7 @@ class ApiServiceReception{
     return login;
   }
 
-  static Future<ModelLogin> SetInjectionStatus(BuildContext context,String patientId,bool status) async {
+  static Future<ModelLogin> SetInjectionStatus(BuildContext context,String patientId,bool status,String recommendedMedical) async {
     var login;
 
 
@@ -370,6 +458,7 @@ class ApiServiceReception{
       'id': patientId,
       'userId': UserId.toString(),
       'status': status.toString(),
+      'RecommendedMedication': recommendedMedical.toString(),
     });
 
 

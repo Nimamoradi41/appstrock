@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:appstrock/Screens/Atend/ScreenFormMedicalInjection.dart';
 import 'package:appstrock/Screens/Atend/ScreenListImages.dart';
 import 'package:appstrock/Screens/Resident/ApiServiceResident.dart';
 import 'package:appstrock/Screens/Resident/ScreenFormNIHS.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -158,24 +160,44 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
   }
 
   Future   setInjectionTrue(String id,BuildContext context) async {
-    ShowLoadingApp(context);
-    // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.SetInjectionStatus(context,widget.patientItem.id.toString(),true);
+
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+        ),
+        builder: (ctx) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                  margin: EdgeInsets.only(top: 16),
+                  child: ScreenFormMedicalInjection((pa) async {
+                    // ignore: use_build_context_synchronously
+                    ShowLoadingApp(context);
+                    var Data= await ApiServiceReception.SetInjectionStatus(context,widget.patientItem.id.toString(),true,pa[0]['selected_answer'].toString());
+
+                    Navigator.pop(context);
+
+                    if(Data!=null)
+                    {
+                      if(Data.success)
+                      {
+                        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+                        getInfoOfPatient();
+                      }else{
+                        // ignore: use_build_context_synchronously
+                        ShowErrorMsg(context, Data.message);
+                      }
+                    }
 
 
-    if(Data!=null)
-    {
-      if(Data.success)
-      {
-        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-        getInfoOfPatient();
-      }else{
-        // ignore: use_build_context_synchronously
-        ShowErrorMsg(context, Data.message);
-      }
-    }
+                  },0)),
+            ],
+          );
+        });
 
-    Navigator.pop(context);
+
   }
 
   Future   setInjectionReason(String id,BuildContext context,List<Map<String, dynamic>> Str) async
@@ -203,7 +225,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
   {
     ShowLoadingApp(context);
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.SetInjectionStatus(context,widget.patientItem.id.toString(),false);
+    var Data= await ApiServiceReception.SetInjectionStatus(context,widget.patientItem.id.toString(),false,'0');
     print(Data.toJson());
 
     if(Data!=null)
@@ -244,11 +266,11 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
   Duration _elapsedTimeFss = Duration.zero;
   Duration _elapsedTimeArriveToHospital = Duration.zero;
    late DateTime TimeEffect;
-  Future RequestAddTimeInjection(String Time,String timeStamp ) async {
+  Future RequestAddTimeInjection(String Time,String timeStamp ,String medicene) async {
     ShowLoadingApp(context);
     // ignore: use_build_context_synchronously
     var Data = await ApiServiceResident.TimeOfInjection(
-        widget.patientItem.id.toString(), context, Time, timeStamp.toString());
+        widget.patientItem.id.toString(), context, Time, timeStamp.toString(),medicene);
     Navigator.pop(context);
     if (Data != null) {
       if (Data.success) {
@@ -276,8 +298,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                   margin: EdgeInsets.only(top: 16),
                   child: ScreenFormTimeInjection((pa) async {
                     RequestAddTimeInjection(
-                        pa[0]['selected_answer'].toString(),pa[1]['selected_answer'].toString());
-                  })),
+                        pa[0]['selected_answer'].toString(),pa[1]['selected_answer'].toString(),pa[2]['selected_answer'].toString());
+                  },Notifi.patientItem.medicine!)),
             ],
           );
         });
@@ -572,6 +594,22 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
     }
   }
 
+  Future changeTM()async{
+    ShowLoadingApp(context);
+    var Data= await ApiServiceResident.changeTM(widget.patientItem.id.toString(),context);
+    Navigator.pop(context);
+    if(Data!=null)
+    {
+      if(Data.success)
+      {
+        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+        getInfoOfPatient();
+      }else{
+        ShowErrorMsg(context, Data.message);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double wid=MediaQuery.of(context).size.width;
@@ -762,6 +800,29 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                                   child: SingleChildScrollView(
                                     child: Column(
                                       children: [
+                                        Row(
+                                          children: [
+                                            SizedBox(width: 8,),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                              child: Consumer<ProviderAtendDetaile>(
+                                                builder: (context,newstate,child){
+                                                  return FlutterSwitch(
+                                                    value: newstate.patientItem.needToMT,
+                                                    activeColor: Color(0xff38b000),
+                                                    onToggle: (val) {
+                                                      changeTM();
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            Expanded(child: TextApp2(' :  MT وضعیت',12,ColorTextsubject,false)),
+                                            SizedBox(width: 16 ,)
+                                          ],
+
+                                        ),
+
                                         BoxInformation(
                                             value: Notifi.patientItem.timeOfAddToSystem.isEmpty  ?
                                             'نامشخص':Notifi.patientItem.timeOfAddToSystem, title: ' :  زمان ثبت در سیستم'
@@ -889,7 +950,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                                                 Notifi.patientItem.injectionType!=0?
                                                 BoxInformation(value:Notifi.patientItem.injectionType==1?
                                                 'تزریق':
-                                                'تزریق نشود', title:
+                                                'تزریق نشود',
+                                                    title:
                                                 ' :  وضعیت تزریق'
                                                 ):Container(),
 
@@ -979,12 +1041,57 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                                                   , title:
                                                   ' :  زمان تزریق',
                                                   onTap: (){
+                                                  if(Notifi.patientItem.injectionType==2)
+                                                    {
+                                                      return;
+                                                    }
+
                                                     if (Notifi.patientItem.timeOfInjection!.isEmpty &&
                                                         Notifi.patientItem.is724IsComplete!) {
                                                       AddTimeInjection();
                                                     }
                                                   },
                                                 ):Container(),
+
+                                                Notifi.patientItem
+                                                    .medicine !=0
+                                                    ? BoxInformation(
+                                                  value: Notifi.patientItem
+                                                      .medicine==1
+                                                      ? 'آلتپلاز':
+                                                  Notifi.patientItem
+                                                      .medicine==2
+                                                      ? 'تنکتپلاز':'آلتلایز(ایرانی)',
+                                                  title:
+                                                  ' : داروی تزریق شده',
+                                                  onTap: () {
+                                                    if (Notifi.patientItem.timeOfInjection!.isEmpty &&
+                                                        Notifi.patientItem.is724IsComplete!) {
+                                                      AddTimeInjection();
+                                                    }
+                                                  },
+                                                )
+                                                    : Container(),
+
+                                                Notifi.patientItem
+                                                    .recommendedMedication !=0
+                                                    ? BoxInformation(
+                                                  value: Notifi.patientItem
+                                                      .recommendedMedication==1
+                                                      ? 'آلتپلاز':
+                                                  Notifi.patientItem
+                                                      .recommendedMedication==2
+                                                      ? 'تنکتپلاز':'آلتلایز(ایرانی)',
+                                                  title:
+                                                  ' : داروی پیشنهاد شده توسط دکتر متخصص',
+                                                  onTap: () {
+                                                    if (Notifi.patientItem.timeOfInjection!.isEmpty &&
+                                                        Notifi.patientItem.is724IsComplete!) {
+                                                      AddTimeInjection();
+                                                    }
+                                                  },
+                                                )
+                                                    : Container(),
 
                                                 Notifi.patientItem.otn.isEmpty?
                                                 Container():

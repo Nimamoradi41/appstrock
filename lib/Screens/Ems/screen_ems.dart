@@ -15,15 +15,19 @@ import '../Reception/ApiServiceReception.dart';
 import '../Reception/screen_reception.dart';
 import 'ProviderEms/ProviderEms.dart';
 
- class ScreenEms extends StatefulWidget {
+class ScreenEms extends StatefulWidget {
    late bool isAtend;
+
    ScreenEms(this.isAtend){}
+
    @override
   State<ScreenEms> createState() => _ScreenEmsState();
+
 }
 
 class _ScreenEmsState extends State<ScreenEms> {
    bool status=false;
+
    var items = [
      'مرد',
      'زن',
@@ -69,9 +73,6 @@ class _ScreenEmsState extends State<ScreenEms> {
        return;
      }
 
-
-
-
      // var check=checkMeliCode(TextConCode.text.toString());
      // if(!check)
      // {
@@ -79,18 +80,23 @@ class _ScreenEmsState extends State<ScreenEms> {
      //   return;
      // }
 
-
      Jalali date=Jalali.now();
-     String formattedDate =
-         '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+     String formattedDate = '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
      // چاپ تاریخ جلالی با فرمت مورد نظر
      print('تاریخ جلالی فعلی: $formattedDate');
      ShowLoadingApp(context);
 
      var age=convertPersianNumbersToEnglish( TextConAge.text.toString());
      var  timestamp=DateTime.now().millisecondsSinceEpoch;
-     var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
-         age,Notifi.dropdownvalue=='مرد'?2:1,context,timestamp);
+
+
+     var typeInput="2";
+
+     if(widget.isAtend)
+       {
+         typeInput="3";
+       }
+     var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),age,Notifi.dropdownvalue=='مرد'?2:1,typeInput,context,timestamp);
      if(Data!=null)
      {
        if(Data.success)
@@ -108,8 +114,6 @@ class _ScreenEmsState extends State<ScreenEms> {
      }
    }
 
-
-
    var TextConName=TextEditingController();
 
    var TextConCode=TextEditingController();
@@ -120,7 +124,6 @@ class _ScreenEmsState extends State<ScreenEms> {
 
    Future   ChangShift(bool StatusNew,BuildContext context) async
    {
-
 
      ShowLoadingApp(context);
      // ignore: use_build_context_synchronously
@@ -147,6 +150,7 @@ class _ScreenEmsState extends State<ScreenEms> {
 
 
    }
+
    Future ClearAllDate()async{
      SharedPreferences prefs = await SharedPreferences.getInstance();
      prefs.clear();
@@ -163,16 +167,17 @@ class _ScreenEmsState extends State<ScreenEms> {
 
 
    }
+
    @override
   void initState() {
     super.initState();
     GetInfo();
   }
+
    @override
    Widget build(BuildContext context) {
      Notifi=Provider.of<ProviderEms>(context);
      double wid=MediaQuery.of(context).size.width;
-     double hei=MediaQuery.of(context).size.height;
      wid=wid>600?600:wid;
      return SafeArea(
        child: Scaffold(
@@ -519,5 +524,6 @@ class _ScreenEmsState extends State<ScreenEms> {
        ),
      );
    }
+
 }
 

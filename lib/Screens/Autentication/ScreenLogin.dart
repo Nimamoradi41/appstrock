@@ -190,7 +190,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                         'نام کاربری',14, ColorApp,false),
                                       )  ,
                                     SizedBox(height: 8),  // فاصله بین عنوان و فیلد
-                                TextField(
+                                    TextField(
                                   controller: textControllerName,
                                   style: const TextStyle(
                                     fontFamily: 'rob',

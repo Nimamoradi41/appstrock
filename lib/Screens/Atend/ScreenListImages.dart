@@ -28,7 +28,6 @@ class _ScreenListImagesState extends State<ScreenListImages> {
 
       var Data= await ApiServiceAtend.GetPatientImages(widget.Id.toString(),context);
 
-
       if(Data!=null)
       {
         if(Data.success)

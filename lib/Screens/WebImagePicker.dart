@@ -10,6 +10,8 @@ import '../Widgets/TextApp.dart';
 import 'Autentication/Models/ModelLogin.dart';
 import 'Resident/Models/ModelNeetToCt.dart';
 
+import 'package:image/image.dart' as img;
+
 
 class WebImagePicker extends StatefulWidget {
 
@@ -31,59 +33,93 @@ class _WebImagePickerState extends State<WebImagePicker> {
 
 
   Future<void> uploadImage(Uint8List imageBytes, String fileName) async {
-    final uri = Uri.parse("https://api.appstrok.ir/Patients/AddImages");
-    final request = http.MultipartRequest('POST', uri);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? UserId;
 
-    // UserId
+    setState(() {
+      isLoading=true;
+    });
 
-    if(prefs.getString('UserId')!=null)
-    {
-      UserId=prefs.getString('UserId')!;
-    }
+    var image= await compressImagePreserveSize( originalBytes: imageBytes,quality: 60);
+    if(image!=null)
+      {
+        final uri = Uri.parse("https://api.appstrok.ir/Patients/AddImages");
+        final request = http.MultipartRequest('POST', uri);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? UserId;
 
-    // فیلدهای متنی
-    request.fields['patientId'] = widget.patientID;
-    request.fields['userId'] = UserId.toString();
+        // UserId
+
+        if(prefs.getString('UserId')!=null)
+        {
+          UserId=prefs.getString('UserId')!;
+        }
+
+        // فیلدهای متنی
+        request.fields['patientId'] = widget.patientID;
+        request.fields['userId'] = UserId.toString();
 
 
-    request.files.add(
-      http.MultipartFile.fromBytes(
-        'Images',
-        imageBytes,
-        filename: fileName,
-        contentType: getMediaType(fileName),
-      ),
-    );
+        request.files.add(
+          http.MultipartFile.fromBytes(
+            'Images',
+            imageBytes,
+            filename: fileName,
+            contentType: getMediaType(fileName),
+          ),
+        );
 
-    try {
-      setState(() {
-        isLoading=true;
-      });
-      final response = await request.send();
+        try {
+          final response = await request.send();
+          setState(() {
+            isLoading=false;
+          });
+
+          if (response.statusCode == 200) {
+            ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+          } else if(response.statusCode==400)
+          {
+            String str= await response.stream.bytesToString();
+            ModelLogin data=   modelLoginFromJson(str);
+            ShowErrorMsg(context,data.message);
+          }
+          else if(response.statusCode==403)
+          {
+            String str= await response.stream.bytesToString();
+            ModelLogin data=   modelLoginFromJson(str);
+            ShowErrorMsg(context,data.message);
+
+          }
+        } catch (e) {
+          print("خطای شبکه: $e");
+        }
+      }else{
       setState(() {
         isLoading=false;
       });
-
-      if (response.statusCode == 200) {
-        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-      } else if(response.statusCode==400)
-      {
-        String str= await response.stream.bytesToString();
-        ModelLogin data=   modelLoginFromJson(str);
-        ShowErrorMsg(context,data.message);
-      }
-      else if(response.statusCode==403)
-      {
-        String str= await response.stream.bytesToString();
-        ModelLogin data=   modelLoginFromJson(str);
-        ShowErrorMsg(context,data.message);
-
-      }
-    } catch (e) {
-      print("خطای شبکه: $e");
+      ShowErrorMsg(context, 'مشکلی در آپلود عکس به وجود آمده');
     }
+
+
+
+  }
+
+
+  /// فشرده‌سازی تصویر با حفظ اندازه اصلی و کاهش کیفیت
+  Future<Uint8List?> compressImagePreserveSize({
+    required Uint8List originalBytes,
+    int quality = 60, // بین 0 تا 100 (پیش‌فرض: 60)
+  }) async {
+    // Decode image
+    final image = img.decodeImage(originalBytes);
+    if (image == null) {
+      throw Exception("تصویر قابل شناسایی نیست.");
+    }
+
+    // فقط کیفیت رو کم می‌کنیم، بدون تغییر سایز
+    final compressedBytes = Uint8List.fromList(
+      img.encodeJpg(image, quality: quality),
+    );
+
+    return compressedBytes;
   }
 
 

@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
 import '../../Widgets/TextApp.dart';
+import '../../report/FirstReportScreen.dart';
 import '../Autentication/screen_EditProfile.dart';
 import '../Reception/Model/ModelPatient.dart';
 import '../SplashScreen.dart';
@@ -53,10 +54,11 @@ class _ScreenAtendState extends State<ScreenAtend> {
   Future RunListP(BuildContext context,bool refresh) async
   {
     Jalali date=Jalali.now();
-    String formattedDate =
-        '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+      formattedDateFrom = '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
+
+    formattedDateTo=formattedDateFrom;
     // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatientLab(formattedDate,formattedDate,context);
+    var Data= await ApiServiceReception.ListPatientLab(formattedDateFrom,formattedDateFrom,context);
 
 
     if(refresh)
@@ -275,11 +277,11 @@ class _ScreenAtendState extends State<ScreenAtend> {
                               quarterTurns: 0,
                               child: InkWell(
                                 onTap: (){
-                                  GoNextPage(context, screen_EditProfile());
+                                  GoNextPage(context, FirstReportScreen());
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.all(16.0),
-                                  child: Icon(Icons.person,color: Colors.white,size: 30,),
+                                  child: Icon(Icons.bar_chart,color: Colors.white,size: 30,),
                                 ),
                               ),
                             ),

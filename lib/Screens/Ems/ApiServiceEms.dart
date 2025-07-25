@@ -22,12 +22,17 @@ class ApiServiceEms{
       String NationalCode,
       String Age,
       int GenderId,
+      String typeInput,
       BuildContext context, int timestamp) async {
     var login;
 
 
     var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients'));
 
+
+    // typeInput== 1 teriag
+    // typeInput== 2 ems
+    // typeInput== 3 Atend
 
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -45,6 +50,7 @@ class ApiServiceEms{
       'Date': Date,
       'NationalCode': NationalCode,
       'Age': Age,
+      'typeInput': typeInput.toString(),
       'GenderId': GenderId.toString(),
       // 'InsertBy': UserId.toString()
       'InsertBy': UserId.toString(),
@@ -120,7 +126,7 @@ class ApiServiceEms{
     // UserId
 
     request.fields.addAll({
-      'id': '33',
+      'id': UserId.toString(),
     });
 
     try{

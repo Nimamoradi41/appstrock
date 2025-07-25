@@ -113,7 +113,7 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
     var age=convertPersianNumbersToEnglish( TextConAge.text.toString());
     var  timestamp=DateTime.now().millisecondsSinceEpoch;
     var Data=await ApiServiceEms.AddPatient(TextConName.text,formattedDate,TextConCode.text.toString(),
-        age,dropdownvalue=='مرد'?2:1,context,timestamp);
+        age,dropdownvalue=='مرد'?2:1,"1",context,timestamp);
 
     if(Data!=null)
     {

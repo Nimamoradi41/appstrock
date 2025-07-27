@@ -29,6 +29,17 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
 
   void _submitForm() {
     List<Map<String, String>> answers = [];
+
+    TimeNowKnow=TimeOfDay.now();
+    TimeNowKnowStr=Convert_Time(TimeNowKnow.hour.toString(),TimeNowKnow.minute.toString());
+
+
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+
+
+    timeStampSelected=timestamp.toString();
+
+
     answers.add({
       'question': "1",
       'selected_answer': TimeNowKnowStr.toString(),
@@ -194,37 +205,37 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
                   Expanded(child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      TextApp2('زمان تزریق',14,Colors.black54,true),
-                      SizedBox(height: 8,),
-                      InkWell(
-                        onTap:  (){
-                          PersianTimeCalender(!_checkBox1,false);
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.black12,width: 2)
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: [
-                                    SizedBox(width: 8,),
-                                    Expanded(child: TextApp(TimeNowKnowStr,16,Colors.black87,true)),
-                                    SizedBox(width: 8,),
-                                    Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
-                                    SizedBox(width: 4,)
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 8,),
+                      // TextApp2('زمان تزریق',14,Colors.black54,true),
+                      // SizedBox(height: 8,),
+                      // InkWell(
+                      //   onTap:  (){
+                      //     PersianTimeCalender(!_checkBox1,false);
+                      //   },
+                      //   child: Container(
+                      //     decoration: BoxDecoration(
+                      //         color: Colors.white,
+                      //         borderRadius: BorderRadius.circular(8),
+                      //         border: Border.all(color: Colors.black12,width: 2)
+                      //     ),
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.all(6.0),
+                      //       child: Column(
+                      //         children: <Widget>[
+                      //           Row(
+                      //             children: [
+                      //               SizedBox(width: 8,),
+                      //               Expanded(child: TextApp(TimeNowKnowStr,16,Colors.black87,true)),
+                      //               SizedBox(width: 8,),
+                      //               Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
+                      //               SizedBox(width: 4,)
+                      //             ],
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(height: 8,),
                       Container(
                         decoration: BoxDecoration(
                             color: Colors.white,
@@ -233,11 +244,11 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                          child: Row(
+                          child: Column(
                             children: [
-                              Expanded(child: buildRadio('آلتپلاز',1)),
-                              Expanded(child:buildRadio('تنکتپلاز',2) ),
-                              Expanded(child: buildRadio('آلتلایز(ایرانی)',3))
+                              buildRadio('آلتپلاز',1),
+                              buildRadio('تنکتپلاز',2),
+                              buildRadio('آلتلایز(ایرانی)',3)
                             ],
                           ),
                         ),
@@ -313,6 +324,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
     return RadioListTile<String>(
       title: Text(
         value,
+        textAlign: TextAlign.end,
         style: const TextStyle(fontSize: 12),
       ),
       value: value,

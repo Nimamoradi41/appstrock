@@ -35,7 +35,7 @@ class ApiServiceTeriaz{
 
 
 
-    var request = http.MultipartRequest('POST', Uri.parse('https://fmirzavand.ir/Patients'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Patients'));
     request.fields.addAll({
       'FullName': Name,
       'NationalCode':codeMeli,

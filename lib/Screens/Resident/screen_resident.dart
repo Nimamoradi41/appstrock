@@ -1,3 +1,4 @@
+import '../../Widgets/notification_registration_button.dart';
 import 'dart:async';
 import 'dart:math';
 
@@ -268,6 +269,10 @@ class _ScreenResidentState extends State<ScreenResident> {
                                   child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
                                 ),
                               ),
+                            ),
+                          const  Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: const NotificationRegistrationButton(),
                             ),
                             RotatedBox(
                               quarterTurns: 0,

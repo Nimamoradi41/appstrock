@@ -41,7 +41,7 @@ class _WebImagePickerState extends State<WebImagePicker> {
     var image= await compressImagePreserveSize( originalBytes: imageBytes,quality: 60);
     if(image!=null)
       {
-        final uri = Uri.parse("https://api.appstrok.ir/Patients/AddImages");
+        final uri = Uri.parse("https://api.appstroke.ir/Patients/AddImages");
         final request = http.MultipartRequest('POST', uri);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String? UserId;

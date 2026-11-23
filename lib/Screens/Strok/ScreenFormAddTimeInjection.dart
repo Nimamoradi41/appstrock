@@ -70,7 +70,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormAddTimeInjection> {
   }
 
   Future PersianTimeCalender(bool Type,bool LKW)async{
-    var picked = await showPersianTimePicker(
+    var picked = await showTimePicker(
       context: context,
       builder: (BuildContext context, Widget? child) {
         return Directionality(

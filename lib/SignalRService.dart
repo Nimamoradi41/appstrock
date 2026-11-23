@@ -18,7 +18,7 @@ class SignalRService {
   HubConnectionState? get connectionState => _hubConnection.state;
 
   Future<void> initConnection() async {
-    final serverUrl = "https://api.appstrok.ir/patientHub";
+    final serverUrl = "https://api.appstroke.ir/patientHub";
 
     _hubConnection = HubConnectionBuilder()
         .withUrl(serverUrl)

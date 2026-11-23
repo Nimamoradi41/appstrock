@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import '../PatientRegistration/model/patient_registration.dart';
+import '../PatientRegistration/ui/patient_registration_screen.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
-import '../../Widgets/TextApp.dart';
-import '../Autentication/screen_EditProfile.dart';
 import '../Ems/ApiServiceEms.dart';
 import '../Reception/ApiServiceReception.dart';
 import '../SplashScreen.dart';
 import 'ProviderTeraizh.dart';
+import 'notification_registration.dart';
 
 class Screen_Teriazh extends StatefulWidget {
 
@@ -22,6 +21,30 @@ class Screen_Teriazh extends StatefulWidget {
 }
 
 class _Screen_TeriazhState extends State<Screen_Teriazh> {
+  bool _registeringNotifications = false;
+
+  Future<void> _enableNotifications() async {
+    if (_registeringNotifications) return;
+    setState(() => _registeringNotifications = true);
+    try {
+      await registerNotificationToken();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('اعلان‌ها با موفقیت فعال شدند')),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      final message = error is StateError
+          ? error.message.toString()
+          : 'فعال‌سازی اعلان‌ها ناموفق بود؛ دوباره تلاش کنید';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    } finally {
+      if (mounted) setState(() => _registeringNotifications = false);
+    }
+  }
+
   bool status=false;
 
   var items = [
@@ -164,331 +187,32 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
   void initState() {
     super.initState();
     GetInfo();
+    syncNotificationTokenIfAllowed().catchError((Object error) {
+      debugPrint('Notification token synchronization failed: $error');
+    });
   }
   @override
   Widget build(BuildContext context) {
-    Notifi=Provider.of<ProviderTeraizh>(context);
-    double wid=MediaQuery.of(context).size.width;
-     wid=wid>600?600:wid;
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Center(
-          child: Container(
-            width: wid,
-            height: double.infinity,
-            color: BackGroundApp,
-            child: Stack(
-              children: [
-                Container(
-                  width: wid,
-                  height: wid*0.25,
-                  color: ColorApp,
-                  child:   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(width: 16,),
-                      Expanded(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children:   [
-                            InkWell(
-                              onTap: () async {
-                                var flag= await ShowAllow(context,"آیا از حساب خود خارج میشوید ؟");
-                                if(flag)
-                                {
-                                  ClearAllDate();
-                                }
-                              } ,
-                              child: const RotatedBox(
-                                quarterTurns: 90,
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Icon(Icons.exit_to_app,color: Colors.white,size: 30,),
-                                ),
-                              ),
-                            ),
-                            const Expanded(child:
-                            Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Text(
-                                  'تریاژ',
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16
-                                  ),
-                                )
-                              // TextApp('فوریت های پزشکی', 16, Colors.white, true),
-                            )),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: wid*0.14,
-                  right: 16,
-                  left: 16,
-                  child: Container(
-                    width: wid*0.85,
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.black26,
-                                    spreadRadius: 1,
-                                    blurRadius: 4
-                                )
-                              ]
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(width: 8,),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Consumer<ProviderTeraizh>(
-                                        builder: (context,newstate,child){
-                                          status=newstate.status;
-                                          return FlutterSwitch(
-                                            value: status,
-                                            activeColor: Color(0xff38b000),
-                                            onToggle: (val) {
-                                              ChangShift(val,context);
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    Expanded(child: TextApp2('وضعیت شیفت',14,ColorTextsubject,false)),
-                                    SizedBox(width: 4 ,)
-                                  ],
-
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 8,),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.black26,
-                                    spreadRadius: 1,
-                                    blurRadius: 4
-                                )
-                              ]
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Consumer<ProviderTeraizh>(
-                              builder: (ctx,newstate,child){
-                                return SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: TextApp2('اطلاعات بیمار', 14, ColorTitleText, true),
-                                      ),
-                                      Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child:
-                                          Container(
-                                            width: double.infinity,
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              children: [
-                                                Align(
-                                                  alignment: Alignment.centerRight,
-                                                  child: TextAppEnd(
-                                                      'نام و نام خانوادگی',14, ColorApp,false),
-                                                )  ,
-                                                SizedBox(height: 8),
-                                                TextField(
-                                                    controller: TextConName,
-                                                    style: const TextStyle(
-                                                      fontFamily: 'rob',
-                                                      fontSize: 13,
-                                                    ),
-                                                    textAlign:   TextAlign.right,
-                                                    textDirection:  TextDirection.rtl,
-                                                    keyboardType: TextInputType.text,
-                                                    inputFormatters: [
-                                                      FilteringTextInputFormatter.allow(RegExp(r'[۰-۹0-9\u0600-\u06CC ]')),
-                                                    ],
-                                                    decoration: InputDecoration(
-                                                      labelStyle: const TextStyle(
-                                                        color: ColorApp,
-                                                      ),
-                                                      counterText: "",
-                                                      enabledBorder: outlinedBorderBlack,
-                                                      focusedBorder: outlinedBorderPurple,
-                                                    )
-                                                )
-                                              ],
-                                            ),
-                                          )
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: TextAppEnd(
-                                                  'کد ملی',14, ColorApp,false),
-                                            ),
-                                            TextField(
-                                              maxLines: 1,
-                                              maxLength: 10,
-                                              textDirection: TextDirection.ltr, // جهت کلی متن
-                                              textAlign: TextAlign.left, // متن ورودی راست‌چین باشد
-                                              keyboardType: TextInputType.phone,
-                                              controller: TextConCode,
-                                              style: const TextStyle(
-                                                  fontSize: 13
-                                              ),
-                                              decoration: InputDecoration(
-                                                labelStyle: TextStyle(
-                                                    color: ColorApp
-                                                ),
-                                                counterText: "",
-                                                enabledBorder: outlinedBorderBlack,
-                                                focusedBorder: outlinedBorderPurple,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: TextAppEnd(
-                                                  'سن',14, ColorApp,false),
-                                            ),
-                                            TextField(
-                                              maxLines: 1,
-                                              maxLength: 10,
-                                              textDirection: TextDirection.ltr, // جهت کلی متن
-                                              textAlign: TextAlign.left, // متن ورودی راست‌چین باشد
-                                              keyboardType: TextInputType.phone,
-                                              controller: TextConAge,
-                                              style: const TextStyle(
-                                                  fontSize: 13
-                                              ),
-                                              decoration: InputDecoration(
-                                                labelStyle: TextStyle(
-                                                    color: ColorApp
-                                                ),
-                                                counterText: "",
-                                                enabledBorder: outlinedBorderBlack,
-                                                focusedBorder: outlinedBorderPurple,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Directionality(
-                                          textDirection: TextDirection.rtl,
-                                          child: DropdownButtonFormField(
-                                            value: Notifi.dropdownvalue,
-                                            decoration: const InputDecoration(
-                                              border: OutlineInputBorder(
-                                                borderRadius:   BorderRadius.all(
-                                                  Radius.circular(8.0),
-                                                ),
-                                              ),
-                                            ),
-                                            items: items.map((String items) {
-                                              return DropdownMenuItem(
-                                                value: items,
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.end,
-                                                  children: [
-                                                    Text(
-                                                      items,),
-                                                  ],
-                                                ),
-                                              );
-                                            }).toList(),
-                                            onChanged: (value) {
-                                              Notifi.setdropdownvalue(value.toString());
-                                            },
-                                          ),
-                                        ),
-                                      ),
-
-                                      Container(
-                                        width: wid,
-                                        margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
-                                        child: ElevatedButton(onPressed: (){
-                                          RunAddP(context);
-                                        },
-                                            style: ButtonStyle(
-                                                backgroundColor: MaterialStateProperty.all(ColorApp),
-                                                padding: MaterialStateProperty.all(EdgeInsets.all(4)),
-                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(8.0),
-                                                    )
-                                                )
-                                            ),
-                                            child:Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text('ثبت بیمار',
-                                                style: TextStyle(color:Colors.white,
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold),),
-                                            )),
-                                      ),
-                                      SizedBox(height: 8,)
-                                    ],
-                                  ),
-                                );
-                              },
-
-                            ),
-                          ),
-                        ),
-
-
-
-
-
-
-
-                      ],
-                    ),
-                  ),
-                ),
-
-
-
-              ],
-            ),
-          ),
-        ),
+    Notifi = Provider.of<ProviderTeraizh>(context);
+    return PatientRegistrationScreen(
+      source: PatientRegistrationSource.triage,
+      shiftActive: Notifi.status,
+      onChangeShift: (value) => ChangShift(value, context),
+      notificationButton: IconButton(
+        tooltip: 'فعال‌سازی اعلان‌ها',
+        onPressed: _registeringNotifications ? null : _enableNotifications,
+        icon: _registeringNotifications
+            ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Icon(Icons.notifications_active_outlined),
       ),
+      onExit: () async {
+        final confirmed = await ShowAllow(context, "آیا از حساب خود خارج میشوید ؟");
+        if (confirmed && mounted) ClearAllDate();
+      },
     );
   }
 }

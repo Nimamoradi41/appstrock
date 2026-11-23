@@ -299,7 +299,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                   child: ScreenFormTimeInjection((pa) async {
                     RequestAddTimeInjection(
                         pa[0]['selected_answer'].toString(),pa[1]['selected_answer'].toString(),pa[2]['selected_answer'].toString());
-                  },Notifi.patientItem.medicine!)),
+                  },Notifi.patientItem.medicine!,true)),
             ],
           );
         });
@@ -1046,8 +1046,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
                                                       return;
                                                     }
 
-                                                    if (Notifi.patientItem.timeOfInjection!.isEmpty &&
-                                                        Notifi.patientItem.is724IsComplete!) {
+                                                    if (Notifi.patientItem.is724IsComplete!) {
                                                       AddTimeInjection();
                                                     }
                                                   },

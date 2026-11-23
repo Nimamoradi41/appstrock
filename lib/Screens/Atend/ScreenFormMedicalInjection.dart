@@ -110,11 +110,11 @@ class _ScreenFormIsNot724State extends State<ScreenFormMedicalInjection> {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                          child: Row(
+                          child: Column(
                             children: [
-                              Expanded(child: buildRadio('آلتپلاز',1)),
-                              Expanded(child:buildRadio('تنکتپلاز',2) ),
-                              Expanded(child: buildRadio('آلتلایز(ایرانی)',3))
+                              buildRadio('آلتپلاز',1),
+                              buildRadio('تنکتپلاز',2),
+                              buildRadio('آلتلایز(ایرانی)',3)
                             ],
                           ),
                         ),

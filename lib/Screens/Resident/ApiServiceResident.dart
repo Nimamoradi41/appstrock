@@ -37,7 +37,7 @@ class ApiServiceResident{
 
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/NeedToCT'));
+        Uri.parse('https://api.appstroke.ir/Patients/NeedToCT'));
     request.fields.addAll({
       'id': id,
       'userId': UserId.toString(),
@@ -116,7 +116,7 @@ class ApiServiceResident{
     }
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/NeedToMRI'));
+        Uri.parse('https://api.appstroke.ir/Patients/NeedToMRI'));
     request.fields.addAll({
       'id': id,
       'userId': UserId.toString(),
@@ -199,7 +199,7 @@ class ApiServiceResident{
     }
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/AddNihsForm'));
+        Uri.parse('https://api.appstroke.ir/Patients/AddNihsForm'));
     request.fields.addAll({
       'patientId': id,
       'userId': UserId.toString(),
@@ -299,7 +299,7 @@ class ApiServiceResident{
     }
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/UpdateNihsForm'));
+        Uri.parse('https://api.appstroke.ir/Patients/UpdateNihsForm'));
     request.fields.addAll({
       'patientId': id,
       'userId': UserId.toString(),
@@ -398,7 +398,7 @@ class ApiServiceResident{
     }
 
 
-    var request = http.MultipartRequest('POST',Uri.parse('https://api.appstrok.ir/Patients/AddLabResult'));
+    var request = http.MultipartRequest('POST',Uri.parse('https://api.appstroke.ir/Patients/AddLabResult'));
 
 
     request.fields.addAll({
@@ -489,7 +489,7 @@ class ApiServiceResident{
     }
 
 
-    var request = http.MultipartRequest('POST',Uri.parse('https://api.appstrok.ir/Patients/UpdateLabResult'));
+    var request = http.MultipartRequest('POST',Uri.parse('https://api.appstroke.ir/Patients/UpdateLabResult'));
 
 
     request.fields.addAll({
@@ -584,7 +584,7 @@ class ApiServiceResident{
 
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/AddPatientSigns'));
+        Uri.parse('https://api.appstroke.ir/Patients/AddPatientSigns'));
     request.fields.addAll({
       'patientId': id,
       'userId': UserId.toString(),
@@ -653,7 +653,7 @@ class ApiServiceResident{
     }
 
 
-    var request = http.MultipartRequest('POST',Uri.parse('https://api.appstrok.ir/Patients/TimeOfInjection'));
+    var request = http.MultipartRequest('POST',Uri.parse('https://api.appstroke.ir/Patients/TimeOfInjection'));
     request.fields.addAll({
       'patientId': id,
       'userId': UserId.toString(),
@@ -726,7 +726,7 @@ class ApiServiceResident{
     }
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/Set724Status'));
+        Uri.parse('https://api.appstroke.ir/Patients/Set724Status'));
     request.fields.addAll({
       'id': idPa,
       'userId': UserId.toString(),
@@ -820,7 +820,7 @@ class ApiServiceResident{
     }
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/Set724Status'));
+        Uri.parse('https://api.appstroke.ir/Patients/Set724Status'));
     request.fields.addAll({
       'id': idPa,
       'userId': UserId.toString(),
@@ -905,7 +905,7 @@ class ApiServiceResident{
     }
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/AddPatientSigns'));
+        Uri.parse('https://api.appstroke.ir/Patients/AddPatientSigns'));
     request.fields.addAll({
       'patientId': idPa,
       'userId': UserId.toString(),
@@ -983,7 +983,7 @@ class ApiServiceResident{
     }
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/AddPatientSigns'));
+        Uri.parse('https://api.appstroke.ir/Patients/AddPatientSigns'));
     request.fields.addAll({
       'patientId': idPa,
       'userId': UserId.toString(),
@@ -1048,15 +1048,15 @@ class ApiServiceResident{
   async {
     var login;
 
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? UserId;
 
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/ResetInformation'));
+        Uri.parse('https://api.appstroke.ir/Patients/ResetInformation'));
     request.fields.addAll({
       'patientId': idPa,
+      'userId': UserId.toString(),
     });
 
 
@@ -1121,7 +1121,7 @@ class ApiServiceResident{
     }
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/AddImages'));
+        Uri.parse('https://api.appstroke.ir/Patients/AddImages'));
     request.fields.addAll({
       'patientId': idPa,
       'userId': UserId.toString(),
@@ -1202,7 +1202,7 @@ class ApiServiceResident{
 
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/TimeOfInjection'));
+        Uri.parse('https://api.appstroke.ir/Patients/TimeOfInjection'));
 
     request.fields.addAll({
       'PatientId': idPa,
@@ -1299,7 +1299,7 @@ class ApiServiceResident{
     }
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/NeedToMT'));
+        Uri.parse('https://api.appstroke.ir/Patients/NeedToMT'));
 
     request.fields.addAll({
       'PatientId': idPa,
@@ -1387,7 +1387,7 @@ class ApiServiceResident{
 
 
     var request = http.MultipartRequest('GET',
-        Uri.parse('https://api.appstrok.ir/Patients/signal'));
+        Uri.parse('https://api.appstroke.ir/Patients/signal'));
 
     try{
       http.StreamedResponse response = await request.send().timeout(
@@ -1473,7 +1473,7 @@ class ApiServiceResident{
     }
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/IsNot724'));
+        Uri.parse('https://api.appstroke.ir/Patients/IsNot724'));
     request.fields.addAll({
       'id': idPa,
       'idUser': UserId.toString(),
@@ -1543,7 +1543,7 @@ class ApiServiceResident{
     }
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/ReasonsForIsNot724'));
+        Uri.parse('https://api.appstroke.ir/Patients/ReasonsForIsNot724'));
 
     request.fields.addAll({
       'patientId': idPa,

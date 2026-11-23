@@ -27,7 +27,7 @@ class ApiServiceEms{
     var login;
 
 
-    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Patients'));
 
 
     // typeInput== 1 teriag
@@ -115,8 +115,7 @@ class ApiServiceEms{
     var login;
 
 
-    var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Users/ChangeShiftStatus'));
+    var request = http.MultipartRequest('POST',Uri.parse('https://api.appstroke.ir/Users/ChangeShiftStatus'));
 
 
 
@@ -186,7 +185,7 @@ class ApiServiceEms{
 
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Users/ChangeUserInfo'));
+        Uri.parse('https://api.appstroke.ir/Users/ChangeUserInfo'));
 
 
 

@@ -23,7 +23,7 @@ class ApiServiceLaboratory{
     var login;
 
 
-    var request = http.MultipartRequest('POST', Uri.parse('https://fmirzavand.ir/Patients/PatientList'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Patients/PatientList'));
     request.fields.addAll({
       // 'date': Date,
       'date': '1402/11/02',

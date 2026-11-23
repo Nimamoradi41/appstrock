@@ -523,7 +523,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                   child: ScreenFormTimeInjection((pa) async {
                     RequestAddTimeInjection(
                         pa[0]['selected_answer'].toString(),pa[1]['selected_answer'].toString(),pa[2]['selected_answer'].toString());
-                  },Notifi.patientItem.medicine!)),
+                  },Notifi.patientItem.medicine!,false)),
             ],
           );
         });

@@ -24,7 +24,7 @@ class ApiServiceAtend{
     var login;
 
 
-    var request = http.MultipartRequest('POST', Uri.parse('https://fmirzavand.ir/Patients/NeedToCT'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Patients/NeedToCT'));
     request.fields.addAll({
       'id': id,
       'signsStartTime': signsStartTime,
@@ -85,7 +85,7 @@ class ApiServiceAtend{
     var login;
 
 
-    var request = http.MultipartRequest('POST', Uri.parse('https://fmirzavand.ir/Patients/NeedToMRI'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Patients/NeedToMRI'));
     request.fields.addAll({
       'id': id,
       'signsStartTime': signsStartTime,
@@ -125,7 +125,7 @@ class ApiServiceAtend{
   static Future<ModelImages> GetPatientImages(String id,BuildContext context) async {
     var login;
 
-    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients/GetPatientImages'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Patients/GetPatientImages'));
     request.fields.addAll({
       'id': id
      });

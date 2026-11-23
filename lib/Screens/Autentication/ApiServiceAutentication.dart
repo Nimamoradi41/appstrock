@@ -1,298 +1,114 @@
+// Keep the public method names used by the existing screens.
+// ignore_for_file: non_constant_identifier_names
 
-// ignore_for_file: use_build_context_synchronously
-
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:http/http.dart'as http;
-import 'package:appstrock/Screens/Autentication/Models/ModelRigester.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
 
 import '../../Constants.dart';
+import '../../core/api_exception.dart';
 import 'Models/ModelLogin.dart';
 import 'Models/ModelOtpCode.dart';
+import 'Models/ModelRigester.dart';
+import 'data/AuthenticationRepository.dart';
 
+class ApiServiceAutentication {
+  static final _repository = AuthenticationRepository();
 
-class ApiServiceAutentication{
-  static Future<ModelRigester?> Rigester(String Name,String Typeuser,
-      String NationalCode,String PhoneNumber,String Password,BuildContext context) async {
-    ModelRigester? login ;
+  static Future<ModelRigester?> Rigester(
+    String Name,
+    String Typeuser,
+    String NationalCode,
+    String PhoneNumber,
+    String Password,
+    BuildContext context,
+  ) {
+    return _execute(
+      context,
+      () => _repository.register(
+        name: Name,
+        departmentId: Typeuser,
+        nationalCode: NationalCode,
+        mobileNumber: PhoneNumber,
+        password: Password,
+      ),
+    );
+  }
 
+  static Future<ModelLogin?> Login(
+    String Name,
+    String NationalCode,
+    String Pass,
+    BuildContext context,
+  ) {
+    return _execute(
+      context,
+      () => _repository.login(
+        name: Name,
+        nationalCode: NationalCode,
+        password: Pass,
+      ),
+    );
+  }
 
-    var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Users/Register'));
+  static Future<ModelOtpCode?> CheckConfirmCode(
+    String Id,
+    String Code,
+    BuildContext context,
+  ) {
+    return _execute(
+      context,
+      () => _repository.checkConfirmCode(id: Id, code: Code),
+    );
+  }
 
+  static Future<ModelOtpCode?> SendAgain(
+    String Id,
+    String mobileNumber,
+    BuildContext context,
+  ) {
+    return _execute(
+      context,
+      () => _repository.sendAgain(id: Id, mobileNumber: mobileNumber),
+    );
+  }
 
-
-    // request.headers.addAll({
-    //   'Content-Type': 'multipart/form-data',
-    //   'Accept': '*/*',
-    // });
-    request.headers['Content-Type'] = 'application/json", "Accept": "application/json';
-    request.fields.addAll({
-      'Name': Name,
-      'NationalCode': NationalCode,
-      'MobileNumber': PhoneNumber,
-      'DepartmentId': Typeuser,
-      'Password': Password
+  static Future<T?> _execute<T>(
+    BuildContext context,
+    Future<T> Function() request,
+  ) async {
+    final navigator = Navigator.of(context, rootNavigator: true);
+    DialogRoute<dynamic>? loadingRoute;
+    // Inspect the top route without popping it. Splash login has no dialog.
+    navigator.popUntil((route) {
+      if (route is DialogRoute<dynamic> && !route.barrierDismissible) {
+        loadingRoute = route;
+      }
+      return true;
     });
 
-    try{
-      http.StreamedResponse response = await request.send().timeout(
-        Duration(seconds: 15),
-      ).catchError((error) {
-        Navigator.pop(context);
-        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-      }) ;
-
-
-
-      print(response.statusCode.toString());
-
-      if(response.statusCode==200)
-      {
-        String str= await response.stream.bytesToString();
-        print(str);
-        if(str != null && str.isNotEmpty) {
-          ModelRigester data = modelRigesterFromJson(str);
-          login = data;
+    try {
+      return await request();
+    } on ApiException catch (error) {
+      if (context.mounted && !error.isCancelled) {
+        ShowErrorMsg(context, error.toString());
+      }
+    } on FormatException {
+      if (context.mounted) {
+        ShowErrorMsg(context, 'ساختار پاسخ دریافتی از سرور نامعتبر است');
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ShowErrorMsg(context, 'مشکلی در دریافت اطلاعات از سرور به وجود آمده');
+      }
+    } finally {
+      final dialog = loadingRoute;
+      if (navigator.mounted && dialog != null && dialog.isActive) {
+        if (dialog.isCurrent) {
+          navigator.pop();
         } else {
-          // Handle the case where response is empty or null
-          ShowErrorMsg(context, 'مشکلی در دریافت اطلاعات از سرور به وجود آمده');
+          navigator.removeRoute(dialog);
         }
       }
-
-      if(response.statusCode==400)
-      {
-        String str= await response.stream.bytesToString();
-        print(str);
-        if(str != null && str.isNotEmpty) {
-          ModelRigester data = modelRigesterFromJson(str);
-          login = data;
-        } else {
-          // Handle the case where response is empty or null
-          ShowErrorMsg(context, 'مشکلی در دریافت اطلاعات از سرور به وجود آمده');
-        }
-      }
-
-    }  on SocketException catch (e) {
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-    } on TimeoutException catch (e) {
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
     }
-
-    Navigator.pop(context);
-    return login;
+    return null;
   }
-  static Future<ModelLogin?> Login(String Name,
-      String NationalCode,String Pass,BuildContext context) async {
-    ModelLogin? login;
-    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Users/Login'));
-    request.headers.addAll({"content-type":"application/json; charset=utf-8"});
-
-    request.fields.addAll({
-      'Name': Name,
-      'NationalCode': NationalCode,
-      'Password': Pass,
-    });
-
-
-
-
-    try{
-      http.StreamedResponse response = await request.send().timeout(
-        Duration(seconds: 15),
-      ).catchError((error) {
-        Navigator.pop(context);
-        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-      }) ;
-
-      print(response.statusCode.toString());
-      if(response.statusCode==200)
-      {
-        String str= await response.stream.bytesToString();
-        ModelLogin data= await  modelLoginFromJson(str);
-        login=data;
-      }
-
-      if(response.statusCode==400)
-      {
-        String str= await response.stream.bytesToString();
-        print(str);
-        ModelLogin data= await  modelLoginFromJson(str);
-        login=data;
-      }
-
-    }  on SocketException catch (e) {
-      Navigator.pop(context);
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
-    } on TimeoutException catch (e) {
-      Navigator.pop(context);
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    Navigator.pop(context);
-    return login;
-  }
-  static Future<ModelOtpCode?>
-
-
-  CheckConfirmCode(String Id,String Code,BuildContext context) async {
-    ModelOtpCode? login;
-    var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Users/CheckConfirmCode'));
-    request.headers['Content-Type'] = 'application/json", "Accept": "application/json';
-    request.fields.addAll({
-      'id': Id,
-      // 'id': '31',
-      'code': Code,
-    });
-
-    try{
-      http.StreamedResponse response = await request.send().timeout(
-        Duration(seconds: 15),
-      ).catchError((error) {
-        Navigator.pop(context);
-        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-      }) ;
-
-      print(response.statusCode.toString());
-      if(response.statusCode==200)
-      {
-        String str= await response.stream.bytesToString();
-        print(str);
-        ModelOtpCode data=   modelOtpCodeFromJson(str);
-        login=data;
-      }
-      if(response.statusCode==400)
-      {
-        String str= await response.stream.bytesToString();
-        print(str);
-        ModelOtpCode data=   modelOtpCodeFromJson(str);
-        login=data;
-      }
-
-      if(response.statusCode==404)
-      {
-        String str= await response.stream.bytesToString();
-        print(str);
-        ModelOtpCode data=   modelOtpCodeFromJson(str);
-        login=data;
-      }
-
-      if(response.statusCode==403)
-      {
-        String str= await response.stream.bytesToString();
-        print(str);
-        ModelOtpCode data=   modelOtpCodeFromJson(str);
-        login=data;
-      }
-    }  on SocketException catch (e) {
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
-    } on TimeoutException catch (e) {
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
-
-    }
-
-
-
-
-
-
-
-    Navigator.pop(context);
-    return login;
-  }
-
- static SendAgain(String Id,String mobileNumber,BuildContext context) async {
-    ModelOtpCode? login;
-    var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Users/TryAgain'));
-    request.headers['Content-Type'] = 'application/json", "Accept": "application/json';
-    request.fields.addAll({
-      'id': Id,
-      'mobileNumber': mobileNumber,
-    });
-
-    try{
-      http.StreamedResponse response = await request.send().timeout(
-        Duration(seconds: 15),
-      ).catchError((error) {
-        Navigator.pop(context);
-        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-      }) ;
-
-      print(response.statusCode.toString());
-      if(response.statusCode==200)
-      {
-        String str= await response.stream.bytesToString();
-        print(str);
-        ModelOtpCode data=   modelOtpCodeFromJson(str);
-        login=data;
-      }
-      if(response.statusCode==400)
-      {
-        String str= await response.stream.bytesToString();
-        print(str);
-        ModelOtpCode data=   modelOtpCodeFromJson(str);
-        login=data;
-      }
-
-      if(response.statusCode==404)
-      {
-        String str= await response.stream.bytesToString();
-        print(str);
-        ModelOtpCode data=   modelOtpCodeFromJson(str);
-        login=data;
-      }
-
-      if(response.statusCode==403)
-      {
-        String str= await response.stream.bytesToString();
-        print(str);
-        ModelOtpCode data=   modelOtpCodeFromJson(str);
-        login=data;
-      }
-    }  on SocketException catch (e) {
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
-    } on TimeoutException catch (e) {
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
-
-    }
-
-
-
-
-
-
-
-    Navigator.pop(context);
-    return login;
-  }
-
-
-
 }

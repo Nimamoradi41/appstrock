@@ -13,6 +13,7 @@ import 'package:appstrock/Screens/Autentication/Models/ModelRigester.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
+import '../../report/model/ModelLogReport.dart';
 import '../Autentication/Models/ModelChangeshift.dart';
 import '../Resident/Models/ModelTimer.dart';
 import 'Model/ModelListPatient.dart';
@@ -24,7 +25,7 @@ import 'Model/ModelListPatient.dart';
 class ApiServiceReception{
   static Future<ModelListPatient> ListPatient(String Date,BuildContext context) async {
     var login;
-    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients/PatientList'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Patients/PatientList'));
     request.fields.addAll({
       'date': Date,
       // 'date': '1402/11/02',
@@ -78,7 +79,7 @@ class ApiServiceReception{
 
   static Future<ModelListPatient> PatientListBetweenDate(String dateFrom,String dateTo,BuildContext context) async {
     var login;
-    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients/PatientListBetweenDate'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Patients/PatientListBetweenDate'));
     request.fields.addAll({
       'startDate': dateFrom,
       'endDate': dateTo,
@@ -147,7 +148,7 @@ class ApiServiceReception{
 
 
 
-    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients/Edit'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Patients/Edit'));
     request.fields.addAll({
       'Id': id,
       'FullName': name,
@@ -193,7 +194,7 @@ class ApiServiceReception{
   static Future<ModelTimer> timeNow(BuildContext context) async {
     var login;
 
-    var request = http.MultipartRequest('GET', Uri.parse('https://api.appstrok.ir/Default/GetTime'));
+    var request = http.MultipartRequest('GET', Uri.parse('https://api.appstroke.ir/Default/GetTime'));
 
     try{
       http.StreamedResponse response = await request.send().timeout(
@@ -232,7 +233,7 @@ class ApiServiceReception{
   static Future<ModelFirstReport> firstReport(BuildContext context,String fromDate,String toDate) async {
     var login;
 
-    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Report/GetPatientSummaryReport'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Report/GetPatientSummaryReport'));
 
     request.fields.addAll({
       'fromDate': fromDate,
@@ -275,11 +276,58 @@ class ApiServiceReception{
     return login;
   }
 
+  static Future<ModelLogReport> getLog(BuildContext context,String patientId) async {
+    var login;
+
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Report/GetPatientReportLog'));
+
+
+    request.fields.addAll({
+      'patientId': patientId,
+    });
+
+    try{
+      http.StreamedResponse response = await request.send().timeout(
+        Duration(seconds: 15),
+      ).catchError((error) {
+        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+      }) ;
+
+
+
+
+
+      if(response.statusCode==200)
+      {
+        String str= await response.stream.bytesToString();
+        print(str);
+        ModelLogReport data= await  modelReportLogFromJson(str);
+        login=data;
+      }else{
+        ShowErrorMsg(context,response.reasonPhrase.toString());
+
+      }
+    }  on SocketException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+    } on TimeoutException catch (e) {
+      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+
+
+    } on Error catch (e) {
+      print(e.toString());
+      ShowErrorMsg(context, 'مشکلی در ارتباط با سرور به وجود آمده');
+    }
+
+
+    return login;
+  }
+
 
 
   static Future<ModelListPatient> ListPatientLab(String startDate,String endDate,BuildContext context) async {
     var login;
-    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients/PatientForAttend'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Patients/PatientForAttend'));
     request.fields.addAll({
       'startDate': startDate,
       'endDate': endDate,
@@ -343,7 +391,7 @@ class ApiServiceReception{
 
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Users/ChangeShiftStatus'));
+        Uri.parse('https://api.appstroke.ir/Users/ChangeShiftStatus'));
     request.fields.addAll({
       'id': UserId,
     });
@@ -398,7 +446,7 @@ class ApiServiceReception{
 
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/SeenByAttend'));
+        Uri.parse('https://api.appstroke.ir/Patients/SeenByAttend'));
     request.fields.addAll({
       'patientId': patientId,
       'userId': UserId.toString(),
@@ -453,7 +501,7 @@ class ApiServiceReception{
     }
 
 
-    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstrok.ir/Patients/SetInjectionStatus'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Patients/SetInjectionStatus'));
     request.fields.addAll({
       'id': patientId,
       'userId': UserId.toString(),
@@ -510,7 +558,7 @@ class ApiServiceReception{
 
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstrok.ir/Patients/SetInjectionStatus'));
+        Uri.parse('https://api.appstroke.ir/Patients/SetInjectionStatus'));
     request.fields.addAll({
       'id': patientId,
       'UserId': UserId.toString(),
@@ -589,7 +637,7 @@ class ApiServiceReception{
     var login;
 
 
-    var request = http.MultipartRequest('POST', Uri.parse('https://fmirzavand.ir/Patients/PatientList'));
+    var request = http.MultipartRequest('POST', Uri.parse('https://api.appstroke.ir/Patients/PatientList'));
     request.fields.addAll({
       'date': Date,
       // 'date': '1402/11/02',

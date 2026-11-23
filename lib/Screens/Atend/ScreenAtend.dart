@@ -1,5 +1,6 @@
 import 'package:appstrock/Screens/Atend/ProviderAtend/ProviderAtend.dart';
 import 'package:appstrock/Screens/Ems/screen_ems.dart';
+import 'package:appstrock/Widgets/notification_registration_button.dart';
 import 'package:appstrock/Screens/Reception/ApiServiceReception.dart';
 import 'package:appstrock/Screens/Reception/ProviderReception/ProviderReception.dart';
 
@@ -248,6 +249,10 @@ class _ScreenAtendState extends State<ScreenAtend> {
                                 ),
                               ),
                             ),
+                          const  Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: const NotificationRegistrationButton(),
+                            ),
                               RotatedBox(
                               quarterTurns: 0,
                               child: InkWell(
@@ -325,39 +330,39 @@ class _ScreenAtendState extends State<ScreenAtend> {
                     width: wid*0.85,
                     child: Column(
                       children: [
-                        Container(
-                          decoration: MainDecoration,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(width: 8,),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Consumer<ProviderReception>(
-                                        builder: (context,newstate,child){
-                                          status=newstate.status;
-                                          return FlutterSwitch(
-                                            value: status,
-                                            activeColor: Color(0xff38b000),
-                                            onToggle: (val) {
-                                              ChangShift(val,context);
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    Expanded(child: TextApp2('وضعیت شیفت',12,ColorTextsubject,false)),
-                                    SizedBox(width: 4 ,)
-                                  ],
-
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        // Container(
+                        //   decoration: MainDecoration,
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.all(4.0),
+                        //     child: Column(
+                        //       children: [
+                        //         // Row(
+                        //         //   children: [
+                        //         //     SizedBox(width: 8,),
+                        //         //     Padding(
+                        //         //       padding: const EdgeInsets.all(8.0),
+                        //         //       child: Consumer<ProviderReception>(
+                        //         //         builder: (context,newstate,child){
+                        //         //           status=newstate.status;
+                        //         //           return FlutterSwitch(
+                        //         //             value: status,
+                        //         //             activeColor: Color(0xff38b000),
+                        //         //             onToggle: (val) {
+                        //         //               ChangShift(val,context);
+                        //         //             },
+                        //         //           );
+                        //         //         },
+                        //         //       ),
+                        //         //     ),
+                        //         //     Expanded(child: TextApp2('وضعیت شیفت',12,ColorTextsubject,false)),
+                        //         //     SizedBox(width: 4 ,)
+                        //         //   ],
+                        //         //
+                        //         // )
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 16),
                           width: wid,

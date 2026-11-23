@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../Constants.dart';
 import '../Widgets/TextApp.dart';
+import 'FirstReportScreen.dart';
+import 'LogFirstreportScreen.dart';
 
 class BoxFirstRowReport extends StatelessWidget {
 
@@ -25,7 +28,10 @@ class BoxFirstRowReport extends StatelessWidget {
                 flex: 1,
                 child:  Center(
                   child:  TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      GoNextPage(context, LogFirstReportScreen(patientName,patientId.toString()));
+
+                    },
                     child: const Text('مشاهده'),
                   ),
                 )),

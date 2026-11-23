@@ -19,12 +19,13 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="AppStroke">
+  <meta name="theme-color" content="#0175C2">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="AppStroke">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/Icon-180.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
@@ -40,7 +41,52 @@
   <script src="flutter.js" defer></script>
 </head>
 <body>
+  <button id="install-app" hidden style="position:fixed;bottom:16px;left:16px;z-index:9999;background:#0175C2;color:white;border:0;border-radius:8px;padding:12px 16px;cursor:pointer">نصب برنامه</button>
   <script>
+    window.showAppStrokeNotification = async function(title, body) {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+      try {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        const registration = registrations.find(function(item) {
+          return item.active && item.active.scriptURL.includes('firebase-messaging-sw.js');
+        });
+        if (registration) {
+          await registration.showNotification(title, {
+            body: body,
+            icon: new URL('icons/Icon-192.png', document.baseURI).href
+          });
+        } else {
+          const notification = new Notification(title, {
+            body: body,
+            icon: new URL('icons/Icon-192.png', document.baseURI).href
+          });
+          notification.onclick = function() {
+            window.focus();
+            notification.close();
+          };
+        }
+      } catch (error) {
+        console.error('Unable to display notification', error);
+      }
+    };
+
+    let installPrompt;
+    const installButton = document.getElementById('install-app');
+    window.addEventListener('beforeinstallprompt', function(event) {
+      event.preventDefault();
+      installPrompt = event;
+      installButton.hidden = false;
+    });
+    installButton.addEventListener('click', async function() {
+      if (!installPrompt) return;
+      await installPrompt.prompt();
+      installPrompt = null;
+      installButton.hidden = true;
+    });
+    window.addEventListener('appinstalled', function() {
+      installPrompt = null;
+      installButton.hidden = true;
+    });
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../Screens/Atend/ScreenFormMedicalInjection.dart';
 import '../Screens/Reception/ApiServiceReception.dart';
 import 'BoxFirstHeaderReport.dart';
 import 'BoxFirstRowReport.dart';
@@ -16,6 +17,8 @@ class FirstReportScreen extends StatefulWidget {
 }
 
 class _FirstReportScreenState extends State<FirstReportScreen> with SingleTickerProviderStateMixin, WidgetsBindingObserver  {
+
+
   Future getReport() async {
     // provider.setLoading(true);
     provider.modelFirstReport.data?.medicinePatient.clear();
@@ -51,8 +54,7 @@ class _FirstReportScreenState extends State<FirstReportScreen> with SingleTicker
     dateFrom = pickedFrom;
 
     if (pickedFrom != null) {
-      formattedDateFrom =
-          '${dateFrom?.year}/${dateFrom?.month.toString().padLeft(2, '0')}/${dateFrom?.day.toString().padLeft(2, '0')}';
+      formattedDateFrom = '${dateFrom?.year}/${dateFrom?.month.toString().padLeft(2, '0')}/${dateFrom?.day.toString().padLeft(2, '0')}';
       setState(() {});
     }
   }
@@ -126,6 +128,7 @@ class _FirstReportScreenState extends State<FirstReportScreen> with SingleTicker
               ),
               InkWell(
                 onTap: () {
+                  // setInjectionTrue("s",context);
                   persianDateCalenderFrom();
                 },
                 child: Row(
@@ -196,7 +199,7 @@ class _FirstReportScreenState extends State<FirstReportScreen> with SingleTicker
                                             Expanded(
                                                 flex: 1,
                                                 child: Center(
-                                                  child: Text('زریدنت',
+                                                  child: Text('رزیدنت',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold)),

@@ -12,7 +12,7 @@ class scr extends StatefulWidget {
 }
 
 class _scrState extends State<scr> {
-  final serverurl="https://fmirzavand.ir/patientHub";
+  final serverurl="https://api.appstroke.ir/patientHub";
   // final serverurl="http://172.10.10.186:9595/SignalRTest";
 
   late HubConnection connection;

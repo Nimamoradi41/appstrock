@@ -8,9 +8,10 @@ import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 class ScreenFormTimeInjection extends StatefulWidget {
   late void Function(List<Map<String, String>>) onClose;
 
-  ScreenFormTimeInjection(this.onClose,this.medicineSelected);
+  ScreenFormTimeInjection(this.onClose,this.medicineSelected,this.isAtend);
 
   int medicineSelected;
+  bool isAtend;
   @override
   State<ScreenFormTimeInjection> createState() => _ScreenFormIsNot724State();
 
@@ -30,14 +31,18 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
   void _submitForm() {
     List<Map<String, String>> answers = [];
 
-    TimeNowKnow=TimeOfDay.now();
-    TimeNowKnowStr=Convert_Time(TimeNowKnow.hour.toString(),TimeNowKnow.minute.toString());
+    if(!widget.isAtend)
+      {
+        TimeNowKnow=TimeOfDay.now();
+        TimeNowKnowStr=Convert_Time(TimeNowKnow.hour.toString(),TimeNowKnow.minute.toString());
 
 
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
 
 
-    timeStampSelected=timestamp.toString();
+        timeStampSelected=timestamp.toString();
+
+      }
 
 
     answers.add({
@@ -79,7 +84,7 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
   String timeStampSelected="";
 
   Future PersianTimeCalender(bool Type,bool LKW)async{
-    var picked = await showPersianTimePicker(
+    var picked = await showTimePicker(
       context: context,
       builder: (BuildContext context, Widget? child) {
         return  Directionality(
@@ -143,24 +148,28 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
   @override
   void initState() {
     super.initState();
-    TimeNowKnow=TimeOfDay.now();
-    TimeNowKnowStr=Convert_Time(TimeNowKnow.hour.toString(),TimeNowKnow.minute.toString());
-
-    // ساختن DateTime از تاریخ امروز و ساعتی که انتخاب کردی
-    final now = DateTime.now();
-    final selectedDateTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute,
-    );
 
 
-    final timestamp = selectedDateTime.millisecondsSinceEpoch;
+        TimeNowKnow=TimeOfDay.now();
+        TimeNowKnowStr=Convert_Time(TimeNowKnow.hour.toString(),TimeNowKnow.minute.toString());
+
+        // ساختن DateTime از تاریخ امروز و ساعتی که انتخاب کردی
+        final now = DateTime.now();
+        final selectedDateTime = DateTime(
+          now.year,
+          now.month,
+          now.day,
+          now.hour,
+          now.minute,
+        );
 
 
-    timeStampSelected=timestamp.toString();
+        final timestamp = selectedDateTime.millisecondsSinceEpoch;
+
+
+        timeStampSelected=timestamp.toString();
+
+
 
 
     if(widget.medicineSelected==1)
@@ -205,37 +214,43 @@ class _ScreenFormIsNot724State extends State<ScreenFormTimeInjection> {
                   Expanded(child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      // TextApp2('زمان تزریق',14,Colors.black54,true),
-                      // SizedBox(height: 8,),
-                      // InkWell(
-                      //   onTap:  (){
-                      //     PersianTimeCalender(!_checkBox1,false);
-                      //   },
-                      //   child: Container(
-                      //     decoration: BoxDecoration(
-                      //         color: Colors.white,
-                      //         borderRadius: BorderRadius.circular(8),
-                      //         border: Border.all(color: Colors.black12,width: 2)
-                      //     ),
-                      //     child: Padding(
-                      //       padding: const EdgeInsets.all(6.0),
-                      //       child: Column(
-                      //         children: <Widget>[
-                      //           Row(
-                      //             children: [
-                      //               SizedBox(width: 8,),
-                      //               Expanded(child: TextApp(TimeNowKnowStr,16,Colors.black87,true)),
-                      //               SizedBox(width: 8,),
-                      //               Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
-                      //               SizedBox(width: 4,)
-                      //             ],
-                      //           ),
-                      //         ],
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      // SizedBox(height: 8,),
+                      widget.isAtend ?
+                          Column(
+                            children: [
+                              TextApp2('زمان تزریق',14,Colors.black54,true),
+                              SizedBox(height: 8,),
+                              InkWell(
+                                onTap:  (){
+                                  PersianTimeCalender(!_checkBox1,false);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: Colors.black12,width: 2)
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Row(
+                                          children: [
+                                            SizedBox(width: 8,),
+                                            Expanded(child: TextApp(TimeNowKnowStr,16,Colors.black87,true)),
+                                            SizedBox(width: 8,),
+                                            Icon(Icons.arrow_drop_down_circle_rounded,color: Colors.black54,),
+                                            SizedBox(width: 4,)
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 8,),
+                            ],
+                          ):Container(),
+
                       Container(
                         decoration: BoxDecoration(
                             color: Colors.white,

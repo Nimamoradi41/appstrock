@@ -1,17 +1,18 @@
-import '../../Widgets/notification_registration_button.dart';
+import '../../authentication/ui/screen_EditProfile.dart';
+import '../../../Widgets/notification_registration_button.dart';
 
 import 'package:appstrock/Screens/Ems/ApiServiceEms.dart';
 import 'package:appstrock/Screens/SplashScreen.dart';
 import 'package:flutter/material.dart';
-import '../PatientRegistration/model/patient_registration.dart';
-import '../PatientRegistration/ui/patient_registration_screen.dart';
+import '../model/patient_registration.dart';
+import 'patient_registration_screen.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../Constants.dart';
-import '../Reception/ApiServiceReception.dart';
-import 'ProviderEms/ProviderEms.dart';
+import '../../../Constants.dart';
+import '../../../Screens/Reception/ApiServiceReception.dart';
+import '../../../Screens/Ems/ProviderEms/ProviderEms.dart';
 
 class ScreenEms extends StatefulWidget {
    late bool isAtend;
@@ -163,7 +164,6 @@ class _ScreenEmsState extends State<ScreenEms> {
          Notifi.setstatus(status);
        }
 
-
    }
 
    @override
@@ -180,8 +180,9 @@ class _ScreenEmsState extends State<ScreenEms> {
           ? PatientRegistrationSource.attending
           : PatientRegistrationSource.ems,
       shiftActive: Notifi.status,
-      onChangeShift: (value) => ChangShift(value, context),
-      notificationButton: const NotificationRegistrationButton(),
+      onChangeShift: Notifi.setstatus,
+      notificationButton: const NotificationRegistrationButton(color: Color(0xff0c1b31), size: 24, icon: Icons.notifications_none_outlined),
+      onEditProfile: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const screen_EditProfile())),
       onExit: () async {
         if (widget.isAtend) {
           Navigator.pop(context);

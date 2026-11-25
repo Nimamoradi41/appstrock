@@ -7,12 +7,13 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:http/http.dart'as http;
-import 'package:appstrock/Screens/Autentication/Models/ModelRigester.dart';
+import 'package:appstrock/features/authentication/model/ModelRigester.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
-import '../Autentication/Models/ModelLogin.dart';
-import 'ModelAddPatient.dart';
+import '../../features/authentication/model/ModelLogin.dart';
+import '../../features/authentication/data/AuthenticationRepository.dart';
+import '../../features/patient_registration/model/ModelAddPatient.dart';
 
 
 
@@ -110,132 +111,17 @@ class ApiServiceEms{
   }
 
 
-  static Future<ModelLogin> ChangeShiftStatus(
-      BuildContext context) async {
-    var login;
-
-
-    var request = http.MultipartRequest('POST',Uri.parse('https://api.appstroke.ir/Users/ChangeShiftStatus'));
-
-
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? UserId=   prefs.getString('UserId');
-
-    // UserId
-
-    request.fields.addAll({
-      'id': UserId.toString(),
-    });
-
-    try{
-      http.StreamedResponse response = await request.send().timeout(
-        Duration(seconds: 15),
-      ).catchError((error) {
-
-        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-      }) ;
-
-      if(response.statusCode==200)
-      {
-        String str= await response.stream.bytesToString();
-        ModelLogin data= await  modelLoginFromJson(str);
-        login=data;
-      }
-
-      if(response.statusCode==400)
-      {
-        String? strw= await response.reasonPhrase;
-        String str= await response.stream.bytesToString();
-        ModelLogin data= await  modelLoginFromJson(str);
-        login=data;
-      }
-
-      else{
-
-        ShowErrorMsg(context,response.reasonPhrase.toString());
-
-      }
-    }  on SocketException catch (e) {
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
-    } on TimeoutException catch (e) {
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    Navigator.pop(context);
-    return login;
-  }
-
   static Future<ModelLogin> EditProfile(String Name,String CodeMeli,String Pass,BuildContext context) async {
     var login;
 
 
-    var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstroke.ir/Users/ChangeUserInfo'));
-
-
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? UserId=   prefs.getString('UserId');
-
-    // UserId
-
-    request.fields.addAll({
-      'id': UserId.toString(),
-      'fullName': Name,
-      'nationalCode': CodeMeli,
-      'password': Pass,
-    });
-
     try{
-      http.StreamedResponse response = await request.send().timeout(
-        Duration(seconds: 15),
-      ).catchError((error) {
-
-        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-      }) ;
-
-      if(response.statusCode==200)
-      {
-        String str= await response.stream.bytesToString();
-        ModelLogin data= await  modelLoginFromJson(str);
-        login=data;
-      }
-
-      if(response.statusCode==400)
-      {
-        String? strw= await response.reasonPhrase;
-        String str= await response.stream.bytesToString();
-        ModelLogin data= await  modelLoginFromJson(str);
-        login=data;
-      }
-
-      else{
-
-        ShowErrorMsg(context,response.reasonPhrase.toString());
-
-      }
-    }  on SocketException catch (e) {
+      login = await AuthenticationRepository().changeUserInfoLegacy(
+        id: UserId.toString(), name: Name, nationalCode: CodeMeli, password: Pass);
+    } catch (e) {
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
-    } on TimeoutException catch (e) {
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
-
     }
 
 

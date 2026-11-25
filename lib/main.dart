@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'Screens/Atend/ScreenAtend.dart';
-import 'Screens/Autentication/ui/screen_login.dart';
-import 'Screens/Ems/screen_ems.dart';
+import 'features/patient_registration/ui/screen_ems.dart';
 import 'Screens/Resident/screen_resident.dart';
 import 'Screens/Teriazh/screen_teriazh.dart';
 import 'firebase_web_messaging.dart';
@@ -72,8 +71,7 @@ class _MyAppState extends State<MyApp> {
         scaffoldMessengerKey: notificationMessengerKey,
         theme: ThemeData(fontFamily: 'iransans'),
         debugShowCheckedModeBanner: false,
-        // home:  const SplashScreen()
-        home:  const ScreenLogin()
+        home: const SplashScreen()
         // home:     ScreenEms(false)
         // home:     Screen_Teriazh()
         // home:     ScreenResident(context)

@@ -1,14 +1,11 @@
 import 'dart:html' as html;
 import 'dart:typed_data';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Constants.dart';
 import '../Widgets/TextApp.dart';
-import 'Autentication/Models/ModelLogin.dart';
-import 'Resident/Models/ModelNeetToCt.dart';
+import '../features/patients/data/resident_patient_repository.dart';
 
 import 'package:image/image.dart' as img;
 
@@ -33,73 +30,25 @@ class _WebImagePickerState extends State<WebImagePicker> {
 
 
   Future<void> uploadImage(Uint8List imageBytes, String fileName) async {
-
     setState(() {
       isLoading=true;
     });
-
-    var image= await compressImagePreserveSize( originalBytes: imageBytes,quality: 60);
-    if(image!=null)
-      {
-        final uri = Uri.parse("https://api.appstroke.ir/Patients/AddImages");
-        final request = http.MultipartRequest('POST', uri);
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String? UserId;
-
-        // UserId
-
-        if(prefs.getString('UserId')!=null)
-        {
-          UserId=prefs.getString('UserId')!;
-        }
-
-        // فیلدهای متنی
-        request.fields['patientId'] = widget.patientID;
-        request.fields['userId'] = UserId.toString();
-
-
-        request.files.add(
-          http.MultipartFile.fromBytes(
-            'Images',
-            imageBytes,
-            filename: fileName,
-            contentType: getMediaType(fileName),
-          ),
-        );
-
-        try {
-          final response = await request.send();
-          setState(() {
-            isLoading=false;
-          });
-
-          if (response.statusCode == 200) {
-            ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-          } else if(response.statusCode==400)
-          {
-            String str= await response.stream.bytesToString();
-            ModelLogin data=   modelLoginFromJson(str);
-            ShowErrorMsg(context,data.message);
-          }
-          else if(response.statusCode==403)
-          {
-            String str= await response.stream.bytesToString();
-            ModelLogin data=   modelLoginFromJson(str);
-            ShowErrorMsg(context,data.message);
-
-          }
-        } catch (e) {
-          print("خطای شبکه: $e");
-        }
-      }else{
-      setState(() {
-        isLoading=false;
-      });
-      ShowErrorMsg(context, 'مشکلی در آپلود عکس به وجود آمده');
+    try {
+      final image = await compressImagePreserveSize(originalBytes: imageBytes, quality: 60);
+      if (image == null) throw const FormatException();
+      final result = await ResidentPatientRepository().uploadImage(
+          widget.patientID, imageBytes, fileName, getMediaType(fileName));
+      if (!mounted) return;
+      if (result.success) {
+        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      } else {
+        ShowErrorMsg(context, result.message);
+      }
+    } catch (_) {
+      if (mounted) ShowErrorMsg(context, 'مشکلی در آپلود عکس به وجود آمده');
+    } finally {
+      if (mounted) setState(() => isLoading = false);
     }
-
-
-
   }
 
 

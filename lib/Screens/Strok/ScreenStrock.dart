@@ -15,7 +15,7 @@ import 'package:signalr_netcore/hub_connection_builder.dart';
 import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
 import '../../Widgets/TextApp.dart';
-import '../Autentication/screen_EditProfile.dart';
+import '../../features/authentication/ui/screen_EditProfile.dart';
 import '../Reception/Model/ModelPatient.dart';
 import '../Reception/ProviderReception/ProviderReception.dart';
 import '../Resident/ApiServiceResident.dart';

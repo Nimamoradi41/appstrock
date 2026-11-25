@@ -53,5 +53,31 @@ class _TestState extends State<Test> {
   }
 }
 
+// // Import the functions you need from the SDKs you need
+// import { initializeApp } from "firebase/app";
+// import { getAnalytics } from "firebase/analytics";
+// // TODO: Add SDKs for Firebase products that you want to use
+// // https://firebase.google.com/docs/web/setup#available-libraries
+//
+// // Your web app's Firebase configuration
+// // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCAk5cRolZgSCdAYYr3U70C5JKQut7W0TI",
+//   authDomain: "myfirebbase.firebaseapp.com",
+//   databaseURL: "https://myfirebbase.firebaseio.com",
+//   projectId: "myfirebbase",
+//   storageBucket: "myfirebbase.firebasestorage.app",
+//   messagingSenderId: "352771572215",
+//   appId: "1:352771572215:web:325962a2f3364f7570aef2",
+//   measurementId: "G-P692EB813L"
+// };
+//
+// // Initialize Firebase
+// const app = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app);
+
+
+// BFWowUxX1lnCRAd8hhSfC9yeXpEBqlgLpd8blBTDGsrVGOL_gVBofu7I-ebDxR2VvQinFujCXHusbdepDF2QFLg
+
 
 

@@ -5,15 +5,15 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:appstrock/Screens/Autentication/Models/ModelLogin.dart';
+import 'package:appstrock/features/authentication/model/ModelLogin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:http/http.dart'as http;
-import 'package:appstrock/Screens/Autentication/Models/ModelRigester.dart';
+import 'package:appstrock/features/authentication/model/ModelRigester.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
-import '../Autentication/Models/ModelConst.dart';
+import '../../features/authentication/model/ModelConst.dart';
 import 'Models/ModelNeetToCt.dart';
 
 
@@ -689,7 +689,6 @@ class ApiServiceResident{
         login=data;
       }else {
         ShowErrorMsg(context,response.reasonPhrase.toString());
-
       }
     }  on SocketException catch (e) {
       ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');

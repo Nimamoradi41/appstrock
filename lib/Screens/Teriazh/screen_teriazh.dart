@@ -1,6 +1,7 @@
+import '../../features/authentication/ui/screen_EditProfile.dart';
 import 'package:flutter/material.dart';
-import '../PatientRegistration/model/patient_registration.dart';
-import '../PatientRegistration/ui/patient_registration_screen.dart';
+import '../../features/patient_registration/model/patient_registration.dart';
+import '../../features/patient_registration/ui/patient_registration_screen.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:provider/provider.dart';
@@ -197,7 +198,7 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
     return PatientRegistrationScreen(
       source: PatientRegistrationSource.triage,
       shiftActive: Notifi.status,
-      onChangeShift: (value) => ChangShift(value, context),
+      onChangeShift: Notifi.setstatus,
       notificationButton: IconButton(
         tooltip: 'فعال‌سازی اعلان‌ها',
         onPressed: _registeringNotifications ? null : _enableNotifications,
@@ -205,10 +206,11 @@ class _Screen_TeriazhState extends State<Screen_Teriazh> {
             ? const SizedBox(
                 width: 22,
                 height: 22,
-                child: CircularProgressIndicator(strokeWidth: 2),
+                child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xff0c1b31)),
               )
-            : const Icon(Icons.notifications_active_outlined),
+            : const Icon(Icons.notifications_none_outlined, color: Color(0xff0c1b31), size: 24),
       ),
+      onEditProfile: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const screen_EditProfile())),
       onExit: () async {
         final confirmed = await ShowAllow(context, "آیا از حساب خود خارج میشوید ؟");
         if (confirmed && mounted) ClearAllDate();

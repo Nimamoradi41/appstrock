@@ -4,17 +4,18 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:appstrock/Screens/Autentication/Models/ModelLogin.dart';
+import 'package:appstrock/features/authentication/model/ModelLogin.dart';
 import 'package:appstrock/report/model/ModelFirstReport.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:http/http.dart'as http;
-import 'package:appstrock/Screens/Autentication/Models/ModelRigester.dart';
+import 'package:appstrock/features/authentication/model/ModelRigester.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
 import '../../report/model/ModelLogReport.dart';
-import '../Autentication/Models/ModelChangeshift.dart';
+import '../../features/authentication/model/ModelChangeshift.dart';
+import '../../features/authentication/data/AuthenticationRepository.dart';
 import '../Resident/Models/ModelTimer.dart';
 import 'Model/ModelListPatient.dart';
 
@@ -378,58 +379,14 @@ class ApiServiceReception{
   }
 
   static Future<ModelChangeshift> ChangeShiftStatus(BuildContext context) async {
-    var login;
-
-
-    var UserId="-1";
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    if(prefs.getString('UserId')!=null)
-      {
-        UserId=prefs.getString('UserId')!;
-      }
-
-
-    var request = http.MultipartRequest('POST',
-        Uri.parse('https://api.appstroke.ir/Users/ChangeShiftStatus'));
-    request.fields.addAll({
-      'id': UserId,
-    });
-
-
-    try{
-      http.StreamedResponse response = await request.send().timeout(
-        Duration(seconds: 15),
-      ).catchError((error) {
-        ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-      }) ;
-
-
-      if(response.statusCode==200)
-      {
-        String str= await response.stream.bytesToString();
-        print(str);
-        ModelChangeshift data= await  modelLoginFromJsonModelChangeshift(str);
-        login=data;
-      }else{
-        ShowErrorMsg(context,response.reasonPhrase.toString());
-
-      }
-    }  on SocketException catch (e) {
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
-    } on TimeoutException catch (e) {
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
-
-
-    } on Error catch (e)
-    {
-      print(e.toString());
-      ShowErrorMsg(context,'مشکلی در ارتباط با سرور به وجود آمده');
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getString('UserId') ?? '-1';
+      return await AuthenticationRepository().changeShiftStatus(userId: userId);
+    } catch (_) {
+      return ModelChangeshift(data: null, success: false,
+          message: 'مشکلی در ارتباط با سرور به وجود آمده', errors: null);
     }
-
-
-    return login;
   }
 
   static Future<ModelLogin> SeenByAtend(BuildContext context,String patientId ) async {

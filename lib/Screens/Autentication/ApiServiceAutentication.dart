@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 
 import '../../Constants.dart';
 import '../../core/api_exception.dart';
-import 'Models/ModelLogin.dart';
-import 'Models/ModelOtpCode.dart';
-import 'Models/ModelRigester.dart';
-import 'data/AuthenticationRepository.dart';
+import '../../features/authentication/model/ModelLogin.dart';
+import '../../features/authentication/model/ModelOtpCode.dart';
+import '../../features/authentication/model/ModelRigester.dart';
+import '../../features/authentication/data/AuthenticationRepository.dart';
 
 class ApiServiceAutentication {
   static final _repository = AuthenticationRepository();

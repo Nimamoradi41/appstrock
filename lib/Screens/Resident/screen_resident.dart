@@ -7,15 +7,16 @@ import 'package:appstrock/Screens/Reception/ProviderReception/ProviderReception.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart' hide showPersianDateRangePicker;
 import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
+import '../../core/utils/persian_date_range_picker.dart';
 import '../../Widgets/ItemPatient.dart';
 import '../../Widgets/TextApp.dart';
-import '../Autentication/screen_EditProfile.dart';
+import '../../features/authentication/ui/screen_EditProfile.dart';
 import '../Reception/Model/ModelPatient.dart';
 import '../SplashScreen.dart';
 import 'ScreenDetailPatient.dart';
@@ -55,33 +56,13 @@ class _ScreenResidentState extends State<ScreenResident> {
   late var Notifi=ProviderReception();
 
 
-  Future persianDateCalenderFrom()async{
-    Jalali? pickedFrom = await showPersianDatePicker(
-      context: context,
-      firstDate: Jalali(1385, 8),
-      lastDate: Jalali(1450, 9),
-      initialDate: dateFrom==null? Jalali.now():dateFrom!!,
-    );
-    dateFrom=pickedFrom;
-
-    if(pickedFrom!=null) {
-      persianDateCalenderTo(pickedFrom);
-      // runListByDate(context,picked);
-    }
-    }
-
-  Future persianDateCalenderTo(Jalali pickedFrom)async{
-    Jalali? pickedTo = await showPersianDatePicker(
-      context: context,
-      firstDate: Jalali(1385, 8),
-      lastDate: Jalali(1450, 9),
-      initialDate: dateTo==null? Jalali.now():dateTo!!,
-    );
-    dateTo=pickedTo;
-
-    if(pickedTo!=null) {
-      runListByDate(context,pickedFrom,pickedTo);
-    }
+  Future<void> persianDateCalenderFrom() async {
+    final range = await showPersianDateRangePicker(context,
+        initialFrom: dateFrom, initialTo: dateTo);
+    if (range == null || !mounted) return;
+    dateFrom = range.from;
+    dateTo = range.to;
+    await runListByDate(context, range.from, range.to);
   }
 
 
@@ -387,8 +368,8 @@ class _ScreenResidentState extends State<ScreenResident> {
                                 itemBuilder: (ctx,item){
                                   return InkWell(
                                       onTap: (){
-                                        GoNextPage(context,ScreenDetailPatient(ItemsP[item],
-                                            context,formattedDateFrom,formattedDateTo));
+                                        GoNextPage(context,ScreenDetailPatient(ItemsP[item].id,
+                                            formattedDateFrom,formattedDateTo));
                                       },
                                       child: ItemPatientNew(wid: wid,ItemsP: ItemsP[item],));
                                 },

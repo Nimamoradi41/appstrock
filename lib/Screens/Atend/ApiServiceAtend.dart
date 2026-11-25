@@ -8,7 +8,7 @@ import 'package:appstrock/Screens/Atend/model/ModelImages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:http/http.dart'as http;
-import 'package:appstrock/Screens/Autentication/Models/ModelRigester.dart';
+import 'package:appstrock/features/authentication/model/ModelRigester.dart';
 
 import '../../Constants.dart';
 import '../Resident/Models/ModelNeetToCt.dart';

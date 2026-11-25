@@ -1,12 +1,7 @@
 import 'dart:async';
 
-import 'package:appstrock/Screens/Laboratory/ScreenFormLaboratory.dart';
-import 'package:appstrock/Screens/Resident/ApiServiceResident.dart';
-import 'package:appstrock/Screens/Resident/ScreenFormBload724.dart';
-import 'package:appstrock/Screens/Resident/ScreenFormNIHS.dart';
 import 'package:appstrock/Screens/Resident/ScreenFormTimeInjection.dart';
 import 'package:flutter/material.dart';
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -15,21 +10,23 @@ import '../../Constants.dart';
 import '../../SignalRService.dart';
 import '../../Widgets/TextApp.dart';
 import '../../components/BoxInformation.dart';
-import '../Reception/ApiServiceReception.dart';
-import '../Reception/Model/ModelPatient.dart';
+import '../../features/patients/data/patient_repository.dart';
+import '../../features/patients/data/resident_patient_repository.dart';
+import '../../features/patients/ui/resident/activation_724_form.dart';
+import '../../features/patients/ui/resident/nihss_screen.dart';
+import '../../features/patients/ui/resident/laboratory_screen.dart';
+import '../../features/patients/ui/resident/patient_vitals_screen.dart';
 import '../WebImagePicker.dart';
 import 'ProviderResident/ProviderResidentDetaile.dart';
 import 'ProviderResident/ProviderTimers.dart';
-import 'ScreenFormIs724.dart';
 import 'ScreenFormIsNot724.dart';
-import 'ScreenFormPreesBload724.dart';
 import 'ScreenFormReasonInjection.dart';
+import 'resident_patient_record.dart';
 
 class ScreenDetailPatient extends StatefulWidget {
-  ScreenDetailPatient(this.patientItem, this.MainCtx, this.formattedDateFrom,this. formattedDateTo);
+  ScreenDetailPatient(this.patientId, this.formattedDateFrom,this.formattedDateTo);
 
-  ModelPatient patientItem;
-  BuildContext MainCtx;
+  final int patientId;
   String formattedDateFrom;
   String formattedDateTo;
 
@@ -40,14 +37,18 @@ class ScreenDetailPatient extends StatefulWidget {
 class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late var Notifi = ProviderResidentDetaile();
+  final _repository = ResidentPatientRepository();
+  int _requestGeneration = 0;
+  String? _loadError;
 
   // Future NeedToCT(BuildContext context)async{
   Future NeedToCT(BuildContext context) async {
     DateTime? TimeStart;
     ShowLoadingApp(context);
     // ignore: use_build_context_synchronously
-    var Data = await ApiServiceResident.NeedToCT(
-        widget.patientItem.id.toString(), context);
+    var Data = await _repository.needToCT(widget.patientId.toString());
+    if (!mounted) return;
+    Navigator.pop(context);
     if (Data.success) {
       ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
       getInfoOfPatient();
@@ -61,8 +62,9 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     ShowLoadingApp(context);
 
     // ignore: use_build_context_synchronously
-    var Data = await ApiServiceResident.NeedToMRI(
-        widget.patientItem.id.toString(), context);
+    var Data = await _repository.needToMRI(widget.patientId.toString());
+    if (!mounted) return;
+    Navigator.pop(context);
 
     if (Data.success) {
       ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
@@ -73,42 +75,11 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     }
   }
 
-  Future AddNIHS(List<Map<String, dynamic>> Str, int score) async {
-    ShowLoadingApp(context);
-    var Data = await ApiServiceResident.AddNihs(
-        widget.patientItem.id.toString(), context, Str, score);
-
-    if (Data != null) {
-      if (Data.success) {
-        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-        getInfoOfPatient();
-      } else {
-        // ignore: use_build_context_synchronously
-        ShowErrorMsg(context, Data.message);
-      }
-    }
-  }
-
-  Future editNIHS(List<Map<String, dynamic>> Str, int score) async {
-    ShowLoadingApp(context);
-    var Data = await ApiServiceResident.editNihs(
-        widget.patientItem.id.toString(), context, Str, score);
-
-    if (Data != null) {
-      if (Data.success) {
-        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-        getInfoOfPatient();
-      } else {
-        // ignore: use_build_context_synchronously
-        ShowErrorMsg(context, Data.message);
-      }
-    }
-  }
 
   Future IsNot724() async {
     var timestamp = DateTime.now().millisecondsSinceEpoch;
-    var Data = await ApiServiceResident.SetNot724(
-        widget.patientItem.id.toString(), context, false, timestamp.toString());
+    var Data = await _repository.setNot724(widget.patientId.toString(), timestamp.toString());
+    if (!mounted) return;
     if (Data != null) {
       if (Data.success) {
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
@@ -127,12 +98,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     ShowLoadingApp(context);
     // ignore: use_build_context_synchronously
 
-    var Data = await ApiServiceResident.ReasonsForIsNot724(
-        widget.patientItem.id.toString(),
-        context,
-        MisdiagnosisOfTriage,
-        MisdiagnosisOfEms,
-        OverTime);
+    var Data = await _repository.saveNot724Reasons(widget.patientId.toString(), MisdiagnosisOfTriage, MisdiagnosisOfEms, OverTime);
+    if (!mounted) return;
     Navigator.pop(context);
     Navigator.pop(context);
     if (Data != null) {
@@ -175,8 +142,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
       String id, BuildContext context, List<Map<String, dynamic>> Str) async {
     ShowLoadingApp(context);
     // ignore: use_build_context_synchronously
-    var Data = await ApiServiceReception.SetInjectionReason(
-        context, widget.patientItem.id.toString(), Str);
+    var Data = await _repository.saveInjectionReason(widget.patientId.toString(), Str);
+    if (!mounted) return;
 
     if (Data != null) {
       if (Data.success) {
@@ -220,89 +187,72 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
   Duration _elapsedTimeFss = Duration.zero;
   late DateTime TimeEffect;
 
-  Future AddRequestIs724(
-      bool IsUnkown,
-      String TimeStart,
-      String DateStart,
-      String TimeFssStart,
-      String DateFSSStart,
-      String TimeLKWStart,
-      String DateLKWStart,
-      String timestamp,
-      String timestampLKW,
-      String timestampFSS) async {
-    ShowLoadingApp(context);
-    // ignore: use_build_context_synchronously
-    var Data = await ApiServiceResident.Set724(
-        widget.patientItem.id.toString(),
-        context,
-        IsUnkown,
-        TimeStart,
-        DateStart,
-        TimeFssStart,
-        DateFSSStart,
-        TimeLKWStart,
-        DateLKWStart,
-        true,
-        timestamp,
-        timestampLKW,
-        timestampFSS);
-    Navigator.pop(context);
-    Navigator.pop(context);
-    if (Data != null) {
-      if (Data.success) {
-        ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
-        getInfoOfPatient();
-      } else {
-        // ignore: use_build_context_synchronously
-        ShowErrorMsg(context, Data.message);
-      }
+  Future<void> Add724() async {
+    final saved = await Navigator.of(context).push<bool>(MaterialPageRoute(
+        builder: (_) => Activation724Form(
+          patient: Notifi.patientItem,
+          onSubmit: ({required unknown, required startTime, required startDate,
+            required fssTime, required fssDate, required lkwTime, required lkwDate,
+            required timestamp, required lkwTimestamp, required fssTimestamp}) =>
+              _repository.set724(widget.patientId.toString(), unknown: unknown,
+                startTime: startTime, startDate: startDate, fssTime: fssTime,
+                fssDate: fssDate, lkwTime: lkwTime, lkwDate: lkwDate,
+                timestamp: timestamp, lkwTimestamp: lkwTimestamp, fssTimestamp: fssTimestamp),
+        )));
+    if (saved == true && mounted) {
+      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      getInfoOfPatient();
     }
   }
 
-  Add724() {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
-        ),
-        builder: (ctx) {
-          return Container(
-              margin: EdgeInsets.only(top: 16),
-              child: ScreenFormIs724((p) async {
-                var Know = p[0]['Know'];
-                String Time = '';
-                String TimeFss = '';
-                String TimeLKW = '';
-                String Date = '';
-                String DateFSS = '';
-                String DateLKW = '';
-                String timestamp = '';
-                Navigator.pop(context);
-                ShowLoadingApp(context);
-                await Future.delayed(Duration(seconds: 2));
-                if (Know == 'false') {
-                  Time = p[1]['Time']!;
-                  Date = p[2]['Date']!;
-                  timestamp = p[3]['timestamp']!;
-                  print(Time);
-                  print(Date);
-                  print(timestamp);
-                  AddRequestIs724(
-                      false, Time, Date, '', '', '', '', timestamp, '', '');
-                } else {
-                  TimeFss = p[3]['TimeFss']!;
-                  TimeLKW = p[1]['TimeLKW']!;
-                  DateFSS = p[4]['DateFss']!;
-                  DateLKW = p[2]['DateLKW']!;
-                  var timestampLKW = p[5]['timestampLKW']!;
-                  var timestampFSS = p[6]['timestampFSS']!;
-                  AddRequestIs724(true, '', '', TimeFss, DateFSS, TimeLKW,
-                      DateLKW, timestamp, timestampLKW, timestampFSS);
-                }
-              }));
-        });
+  Future<void> _openNihss() async {
+    final patient = Notifi.patientItem;
+    if (patient.is724IsComplete != true || patient.isNot724) return;
+    final saved = await Navigator.of(context).push<bool>(MaterialPageRoute(
+      builder: (_) => NihssScreen(
+        patient: patient,
+        onSubmit: (answers, score) => _repository.saveNihss(
+          widget.patientId.toString(), answers, score, update: patient.nihsIsComplete),
+      ),
+    ));
+    if (saved == true && mounted) {
+      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      getInfoOfPatient();
+    }
+  }
+
+  Future<void> _openLaboratory() async {
+    final patient = Notifi.patientItem;
+    if (patient.is724IsComplete != true || patient.isNot724) return;
+    final saved = await Navigator.of(context).push<bool>(MaterialPageRoute(
+      builder: (_) => LaboratoryScreen(
+        patient: patient,
+        onSubmit: (answers) => _repository.saveLab(
+          widget.patientId.toString(), answers, update: patient.labIsComplete),
+      ),
+    ));
+    if (saved == true && mounted) {
+      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      getInfoOfPatient();
+    }
+  }
+
+  Future<void> _openVitals(PatientVital vital) async {
+    final patient = Notifi.patientItem;
+    if (patient.is724IsComplete != true || patient.isNot724) return;
+    final saved = await Navigator.of(context).push<bool>(MaterialPageRoute(
+      builder: (_) => PatientVitalsScreen(
+        patient: patient,
+        vital: vital,
+        onSubmit: (first, second) => vital == PatientVital.bloodPressure
+            ? _repository.saveBloodPressure(widget.patientId.toString(), first, second!)
+            : _repository.saveBloodSugar(widget.patientId.toString(), first),
+      ),
+    ));
+    if (saved == true && mounted) {
+      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      getInfoOfPatient();
+    }
   }
 
   Timer? _timer;
@@ -380,8 +330,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
   Future RunPressBload(String Blod1, String Blod2) async {
     ShowLoadingApp(context);
 
-    var Data = await ApiServiceResident.PressBlod(
-        widget.patientItem.id.toString(), context, Blod1, Blod2);
+    var Data = await _repository.saveBloodPressure(widget.patientId.toString(), Blod1, Blod2);
+    if (!mounted) return;
 
     Navigator.pop(context);
 
@@ -398,8 +348,9 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
 
   Future AddLab(List<Map<String, dynamic>> Str) async {
     ShowLoadingApp(context);
-    var Data = await ApiServiceResident.AddLab(
-        widget.patientItem.id.toString(), context, Str);
+    var Data = await _repository.saveLab(widget.patientId.toString(), Str, update: false);
+    if (!mounted) return;
+    Navigator.pop(context);
     if (Data != null) {
       if (Data.success) {
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
@@ -412,8 +363,9 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
 
   Future editLab(List<Map<String, dynamic>> Str) async {
     ShowLoadingApp(context);
-    var Data = await ApiServiceResident.editLab(
-        widget.patientItem.id.toString(), context, Str);
+    var Data = await _repository.saveLab(widget.patientId.toString(), Str, update: true);
+    if (!mounted) return;
+    Navigator.pop(context);
     if (Data != null) {
       if (Data.success) {
         ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
@@ -446,8 +398,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
 
   Future RunBload(String Blod) async {
     ShowLoadingApp(context);
-    var Data = await ApiServiceResident.Blod(
-        widget.patientItem.id.toString(), context, Blod);
+    var Data = await _repository.saveBloodSugar(widget.patientId.toString(), Blod);
+    if (!mounted) return;
 
     Navigator.pop(context);
 
@@ -464,8 +416,8 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
   Future RequestAddTimeInjection(String Time,String timeStamp,String medicen) async {
     ShowLoadingApp(context);
     // ignore: use_build_context_synchronously
-    var Data = await ApiServiceResident.TimeOfInjection(
-        widget.patientItem.id.toString(), context, Time, timeStamp.toString(),medicen);
+    var Data = await _repository.saveInjection(widget.patientId.toString(), Time, timeStamp.toString(), medicen);
+    if (!mounted) return;
     Navigator.pop(context);
     if (Data != null) {
       if (Data.success) {
@@ -534,46 +486,35 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
   }
 
   Future getInfoOfPatient() async {
-    isLoading = true;
-    setState(() {});
-
-    Jalali date = Jalali.now();
-
-    // ignore: use_build_context_synchronously
-    var Data = await ApiServiceReception.PatientListBetweenDate(widget.formattedDateFrom,widget.formattedDateTo, context);
-
-    if (Data != null) {
-      if (Data.success) {
-        var finded = Data.data.firstWhere((element) => element.id == widget.patientItem.id);
-        Notifi.setItems(finded);
-        isLoading = false;
-        setState(() {});
-
-        if (!Notifi.patientItem.isFinished!) {
-          if(!isTimerRunning())
-          {
-            startTimer();
-          }
-        } else {
-          if (_timer != null) {
-            _timer!.cancel();
-          }
-        }
+    if (!mounted) return;
+    final generation = ++_requestGeneration;
+    setState(() { isLoading = true; _loadError = null; });
+    try {
+      final patient = await _repository.getPatient(patientId: widget.patientId,
+          from: widget.formattedDateFrom, to: widget.formattedDateTo);
+      if (!mounted || generation != _requestGeneration) return;
+      Notifi.setItems(patient);
+      setState(() => isLoading = false);
+      if (patient.isFinished != true) {
+        if (!isTimerRunning()) startTimer();
       } else {
-        // ignore: use_build_context_synchronously
-        ShowErrorMsg(context, Data.message);
+        _timer?.cancel();
       }
+    } catch (error) {
+      if (!mounted || generation != _requestGeneration) return;
+      setState(() {
+        isLoading = false;
+        _loadError = error is PatientListException ? error.message : 'دریافت پرونده بیمار ناموفق بود';
+      });
     }
-
-
-
-
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _requestGeneration++;
     SignalRService().isPageActive = false;
+    SignalRService().onMessageReceived = null;
     SignalRService().disconnect();
 
     if (_timer != null && _timer!.isActive) {
@@ -596,10 +537,54 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     }
   }
 
+  bool _showExistingActions = false;
+  bool _statusSubmitting = false;
+
+  Future<void> _markNot724() async {
+    if (_statusSubmitting) return;
+    setState(() => _statusSubmitting = true);
+    try {
+      await IsNot724();
+    } finally {
+      if (mounted) setState(() => _statusSubmitting = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double wid = MediaQuery.of(context).size.width;
     double hei = MediaQuery.of(context).size.height;
+    if (_loadError != null && !isLoading) {
+      return Scaffold(body: SafeArea(child: Center(child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(_loadError!, textDirection: TextDirection.rtl),
+          TextButton(onPressed: getInfoOfPatient, child: const Text('تلاش مجدد')),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('بازگشت')),
+        ],
+      ))));
+    }
+    if (!_showExistingActions) {
+      return isLoading
+          ? const Scaffold(body: Center(child: CircularProgressIndicator()))
+          : ResidentPatientRecord(
+              patient: Notifi.patientItem,
+              elapsedSinceRegistration: _elapsedTimeArriveToHospital,
+              elapsedSinceSymptoms: _elapsedTime,
+              onBack: () => Navigator.pop(context),
+              onActions: () => setState(() => _showExistingActions = true),
+              onImages: () => uploadImage(Notifi.patientItem.id.toString()),
+              onNihss: _openNihss,
+              onLaboratory: _openLaboratory,
+              onBloodPressure: () => _openVitals(PatientVital.bloodPressure),
+              onBloodSugar: () => _openVitals(PatientVital.bloodSugar),
+              onIs724: Add724,
+              onIsNot724: _markNot724,
+              onSaveNot724Reasons: (triage, ems, overTime) => _repository.saveNot724Reasons(widget.patientId.toString(), triage, ems, overTime),
+              onNot724ReasonsSaved: getInfoOfPatient,
+              statusSubmitting: _statusSubmitting,
+            );
+    }
     wid = wid > 600 ? 600 : wid;
     return SafeArea(
       child: Scaffold(
@@ -633,6 +618,10 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                   children: [
                                     InkWell(
                                       onTap: () {
+                                        if (_showExistingActions) {
+                                          setState(() => _showExistingActions = false);
+                                          return;
+                                        }
                                         if (_timer != null) {
                                           _timer!.cancel();
                                         }
@@ -1000,83 +989,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                                                       .toString(),
                                                               title:
                                                                   ' :  وضعیت  NIHSS',
-                                                              onTap: () {
-                                                                GoNextPage(
-                                                                    context,
-                                                                    ScreenFormNIHS(
-                                                                      (p0, s) {
-
-                                                                        if(Notifi.patientItem.is724IsComplete==false)
-                                                                        {
-                                                                          return ;
-                                                                        }
-
-                                                                        if (Notifi
-                                                                            .patientItem
-                                                                            .nihsIsComplete) {
-                                                                          editNIHS(
-                                                                              p0,
-                                                                              s);
-                                                                        } else {
-                                                                          AddNIHS(
-                                                                              p0,
-                                                                              s);
-                                                                        }
-                                                                      },
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .nihsIsComplete,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_1_a,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_1_b,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_1_c,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_2,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_3,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_4,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_5_a,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_5_b,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_6_a,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_6_b,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_7,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_8,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_9,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_10,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .n_11,
-                                                                      false,
-                                                                      Notifi
-                                                                          .patientItem
-                                                                          .nihsSubscore,
-                                                                    ));
-                                                              },
+                                                              onTap: _openNihss,
                                                             )
                                                           : Container(),
                                                       Notifi.patientItem
@@ -1119,65 +1032,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                                                       : 'تکمیل نشده است',
                                                               title:
                                                                   ' :  فرم آزمایشگاه',
-                                                              onTap: () {
-                                                                if (Notifi
-                                                                        .patientItem
-                                                                        .is724IsComplete ==
-                                                                    true) {
-                                                                  GoNextPage(
-                                                                      context,
-                                                                      ScreenFormLaboratory(
-                                                                          (p0) {
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                        if (Notifi
-                                                                            .patientItem
-                                                                            .labIsComplete) {
-                                                                          editLab(
-                                                                              p0);
-                                                                        } else {
-                                                                          AddLab(
-                                                                              p0);
-                                                                        }
-                                                                      },
-                                                                          Notifi
-                                                                              .patientItem
-                                                                              .labIsComplete,
-                                                                          Notifi
-                                                                              .patientItem
-                                                                              .bun
-                                                                              .toString(),
-                                                                          Notifi
-                                                                              .patientItem
-                                                                              .cr
-                                                                              .toString(),
-                                                                          Notifi
-                                                                              .patientItem
-                                                                              .plt
-                                                                              .toString(),
-                                                                          Notifi
-                                                                              .patientItem
-                                                                              .pt
-                                                                              .toString(),
-                                                                          Notifi
-                                                                              .patientItem
-                                                                              .inr
-                                                                              .toString(),
-                                                                          Notifi
-                                                                              .patientItem
-                                                                              .trop
-                                                                              .toString(),
-                                                                          Notifi
-                                                                              .patientItem
-                                                                              .hb
-                                                                              .toString(),
-                                                                          Notifi
-                                                                              .patientItem
-                                                                              .wbc
-                                                                              .toString(),
-                                                                          false));
-                                                                }
-                                                              },
+                                                              onTap: _openLaboratory,
                                                             )
                                                           : Container(),
                                                       Notifi.patientItem
@@ -1204,27 +1059,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                                                       .toString(),
                                                               title:
                                                                   ' :  قند خون',
-                                                              onTap: () {
-                                                                if (Notifi
-                                                                        .patientItem
-                                                                        .is724IsComplete ==
-                                                                    true) {
-                                                                  GoNextPage(
-                                                                      context,
-                                                                      ScreenFormBload724(
-                                                                          Notifi
-                                                                              .patientItem
-                                                                              .id
-                                                                              .toString(),
-                                                                          false,
-                                                                          (p0) {
-                                                                        var item =
-                                                                            p0[0]['bload'].toString();
-                                                                        RunBload(
-                                                                            item);
-                                                                      }));
-                                                                }
-                                                              },
+                                                              onTap: () => _openVitals(PatientVital.bloodSugar),
                                                             )
                                                           : Container(),
                                                       Notifi.patientItem
@@ -1239,30 +1074,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                                                   : "${Notifi.patientItem.bloodPressure1}/${Notifi.patientItem.bloodPressure2}",
                                                               title:
                                                                   ' :  فشار خون',
-                                                              onTap: () {
-                                                                if (Notifi
-                                                                        .patientItem
-                                                                        .is724IsComplete ==
-                                                                    true) {
-                                                                  GoNextPage(
-                                                                      context,
-                                                                      ScreenFormPreesBload724(
-                                                                          Notifi
-                                                                              .patientItem
-                                                                              .id
-                                                                              .toString(),
-                                                                          false,
-                                                                          (p0) {
-                                                                        var bload1 =
-                                                                            p0[0]['bload1'].toString();
-                                                                        var bload2 =
-                                                                            p0[0]['bload2'].toString();
-                                                                        RunPressBload(
-                                                                            bload1,
-                                                                            bload2);
-                                                                      }));
-                                                                }
-                                                              },
+                                                              onTap: () => _openVitals(PatientVital.bloodPressure),
                                                             )
                                                           : Container(),
                                                       Notifi.patientItem
@@ -1510,10 +1322,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
                                                               ScreenFormReasonInjection(
                                                                 (p0) {
                                                                   setInjectionReason(
-                                                                      widget
-                                                                          .patientItem
-                                                                          .id
-                                                                          .toString(),
+                                                                      widget.patientId.toString(),
                                                                       context,
                                                                       p0);
                                                                 },

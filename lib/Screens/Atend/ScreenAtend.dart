@@ -1,5 +1,5 @@
 import 'package:appstrock/Screens/Atend/ProviderAtend/ProviderAtend.dart';
-import 'package:appstrock/Screens/Ems/screen_ems.dart';
+import 'package:appstrock/features/patient_registration/ui/screen_ems.dart';
 import 'package:appstrock/Widgets/notification_registration_button.dart';
 import 'package:appstrock/Screens/Reception/ApiServiceReception.dart';
 import 'package:appstrock/Screens/Reception/ProviderReception/ProviderReception.dart';
@@ -15,7 +15,7 @@ import '../../Constants.dart';
 import '../../Widgets/ItemPatient.dart';
 import '../../Widgets/TextApp.dart';
 import '../../report/FirstReportScreen.dart';
-import '../Autentication/screen_EditProfile.dart';
+import '../../features/authentication/ui/screen_EditProfile.dart';
 import '../Reception/Model/ModelPatient.dart';
 import '../SplashScreen.dart';
 import 'ScreenDetailPatientAtend.dart';

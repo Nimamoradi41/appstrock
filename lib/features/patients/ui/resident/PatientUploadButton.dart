@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 
 
 class PatientUploadButton extends StatelessWidget {
-  const PatientUploadButton({super.key, required this.onPressed});
+  const PatientUploadButton(
+      {super.key, required this.onPressed, this.label = 'آپلود عکس'});
   final VoidCallback onPressed;
+  final String label;
 
   @override
   Widget build(BuildContext context) => SizedBox(
@@ -18,6 +20,7 @@ class PatientUploadButton extends StatelessWidget {
               backgroundColor: AppConfig.tealColorResident,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10))),
-          child: const Text('آپلود عکس',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))));
+          child: Text(label,
+              style: const TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.bold))));
 }

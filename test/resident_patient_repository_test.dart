@@ -44,6 +44,21 @@ void main() {
       expect(fields.length, 18);
     }
   });
+  test('sends unanswered NIHSS fields as empty values', () async {
+    final dio = Dio(BaseOptions(baseUrl: 'https://example.test'));
+    RequestOptions? request;
+    dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+      request = options;
+      handler.resolve(Response(requestOptions: options, statusCode: 200, data: {'success': true}));
+    }));
+    final repository = ResidentPatientRepository(dio: dio, userId: () async => '9');
+    final answers = List.generate(15, (index) => <String, dynamic>{'selected_answer': index == 1 ? 0 : null});
+    await repository.saveNihss('42', answers, 0, update: true);
+    final fields = Map.fromEntries((request!.data as FormData).fields);
+    expect(fields['N_1_a'], '');
+    expect(fields['N_1_b'], '0');
+    expect(fields['N_11'], '');
+  });
   test('sends known and unknown onset fields to the 724 endpoint', () async {
     final dio = Dio(BaseOptions(baseUrl: 'https://example.test'));
     final requests = <RequestOptions>[];
@@ -112,6 +127,17 @@ void main() {
     expect(Map.fromEntries(form.fields), {'patientId': '42', 'userId': '9'});
     expect(form.files.single.key, 'Images');
     expect(form.files.single.value.filename, 'scan.png');
+  });
+
+  test('does not report upload success when the server rejects it in a 200 response', () async {
+    final dio = Dio(BaseOptions(baseUrl: 'https://example.test'));
+    dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+      handler.resolve(Response(requestOptions: options, statusCode: 200, data: {'success': false, 'message': 'خطای ثبت'}));
+    }));
+    final repository = ResidentPatientRepository(dio: dio, userId: () async => '9');
+    final result = await repository.uploadImage('42', Uint8List.fromList([1]), 'scan.png', MediaType('image', 'png'));
+    expect(result.success, isFalse);
+    expect(result.message, 'خطای ثبت');
   });
 
   test(

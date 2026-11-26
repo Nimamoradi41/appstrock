@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../Reception/Model/ModelPatient.dart';
+import 'package:appstrock/Screens/Reception/Model/ModelPatient.dart';
 
 
 

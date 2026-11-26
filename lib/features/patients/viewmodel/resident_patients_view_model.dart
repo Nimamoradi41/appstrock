@@ -33,6 +33,16 @@ class ResidentPatientsViewModel extends ChangeNotifier {
     await refresh();
   }
 
+  Future<void> showToday() async {
+    from = to = Jalali.now();
+    isToday = true;
+    _generation++;
+    patients = const [];
+    error = null;
+    notifyListeners();
+    await refresh();
+  }
+
   Future<void> refresh() async {
     if (loading || _disposed) return;
     if (isToday) from = to = Jalali.now();

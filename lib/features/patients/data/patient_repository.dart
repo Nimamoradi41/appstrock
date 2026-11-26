@@ -27,13 +27,19 @@ class PatientListEntry {
 
   PatientStatus get status {
     if (patient.isFinished == true) return PatientStatus.finished;
-    if (isNot724 == null ||
-        (isNot724 == false && patient.is724IsComplete != true)) {
-      return PatientStatus.waiting;
-    }
-    if (isNot724 == false) return PatientStatus.active724;
-    return PatientStatus.not724;
+    if (patient.is724IsComplete == true) return PatientStatus.active724;
+    if (isNot724 == true) return PatientStatus.not724;
+    return PatientStatus.waiting;
   }
+
+  /// نیازمند اقدام: هنوز نه ۷۲۴ ثبت شده و نه پرونده بسته شده است.
+  bool get needsAction => status == PatientStatus.waiting;
+
+  /// کد ۷۲۴: کد ۷۲۴ تایید شده و پرونده هنوز تکمیل نشده است.
+  bool get isCode724 => status == PatientStatus.active724;
+
+  /// تکمیل شده: پرونده بیمار بسته شده است.
+  bool get isCompleted => status == PatientStatus.finished;
 }
 
 class PatientRepository {
@@ -45,6 +51,13 @@ class PatientRepository {
 
   Future<List<PatientListEntry>> listBetweenDates(String start, String end) =>
       _list('/Patients/PatientListBetweenDate', {'startDate': start, 'endDate': end});
+
+  Future<List<PatientListEntry>> listForAttend(String start, String end) async {
+    final patients = await _list('/Patients/PatientForAttend',
+        {'startDate': start, 'endDate': end});
+    return List.unmodifiable(
+        patients.where((entry) => entry.isCode724 || entry.isCompleted));
+  }
 
   Future<List<PatientListEntry>> _list(String path, Map<String, String> fields) async {
     final response = await _dio.post<dynamic>(path,

@@ -1,17 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:shamsi_date/shamsi_date.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/AppConfig.dart';
 import '../../authentication/data/AuthenticationRepository.dart';
 import '../../../core/api_exception.dart';
 import '../model/patient_registration.dart';
+import '../data/patient_repository.dart';
 import '../viewmodel/patient_registration_view_model.dart';
 
 const _navy = Color(0xff0c1b31);
 const _teal = Color(0xff007d85);
 const _background = Color(0xffedf3f8);
 const _border = Color(0xffc5d1dc);
+
+class _PersianRegistrationLocalizations extends PersianMaterialLocalizations {
+  const _PersianRegistrationLocalizations();
+
+  @override
+  String formatDecimal(int number) =>
+      AppConfig.digits(super.formatDecimal(number));
+  @override
+  String formatYear(DateTime date) => AppConfig.digits(super.formatYear(date));
+  @override
+  String formatMediumDate(DateTime date) =>
+      AppConfig.digits(super.formatMediumDate(date));
+  @override
+  String formatShortDate(DateTime date) =>
+      AppConfig.digits(super.formatShortDate(date));
+  @override
+  String formatMonthYear(DateTime date) =>
+      AppConfig.digits(super.formatMonthYear(date));
+}
+
+class _PersianRegistrationDelegate
+    extends LocalizationsDelegate<MaterialLocalizations> {
+  const _PersianRegistrationDelegate();
+  @override
+  bool isSupported(Locale locale) => locale.languageCode == 'fa';
+  @override
+  Future<MaterialLocalizations> load(Locale locale) =>
+      SynchronousFuture<MaterialLocalizations>(
+          const _PersianRegistrationLocalizations());
+  @override
+  bool shouldReload(_PersianRegistrationDelegate old) => false;
+}
 
 class PatientRegistrationScreen extends StatefulWidget {
   const PatientRegistrationScreen({
@@ -22,6 +57,8 @@ class PatientRegistrationScreen extends StatefulWidget {
     required this.onExit,
     required this.onEditProfile,
     required this.notificationButton,
+    this.repository,
+    this.showBackButton = false,
   });
 
   final PatientRegistrationSource source;
@@ -30,6 +67,8 @@ class PatientRegistrationScreen extends StatefulWidget {
   final VoidCallback onExit;
   final VoidCallback onEditProfile;
   final Widget notificationButton;
+  final PatientRepository? repository;
+  final bool showBackButton;
 
   @override
   State<PatientRegistrationScreen> createState() =>
@@ -41,11 +80,21 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
   final _name = TextEditingController();
   final _nationalCode = TextEditingController();
   final _age = TextEditingController();
-  final _viewModel = PatientRegistrationViewModel();
+  late final PatientRegistrationViewModel _viewModel;
   bool _submitted = false;
   bool _preparing = false;
   bool _changingShift = false;
   int _gender = 2;
+  bool _withoutInfo = false;
+  bool _manualTime = false;
+  Jalali? _selectedDate;
+  TimeOfDay? _selectedTime;
+  String? _timeError;
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = PatientRegistrationViewModel(repository: widget.repository);
+  }
   @override
   void dispose() {
     _name.dispose();
@@ -67,13 +116,18 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
       final preferences = await SharedPreferences.getInstance();
       final userId = preferences.getString('UserId');
       if (userId == null || userId.isEmpty) {
-        if (mounted) _message('اطلاعات کاربر در دسترس نیست؛ دوباره وارد حساب کاربری شوید');
+        if (mounted) {
+          _message('اطلاعات کاربر در دسترس نیست؛ دوباره وارد حساب کاربری شوید');
+        }
         return;
       }
-      final result = await AuthenticationRepository().changeShiftStatus(userId: userId);
+      final result =
+          await AuthenticationRepository().changeShiftStatus(userId: userId);
       if (!mounted) return;
       if (!result.success || result.data == null) {
-        _message(result.message.isEmpty ? 'تغییر وضعیت شیفت ناموفق بود' : result.message);
+        _message(result.message.isEmpty
+            ? 'تغییر وضعیت شیفت ناموفق بود'
+            : result.message);
         return;
       }
       final isOnline = result.data!.isOnline;
@@ -95,7 +149,23 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
       return;
     }
     setState(() => _submitted = true);
-    if (!_formKey.currentState!.validate()) return;
+    if (!_withoutInfo && !_formKey.currentState!.validate()) return;
+
+    final pressedAt = DateTime.now();
+    DateTime registeredAt = pressedAt;
+    if (_manualTime) {
+      if (_selectedDate == null || _selectedTime == null) {
+        setState(() => _timeError = 'تاریخ و ساعت ثبت را انتخاب کنید.');
+        return;
+      }
+      final date = _selectedDate!.toGregorian();
+      registeredAt = DateTime(date.year, date.month, date.day,
+          _selectedTime!.hour, _selectedTime!.minute);
+      if (registeredAt.isAfter(pressedAt)) {
+        setState(() => _timeError = 'زمان ثبت نمی‌تواند در آینده باشد.');
+        return;
+      }
+    }
 
     setState(() => _preparing = true);
     String? userId;
@@ -115,16 +185,16 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
       _message('اطلاعات کاربر در دسترس نیست؛ دوباره وارد حساب کاربری شوید');
       return;
     }
-    final now = DateTime.now();
     final patient = PatientRegistration(
       fullName: _name.text.trim(),
       nationalCode: _nationalCode.text,
       age: _age.text,
       genderId: _gender,
       source: widget.source,
-      registeredDate: _date(now),
-      registeredAt: now,
+      registeredDate: _date(registeredAt),
+      registeredAt: registeredAt,
       registeredBy: userId,
+      withoutInfo: _withoutInfo,
     );
     final success = await _viewModel.register(patient);
     if (!mounted) return;
@@ -136,7 +206,12 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
       _age.clear();
       setState(() {
         _gender = 2;
+        _withoutInfo = false;
         _submitted = false;
+        _manualTime = false;
+        _selectedDate = null;
+        _selectedTime = null;
+        _timeError = null;
       });
       _message('بیمار با موفقیت ثبت شد');
     } else if (_viewModel.errorMessage != null) {
@@ -157,7 +232,9 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
   Widget build(BuildContext context) {
     final sourceTitle = widget.source == PatientRegistrationSource.attending
         ? 'دکتر متخصص'
-        : 'تریاژ / پرستار استروک';
+        : widget.source == PatientRegistrationSource.resident
+            ? 'رزیدنت'
+            : 'تریاژ / پرستار استروک';
     return AnimatedBuilder(
       animation: _viewModel,
       builder: (context, _) {
@@ -207,7 +284,20 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
                             _label('منبع پذیرش'),
                             _sourceSelector(),
                             const SizedBox(height: 19),
-                            _patientForm(),
+                            SwitchListTile.adaptive(
+                              key: const ValueKey('without-info'),
+                              contentPadding: EdgeInsets.zero,
+                              title: const Text('بیمار مجهول‌الهویه', style: TextStyle(fontWeight: FontWeight.bold, color: _navy)),
+                              subtitle: const Text('ثبت بیمار بدون اطلاعات هویتی', style: TextStyle(fontSize: 12)),
+                              value: _withoutInfo,
+                              onChanged: busy ? null : (value) => setState(() { _withoutInfo = value; _submitted = false; }),
+                            ),
+                            if (!_withoutInfo) _patientForm(),
+                            if (widget.source !=
+                                PatientRegistrationSource.attending) ...[
+                              const SizedBox(height: 20),
+                              _registrationTimeSelector(busy),
+                            ],
                             const SizedBox(height: 22),
                             _notice(
                                 icon: Icons.info_outline,
@@ -257,6 +347,9 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
             color: Colors.white,
             border: Border(bottom: BorderSide(color: Color(0xffe0e6ec)))),
         child: Row(children: [
+          if (widget.showBackButton)
+            IconButton(onPressed: _preparing || _viewModel.isLoading || _changingShift ? null : () => Navigator.pop(context),
+                tooltip: 'بازگشت', icon: const Icon(Icons.arrow_forward, color: _navy)),
           Image.asset('web/icons/Icon-512.png', height: 30, width: 30),
           const SizedBox(width: 3),
           const Text('استروک',
@@ -342,6 +435,119 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           style: const TextStyle(
               color: _navy, fontWeight: FontWeight.w900, fontSize: 15)));
 
+  Widget _localizedPicker(BuildContext context, Widget? child) =>
+      Localizations.override(
+          context: context,
+          locale: const Locale('fa', 'IR'),
+          delegates: const [_PersianRegistrationDelegate()],
+          child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: MediaQuery(
+                  data: MediaQuery.of(context)
+                      .copyWith(alwaysUse24HourFormat: true),
+                  child: child!)));
+
+  Future<void> _pickRegistrationDate() async {
+    final today = Jalali.now();
+    final picked = await showPersianDatePicker(
+        context: context,
+        initialDate: _selectedDate ?? today,
+        firstDate: Jalali(1300, 1, 1),
+        lastDate: today,
+        builder: _localizedPicker);
+    if (picked != null && mounted) {
+      setState(() {
+        _selectedDate = picked;
+        _timeError = null;
+      });
+    }
+  }
+
+  Future<void> _pickRegistrationTime() async {
+    final picked = await showTimePicker(
+        context: context,
+        initialTime: _selectedTime ?? TimeOfDay.now(),
+        builder: _localizedPicker);
+    if (picked != null && mounted) {
+      setState(() {
+        _selectedTime = picked;
+        _timeError = null;
+      });
+    }
+  }
+
+  Widget _registrationTimeSelector(bool busy) {
+    final date = _selectedDate;
+    final time = _selectedTime;
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      _label('زمان ثبت بیمار'),
+      _timeMode(
+          'زمان فعلی', 'تاریخ و ساعت در لحظه ثبت ذخیره می‌شود.', false, busy),
+      const SizedBox(height: 8),
+      _timeMode('انتخاب تاریخ و ساعت', 'زمان ثبت را به‌صورت دستی مشخص کنید.',
+          true, busy),
+      if (_manualTime) ...[
+        const SizedBox(height: 10),
+        Row(children: [
+          Expanded(
+              child: OutlinedButton.icon(
+                  key: const ValueKey('registration-date'),
+                  onPressed: busy ? null : _pickRegistrationDate,
+                  icon: const Icon(Icons.calendar_today_outlined, size: 18),
+                  label: Text(date == null
+                      ? 'انتخاب تاریخ'
+                      : AppConfig.digits(
+                          '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}')),
+                  style: OutlinedButton.styleFrom(
+                      foregroundColor: _teal, minimumSize: const Size(0, 48)))),
+          const SizedBox(width: 8),
+          Expanded(
+              child: OutlinedButton.icon(
+                  key: const ValueKey('registration-time'),
+                  onPressed: busy ? null : _pickRegistrationTime,
+                  icon: const Icon(Icons.access_time, size: 18),
+                  label: Text(time == null
+                      ? 'انتخاب ساعت'
+                      : AppConfig.digits(
+                          '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}')),
+                  style: OutlinedButton.styleFrom(
+                      foregroundColor: _teal, minimumSize: const Size(0, 48)))),
+        ]),
+      ],
+      if (_timeError != null)
+        Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(_timeError!,
+                style: const TextStyle(color: Colors.red, fontSize: 12))),
+    ]);
+  }
+
+  Widget _timeMode(String title, String description, bool manual, bool busy) =>
+      Material(
+          color: _manualTime == manual ? const Color(0xffe0f3ef) : Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          child: RadioListTile<bool>(
+              value: manual,
+              groupValue: _manualTime,
+              onChanged: busy
+                  ? null
+                  : (value) => setState(() {
+                        _manualTime = value!;
+                        _timeError = null;
+                      }),
+              activeColor: _teal,
+              dense: true,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: BorderSide(
+                      color: _manualTime == manual ? _teal : _border)),
+              title: Text(title,
+                  style: const TextStyle(
+                      color: _navy, fontWeight: FontWeight.bold, fontSize: 14)),
+              subtitle: Text(description,
+                  style: const TextStyle(
+                      color: Color(0xff5d6775), fontSize: 12))));
+
   Widget _sourceSelector() =>
       Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Container(
@@ -352,8 +558,9 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
             child: Row(children: [
               _sourceItem(
                   'تریاژ', widget.source == PatientRegistrationSource.triage),
-              _sourceItem(
-                  'پرستار استروک', widget.source == PatientRegistrationSource.ems),
+              _sourceItem('پرستار استروک',
+                  widget.source == PatientRegistrationSource.ems),
+              _sourceItem('رزیدنت', widget.source == PatientRegistrationSource.resident),
             ])),
         if (widget.source == PatientRegistrationSource.attending)
           const Padding(
@@ -369,11 +576,11 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
         decoration: BoxDecoration(
             color: selected ? _teal : Colors.transparent,
             borderRadius: BorderRadius.circular(8)),
-        child: Text(label,
+        child: FittedBox(fit: BoxFit.scaleDown, child: Text(label,
             style: TextStyle(
                 color: selected ? Colors.white : _navy,
-                fontSize: 16,
-                fontWeight: FontWeight.bold)),
+                fontSize: 14,
+                fontWeight: FontWeight.bold))),
       ));
 
   Widget _patientForm() => Form(

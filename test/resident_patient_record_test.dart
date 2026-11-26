@@ -4,16 +4,76 @@ import 'package:appstrock/features/patients/data/resident_patient_repository.dar
 import 'package:appstrock/features/patients/ui/resident/not_724_reasons.dart';
 import 'package:appstrock/features/patients/ui/resident/patient_record_dates.dart';
 import 'package:appstrock/features/patients/ui/resident/PatientRecordSteps.dart';
+import 'package:appstrock/features/patients/ui/resident/PatientIdentityCard.dart';
+import 'package:appstrock/core/AppConfig.dart';
+import 'package:appstrock/features/patients/ui/resident/patient_medications_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  testWidgets(
+      'finished record hides timers, turns the identity box green and lists the upload button last',
+      (tester) async {
+    Widget record(Map<String, dynamic> fields) => MaterialApp(
+            home: ResidentPatientRecord(
+          patient: ModelPatient.fromJson(
+              {'id': 1, 'is724IsComplete': true, ...fields}),
+          elapsedSinceRegistration: const Duration(minutes: 5),
+          elapsedSinceSymptoms: const Duration(minutes: 30),
+          onBack: () {},
+          onActions: () {},
+          onImages: () {},
+          onNihss: () {},
+          onLaboratory: () {},
+          onInjectionTime: () {},
+          onBloodPressure: () {},
+          onBloodSugar: () {},
+          onIs724: () {},
+          onIsNot724: () {},
+          onSaveNot724Reasons: (_, __, ___) async =>
+              const PatientOperationResult(true, ''),
+          onNot724ReasonsSaved: () {},
+        ));
+
+    await tester.pumpWidget(record({}));
+    expect(find.text('از ثبت'), findsOneWidget);
+    expect(find.text('از شروع علائم'), findsOneWidget);
+    expect(find.text('تکمیل شده'), findsNothing);
+
+    await tester.pumpWidget(record({'isFinished': true, 'seenByAttend': true}));
+    expect(find.text('از ثبت'), findsNothing);
+    expect(find.text('از شروع علائم'), findsNothing);
+    expect(
+        tester
+            .widget<PatientIdentityCard>(find.byType(PatientIdentityCard))
+            .patient
+            .isFinished,
+        true);
+    expect(find.text('تکمیل شده'), findsOneWidget);
+    expect(find.text('دکتر متخصص مشاهده کرده'), findsOneWidget);
+    expect(
+        find.byWidgetPredicate((widget) =>
+            widget is Container &&
+            widget.decoration is BoxDecoration &&
+            (widget.decoration as BoxDecoration).color ==
+                AppConfig.successSurfaceResident),
+        findsOneWidget);
+
+    final upload = tester.getTopLeft(find.text('آپلود عکس'));
+    for (final label in ['زمان‌های پرونده', 'داروهای پرونده', 'قند خون']) {
+      expect(upload.dy, greaterThan(tester.getTopLeft(find.text(label)).dy),
+          reason: 'upload button must sit below $label');
+    }
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('record uploads images and retains access to patient actions',
       (tester) async {
     var uploads = 0;
     var actions = 0;
     var assessments = 0;
     var laboratory = 0;
+    var injection = 0;
     var pressure = 0;
     var sugar = 0;
     final patient = ModelPatient.fromJson({
@@ -36,6 +96,7 @@ void main() {
       onImages: () => uploads++,
       onNihss: () => assessments++,
       onLaboratory: () => laboratory++,
+      onInjectionTime: () => injection++,
       onBloodPressure: () => pressure++,
       onBloodSugar: () => sugar++,
       onIs724: () {},
@@ -58,9 +119,13 @@ void main() {
     await tester.ensureVisible(find.text('آپلود عکس'));
     await tester.tap(find.text('آپلود عکس'));
     expect(uploads, 1);
+    await tester.ensureVisible(find.text('آزمایشگاه'));
     await tester.tap(find.text('آزمایشگاه'));
     expect(laboratory, 1);
     expect(actions, 0);
+    await tester.ensureVisible(find.text('زمان تزریق'));
+    await tester.tap(find.text('زمان تزریق'));
+    expect(injection, 1);
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpWidget(const SizedBox());
   });
@@ -79,6 +144,7 @@ void main() {
           onImages: () {},
           onNihss: () {},
           onLaboratory: () {},
+          onInjectionTime: () {},
           onBloodPressure: () {},
           onBloodSugar: () {},
           onIs724: () => is724++,
@@ -89,6 +155,8 @@ void main() {
         ));
 
     await tester.pumpWidget(record({}));
+    expect(find.byType(PatientMedicationsCard), findsNothing);
+    expect(find.byType(PatientRecordDates), findsOneWidget);
     expect(tester.widget<PatientRecordSteps>(find.byType(PatientRecordSteps)).step, 1);
     expect(find.text('برای دسترسی به اقدامات پرونده، ابتدا وضعیت کد ۷۲۴ بیمار را مشخص کنید.'), findsOneWidget);
     expect(find.text('آپلود عکس'), findsNothing);
@@ -100,9 +168,24 @@ void main() {
     expect(is724, 1);
     expect(isNot724, 1);
     await tester.pumpWidget(record({'is724IsComplete': true}));
+    expect(find.byType(PatientMedicationsCard), findsOneWidget);
+    expect(find.byType(PatientRecordDates), findsOneWidget);
     expect(tester.widget<PatientRecordSteps>(find.byType(PatientRecordSteps)).step, 2);
     expect(find.text('آزمایشگاه'), findsOneWidget);
     expect(find.text('آپلود عکس'), findsOneWidget);
+    expect(find.text('زمان تزریق'), findsOneWidget);
+    await tester.pumpWidget(record({'is724IsComplete': true, 'needToCT': true}));
+    expect(find.text('CT'), findsOneWidget);
+    await tester.pumpWidget(record({'is724IsComplete': true, 'needToMRI': true}));
+    expect(find.text('MRI'), findsOneWidget);
+    await tester.pumpWidget(record({'is724IsComplete': true, 'needToCT': true, 'needToMRI': true}));
+    expect(find.text('CT / MRI'), findsOneWidget);
+    await tester.pumpWidget(record({'is724IsComplete': true, 'injectionType': 2}));
+    expect(find.text('زمان تزریق'), findsNothing);
+    await tester.pumpWidget(record({'is724IsComplete': true, 'timeOfInjection': '12:00'}));
+    expect(find.text('زمان تزریق'), findsOneWidget);
+    expect(find.text('۱۲:۰۰'), findsOneWidget);
+    expect(find.text('ثبت زمان'), findsNothing);
     for (final fields in [
       {'is724IsComplete': true},
       {'isNot724': true},
@@ -131,6 +214,7 @@ void main() {
           onImages: () {},
           onNihss: () {},
           onLaboratory: () {},
+          onInjectionTime: () {},
           onBloodPressure: () {},
           onBloodSugar: () {},
           onIs724: () {},
@@ -184,7 +268,7 @@ void main() {
     Widget record(Map<String, dynamic> fields) => MaterialApp(home: ResidentPatientRecord(
       patient: ModelPatient.fromJson({'id': 1, 'isNot724': true, ...fields}),
       elapsedSinceRegistration: Duration.zero, elapsedSinceSymptoms: Duration.zero,
-      onBack: () {}, onActions: () {}, onImages: () {}, onNihss: () {}, onLaboratory: () {}, onBloodPressure: () {}, onBloodSugar: () {}, onIs724: () {}, onIsNot724: () {},
+      onBack: () {}, onActions: () {}, onImages: () {}, onNihss: () {}, onLaboratory: () {}, onInjectionTime: () {}, onBloodPressure: () {}, onBloodSugar: () {}, onIs724: () {}, onIsNot724: () {},
       onSaveNot724Reasons: (_, __, ___) async => const PatientOperationResult(true, ''),
       onNot724ReasonsSaved: () {},
     ));
@@ -202,5 +286,51 @@ void main() {
     expect(find.text('۱۴۰۵/۰۹/۰۴'), findsOneWidget);
     expect(find.text('۱۴۰۵/۰۹/۰۴  •  ۱۵:۲۳'), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('record dates follow availability and laboratory completion', (tester) async {
+    Widget dates(Map<String, dynamic> fields) => MaterialApp(home: Scaffold(body: PatientRecordDates(
+      patient: ModelPatient.fromJson({'id': 1, ...fields}),
+    )));
+    await tester.pumpWidget(dates({'signsStartDate': '1405/09/01', 'labInsertDate': '1405/09/02', 'otn': '', 'dtn': ''}));
+    expect(find.text('تاریخ ثبت در سیستم'), findsOneWidget);
+    expect(find.text('زمان و تاریخ شروع علائم'), findsNothing);
+    expect(find.text('زمان ثبت فرم آزمایشگاه'), findsNothing);
+    expect(find.text('OTN'), findsNothing);
+    expect(find.text('DTN'), findsNothing);
+
+    await tester.pumpWidget(dates({
+      'dateOfAddToSystem': '1405/09/02', 'signsStartDate': '1405/09/01',
+      'signsStartTime': '13:05', 'labIsComplete': true,
+      'labInsertDate': '1405/09/02', 'labInsertTime': '15:10',
+      'otn': '45', 'dtn': '70',
+    }));
+    expect(find.text('۱۴۰۵/۰۹/۰۲'), findsOneWidget);
+    expect(find.text('۱۴۰۵/۰۹/۰۱  •  ۱۳:۰۵'), findsOneWidget);
+    expect(find.text('۱۴۰۵/۰۹/۰۲  •  ۱۵:۱۰'), findsOneWidget);
+    expect(find.text('OTN'), findsOneWidget);
+    expect(find.text('۴۵'), findsOneWidget);
+    expect(find.text('DTN'), findsOneWidget);
+    expect(find.text('۷۰'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('shows proposed and administered medicines independently', (tester) async {
+    Widget card(Map<String, dynamic> fields) => MaterialApp(home: Scaffold(
+      body: PatientMedicationsCard(patient: ModelPatient.fromJson({'id': 1, ...fields})),
+    ));
+    await tester.pumpWidget(card({}));
+    expect(find.text('داروی پیشنهادی متخصص'), findsOneWidget);
+    expect(find.text('داروی تزریق‌شده'), findsOneWidget);
+    expect(find.text('ثبت نشده'), findsNWidgets(2));
+    await tester.pumpWidget(card({'recommendedMedication': 2, 'medicine': 1}));
+    expect(find.text('تنکتپلاز'), findsOneWidget);
+    expect(find.text('آلتپلاز'), findsOneWidget);
+    await tester.pumpWidget(card({'medicine': 1, 'timeOfInjection': '08:05'}));
+    expect(find.text('زمان تزریق'), findsOneWidget);
+    expect(find.text('۰۸:۰۵'), findsOneWidget);
+    await tester.pumpWidget(card({'recommendedMedication': 3, 'medicine': 99}));
+    expect(find.text('آلتلایز (ایرانی)'), findsOneWidget);
+    expect(find.text('نامشخص'), findsOneWidget);
   });
 }

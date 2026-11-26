@@ -11,6 +11,8 @@ import '../../features/authentication/data/AuthenticationRepository.dart';
 import '../../features/authentication/ui/screen_EditProfile.dart';
 import '../../features/patients/data/patient_repository.dart';
 import '../../features/patients/viewmodel/resident_patients_view_model.dart';
+import '../../features/patient_registration/model/patient_registration.dart';
+import '../../features/patient_registration/ui/patient_registration_screen.dart';
 import '../SplashScreen.dart';
 import '../Teriazh/notification_registration.dart';
 import 'package:appstrock/Screens/Resident/ScreenDetailPatient.dart';
@@ -146,8 +148,8 @@ class _ResidentPatientsPreviewState extends State<ResidentPatientsPreview>
     try {
       await Navigator.of(context).push(MaterialPageRoute<void>(builder: (ctx) =>
           ScreenDetailPatient(entry.patient.id,
-            ResidentPatientsViewModel.formatDate(_viewModel.from),
-            ResidentPatientsViewModel.formatDate(_viewModel.to))));
+              ResidentPatientsViewModel.formatDate(_viewModel.from),
+              ResidentPatientsViewModel.formatDate(_viewModel.to))));
     } finally {
       _detailOpen = false;
       if (mounted) { _clock.value = DateTime.now(); _viewModel.refresh(); }
@@ -155,6 +157,24 @@ class _ResidentPatientsPreviewState extends State<ResidentPatientsPreview>
   }
 
   Future<void> _accountAction(String value) async {
+    if (value == 'add') {
+      _detailOpen = true;
+      try {
+        await Navigator.of(context).push(MaterialPageRoute<void>(builder: (pageContext) => PatientRegistrationScreen(
+          source: PatientRegistrationSource.resident,
+          shiftActive: _shiftActive,
+          onChangeShift: (active) { if (mounted) setState(() => _shiftActive = active); },
+          onExit: () => Navigator.pop(pageContext),
+          onEditProfile: () => Navigator.of(pageContext).push(MaterialPageRoute<void>(builder: (_) => const screen_EditProfile())),
+          notificationButton: const NotificationRegistrationButton(color: _navy, size: 23, icon: Icons.notifications_none_outlined),
+          showBackButton: true,
+        )));
+      } finally {
+        _detailOpen = false;
+        if (mounted) _viewModel.refresh();
+      }
+      return;
+    }
     if (value == 'profile') {
       await Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const screen_EditProfile()));
       return;
@@ -199,8 +219,10 @@ class _ResidentPatientsPreviewState extends State<ResidentPatientsPreview>
                 final p = entry.patient;
                 final match = _normalize(p.fullName).contains(query) || _normalize(p.nationalCode).contains(query);
                 final status = entry.status;
-                return match && (_filter == 0 || (_filter == 1 && status != PatientStatus.finished) ||
-                    (_filter == 2 && p.is724IsComplete == true));
+                return match && (_filter == 0 ||
+                    (_filter == 1 && status == PatientStatus.waiting) ||
+                    (_filter == 2 && status == PatientStatus.active724) ||
+                    (_filter == 3 && status == PatientStatus.finished));
               }).toList();
               int count(PatientStatus status) => all.where((p) => p.status == status).length;
               return RefreshIndicator(onRefresh: _viewModel.refresh, child: CustomScrollView(
@@ -217,9 +239,12 @@ class _ResidentPatientsPreviewState extends State<ResidentPatientsPreview>
                             style: const TextStyle(fontSize: 11, color: Color(0xff667589))),
                       ])),
                     ]),
+                    if (!_viewModel.isToday) Align(alignment: Alignment.centerLeft,
+                      child: TextButton.icon(onPressed: _viewModel.showToday,
+                        icon: const Icon(Icons.today, size: 16), label: const Text('بازگشت به امروز'))),
                     const SizedBox(height: 14),
                     Row(children: [
-                      _summary(count(PatientStatus.waiting), 'در انتظار بررسی', Icons.access_time, const Color(0xfffff2df), const Color(0xffb56709)), const SizedBox(width: 8),
+                      _summary(count(PatientStatus.waiting), 'نیازمند اقدام', Icons.access_time, const Color(0xfffff2df), const Color(0xffb56709)), const SizedBox(width: 8),
                       _summary(count(PatientStatus.active724), 'کد ۷۲۴ فعال', Icons.bolt, const Color(0xffe5f5f2), const Color(0xff00a783)), const SizedBox(width: 8),
                       _summary(count(PatientStatus.finished), 'تکمیل‌شده', Icons.check_circle, const Color(0xffe2f4e8), const Color(0xff39ad70)),
                     ]),
@@ -232,7 +257,7 @@ class _ResidentPatientsPreviewState extends State<ResidentPatientsPreview>
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: _line)),
                         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: _line)))),
                     const SizedBox(height: 14),
-                    Row(children: [_filterChip('همه', 0), const SizedBox(width: 7), _filterChip('نیازمند اقدام', 1), const SizedBox(width: 7), _filterChip('کد ۷۲۴', 2)]),
+                    Row(children: [_filterChip('همه', 0), const SizedBox(width: 7), _filterChip('نیازمند اقدام', 1), const SizedBox(width: 7), _filterChip('کد ۷۲۴', 2), const SizedBox(width: 7), _filterChip('تکمیل شده', 3)]),
                     const SizedBox(height: 16),
                     if (_viewModel.loading && all.isNotEmpty) const LinearProgressIndicator(minHeight: 2, color: _teal),
                     if (_viewModel.error != null) Padding(padding: const EdgeInsets.only(bottom: 10), child: Row(children: [
@@ -243,7 +268,9 @@ class _ResidentPatientsPreviewState extends State<ResidentPatientsPreview>
                   if (_viewModel.loading && all.isEmpty)
                     const SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(30), child: Center(child: CircularProgressIndicator(color: _teal))))
                   else if (filtered.isEmpty && _viewModel.error == null)
-                    const SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(30), child: Center(child: Text('بیماری برای نمایش وجود ندارد', style: TextStyle(color: Color(0xff667589))))))
+                    SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.all(30), child: Center(child: Text(
+                      _query.isNotEmpty || _filter != 0 ? 'بیماری با این جستجو یا فیلتر پیدا نشد' : 'بیماری برای نمایش در این بازه وجود ندارد',
+                      textAlign: TextAlign.center, style: const TextStyle(color: Color(0xff667589))))))
                   else SliverPadding(padding: const EdgeInsets.fromLTRB(14, 0, 14, 20), sliver: SliverList(delegate: SliverChildBuilderDelegate(
                     (context, index) => _patientCard(filtered[index]), childCount: filtered.length))),
                 ],
@@ -268,7 +295,7 @@ class _ResidentPatientsPreviewState extends State<ResidentPatientsPreview>
           const Color(0xffe8f5ef))),
       const SizedBox(width: 5),
       PopupMenuButton<String>(tooltip: 'حساب کاربری', onSelected: _accountAction,
-        itemBuilder: (_) => const [PopupMenuItem(value: 'profile', child: Text('ویرایش حساب کاربری')), PopupMenuItem(value: 'exit', child: Text('خروج از حساب'))],
+        itemBuilder: (_) => const [PopupMenuItem(value: 'add', child: Text('ثبت بیمار')), PopupMenuItem(value: 'profile', child: Text('ویرایش حساب کاربری')), PopupMenuItem(value: 'exit', child: Text('خروج از حساب'))],
         child: _pill('رزیدنت', const Icon(Icons.person_outline, size: 18, color: _navy), const Color(0xffedf2f6))),
       NotificationRegistrationButton(color: _navy, size: 23, icon: Icons.notifications_none_outlined, onRegistered: _checkNotifications),
     ]));
@@ -304,14 +331,14 @@ class _ResidentPatientsPreviewState extends State<ResidentPatientsPreview>
     final status = entry.status;
     final waiting = status == PatientStatus.waiting;
     final active = status == PatientStatus.active724;
-    final label = waiting ? 'در انتظار ارزیابی' : active ? 'کد ۷۲۴ فعال' : status == PatientStatus.finished ? 'تکمیل‌شده' : 'غیر ۷۲۴';
-    final source = entry.source == '1' ? 'تریاژ' : entry.source == '2' ? 'پرستار استروک' : entry.source == '3' ? 'متخصص' : null;
+    final label = waiting ? 'نیازمند اقدام' : active ? 'کد ۷۲۴' : status == PatientStatus.finished ? 'تکمیل شده' : 'غیر ۷۲۴';
+    final source = entry.source == '1' ? 'تریاژ' : entry.source == '2' ? 'پرستار استروک' : entry.source == '3' ? 'متخصص' : entry.source == '4' ? 'رزیدنت' : null;
     return InkWell(key: ValueKey(p.id), onTap: () => _openPatient(entry), child: Container(
       margin: const EdgeInsets.only(bottom: 10), padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(color: waiting ? const Color(0xfffff9ef) : Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: waiting ? const Color(0xffffc36c) : _line)),
       child: Column(children: [Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(p.fullName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _navy)),
+          Text(p.withoutInfo ? 'بیمار مجهول‌الهویه' : p.fullName.isEmpty ? 'نام ثبت نشده' : p.fullName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _navy)),
           Text('${p.gender.isEmpty ? 'نامشخص' : p.gender} • ${p.age.isEmpty ? 'سن نامشخص' : '${_digits(p.age)} سال'}', style: const TextStyle(fontSize: 12, color: Color(0xff58667a))),
           if (source != null) Text(source, style: const TextStyle(fontSize: 11, color: Color(0xff667589))),
         ])),

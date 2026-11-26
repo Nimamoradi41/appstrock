@@ -5,12 +5,10 @@ import 'package:flutter/services.dart';
 
 import '../../../Constants.dart';
 import '../../../Screens/Atend/ScreenAtend.dart';
-import '../../patient_registration/ui/screen_ems.dart';
 import '../../../Screens/Laboratory/screen_Laboratory.dart';
 import '../../../Screens/Reception/screen_reception.dart';
 import '../../../Screens/Resident/resident_patients_preview.dart';
 import '../../../Screens/SplashScreen.dart';
-import '../../../Screens/Strok/ScreenStrock.dart';
 import '../../../Screens/Teriazh/screen_teriazh.dart';
 import '../../../Screens/sickcarrier/screen_sickcarrier.dart';
 import '../../../Screens/Autentication/ApiServiceAutentication.dart';
@@ -96,7 +94,7 @@ class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
       if (!mounted) return;
       switch (widget.userType) {
         case 1:
-          GoNextPageGameOver(context, ScreenEms(false));
+          GoNextPageGameOver(context, const ScreenAtend(strokeNurse: true));
           break;
         case 2:
           GoNextPageGameOver(context, Screen_Teriazh());
@@ -117,7 +115,7 @@ class _ScreenCodeOtpState extends State<ScreenCodeOtp> {
           GoNextPageGameOver(context, const ResidentPatientsPreview());
           break;
         case 8:
-          GoNextPageGameOver(context, ScreenStrock());
+          GoNextPageGameOver(context, const ScreenAtend(strokeNurse: true));
           break;
         case 9:
         case 10:

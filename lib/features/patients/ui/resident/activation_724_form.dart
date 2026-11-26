@@ -96,6 +96,17 @@ class _Activation724FormState extends State<Activation724Form> {
     _start = _Moment(now);
     _lkw = _Moment(now);
     _fss = _Moment(now);
+    _unknown = widget.patient.signsStartIsUnknown == true;
+    _restoreMoment(_start, widget.patient.signsStartTS);
+    _restoreMoment(_lkw, widget.patient.signsStartTSLKW);
+    _restoreMoment(_fss, widget.patient.signsStartTSFSS);
+  }
+
+  void _restoreMoment(_Moment moment, int? timestamp) {
+    if (timestamp == null || timestamp <= 0) return;
+    final value = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    moment.date = Jalali.fromDateTime(value);
+    moment.time = TimeOfDay.fromDateTime(value);
   }
 
   Widget _localized(BuildContext context, Widget? child) =>
@@ -560,8 +571,8 @@ class _Activation724FormState extends State<Activation724Form> {
                                         child: CircularProgressIndicator(
                                             strokeWidth: 2))
                                     : Text(_review
-                                        ? 'ثبت کد ۷۲۴'
-                                        : 'مرور و ثبت کد ۷۲۴'))),
+                                        ? 'ثبت'
+                                        : 'مرور و ثبت'))),
                         const SizedBox(width: 10),
                         Expanded(
                             flex: 2,

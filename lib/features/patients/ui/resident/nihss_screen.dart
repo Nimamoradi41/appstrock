@@ -90,9 +90,14 @@ const _items = <_NihssItem>[
 ];
 
 class NihssScreen extends StatefulWidget {
-  const NihssScreen({super.key, required this.patient, required this.onSubmit});
+  const NihssScreen(
+      {super.key,
+      required this.patient,
+      required this.onSubmit,
+      this.readOnly = false});
 
   final ModelPatient patient;
+  final bool readOnly;
   final Future<PatientOperationResult> Function(List<Map<String, dynamic>>, int)
       onSubmit;
 
@@ -141,8 +146,8 @@ class _NihssScreenState extends State<NihssScreen> {
 
   Future<void> _submit() async {
     if (_submitting) return;
-    if (_completed != _items.length) {
-      setState(() => _error = 'برای ثبت ارزیابی، به همه ۱۵ بخش پاسخ دهید.');
+    if (_completed == 0) {
+      setState(() => _error = 'برای ثبت ارزیابی، حداقل یک بخش را پاسخ دهید.');
       return;
     }
     setState(() {
@@ -251,7 +256,7 @@ class _NihssScreenState extends State<NihssScreen> {
                                 '${AppConfig.digits('$value')}، ${item.options[value]}',
                             child: OutlinedButton(
                                 key: ValueKey('nihss-$index-$value'),
-                                onPressed: _submitting
+                                onPressed: _submitting || widget.readOnly
                                     ? null
                                     : () => setState(() {
                                           _answers[index] = value;
@@ -369,8 +374,12 @@ class _NihssScreenState extends State<NihssScreen> {
                                                           12)),
                                               child: Row(children: [
                                                 Column(children: [
-                                                  const Text('امتیاز فعلی',
-                                                      style: TextStyle(
+                                                  Text(
+                                                      _completed ==
+                                                              _items.length
+                                                          ? 'امتیاز NIHSS'
+                                                          : 'امتیاز جزئی',
+                                                      style: const TextStyle(
                                                           color: Colors.white,
                                                           fontWeight:
                                                               FontWeight.bold)),
@@ -443,7 +452,7 @@ class _NihssScreenState extends State<NihssScreen> {
                                             SizedBox(width: 8),
                                             Expanded(
                                                 child: Text(
-                                                    'امتیاز بر اساس پاسخ‌های ثبت‌شده محاسبه می‌شود.',
+                                                    'امتیاز فقط بر اساس بخش‌های پاسخ‌داده‌شده محاسبه می‌شود و تا تکمیل همه بخش‌ها نهایی نیست.',
                                                     style: TextStyle(
                                                         color:
                                                             Color(0xff607185),
@@ -461,27 +470,29 @@ class _NihssScreenState extends State<NihssScreen> {
                                 padding:
                                     const EdgeInsets.fromLTRB(16, 8, 16, 16),
                                 child: Row(children: [
-                                  Expanded(
-                                      flex: 2,
-                                      child: FilledButton(
-                                          onPressed:
-                                              _submitting ? null : _submit,
-                                          style: FilledButton.styleFrom(
-                                              backgroundColor:
-                                                  AppConfig.tealColorResident,
-                                              minimumSize: const Size(0, 48)),
-                                          child: _submitting
-                                              ? const SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                          strokeWidth: 2))
-                                              : Text(
-                                                  widget.patient.nihsIsComplete
-                                                      ? 'ثبت ویرایش NIHSS'
-                                                      : 'ثبت ارزیابی NIHSS'))),
-                                  const SizedBox(width: 10),
+                                  if (!widget.readOnly)
+                                    Expanded(
+                                        flex: 2,
+                                        child: FilledButton(
+                                            onPressed:
+                                                _submitting ? null : _submit,
+                                            style: FilledButton.styleFrom(
+                                                backgroundColor:
+                                                    AppConfig.tealColorResident,
+                                                minimumSize: const Size(0, 48)),
+                                            child: _submitting
+                                                ? const SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                            strokeWidth: 2))
+                                                : Text(widget
+                                                        .patient.nihsIsComplete
+                                                    ? 'ثبت ویرایش NIHSS'
+                                                    : 'ثبت ارزیابی NIHSS'))),
+                                  if (!widget.readOnly)
+                                    const SizedBox(width: 10),
                                   Expanded(
                                       child: OutlinedButton(
                                           onPressed: _submitting

@@ -13,8 +13,9 @@ import '../../features/patients/ui/resident/PatientRecordSteps.dart';
 import '../../features/patients/ui/resident/PatientUploadButton.dart';
 import '../../features/patients/ui/resident/not_724_reasons.dart';
 import '../../features/patients/ui/resident/patient_record_dates.dart';
+import '../../features/patients/ui/resident/patient_medications_card.dart';
 import '../../features/patients/data/resident_patient_repository.dart';
-import '../Reception/Model/ModelPatient.dart';
+import 'package:appstrock/Screens/Reception/Model/ModelPatient.dart';
 
 class ResidentPatientRecord extends StatelessWidget {
   const ResidentPatientRecord({
@@ -27,6 +28,7 @@ class ResidentPatientRecord extends StatelessWidget {
     required this.onImages,
     required this.onNihss,
     required this.onLaboratory,
+    required this.onInjectionTime,
     required this.onBloodPressure,
     required this.onBloodSugar,
     required this.onIs724,
@@ -44,6 +46,7 @@ class ResidentPatientRecord extends StatelessWidget {
   final VoidCallback onImages;
   final VoidCallback onNihss;
   final VoidCallback onLaboratory;
+  final VoidCallback onInjectionTime;
   final VoidCallback onBloodPressure;
   final VoidCallback onBloodSugar;
   final VoidCallback onIs724;
@@ -118,12 +121,14 @@ class ResidentPatientRecord extends StatelessWidget {
                               submitting: statusSubmitting,
                             ),
                           ],
-                          const SizedBox(height: 10),
-                          PatientElapsedTimes(
-                              patient: patient,
-                              elapsedSinceRegistration:
-                                  elapsedSinceRegistration,
-                              elapsedSinceSymptoms: elapsedSinceSymptoms),
+                          if (patient.isFinished != true) ...[
+                            const SizedBox(height: 10),
+                            PatientElapsedTimes(
+                                patient: patient,
+                                elapsedSinceRegistration:
+                                    elapsedSinceRegistration,
+                                elapsedSinceSymptoms: elapsedSinceSymptoms),
+                          ],
                           const SizedBox(height: 16),
                           if (patient.isNot724)
                             PatientRecordSteps(
@@ -159,6 +164,8 @@ class ResidentPatientRecord extends StatelessWidget {
                                 ],
                               ),
                             ),
+                            const SizedBox(height: 12),
+                            PatientRecordDates(patient: patient),
                           ] else if (patient.isNot724) ...[
                             PatientRecordDates(patient: patient),
                             const SizedBox(height: 12),
@@ -253,19 +260,23 @@ class ResidentPatientRecord extends StatelessWidget {
                                       statusComplete: patient.labIsComplete),
                                   PatientRecordRow(
                                       title: 'تصویربرداری',
-                                      status: patient.needToCT
-                                          ? 'CT'
-                                          : patient.needToMRI
-                                              ? 'MRI'
-                                              : 'ثبت نشده',
+                                      status: patient.needToCT && patient.needToMRI
+                                          ? 'CT / MRI'
+                                          : patient.needToCT
+                                              ? 'CT'
+                                              : patient.needToMRI
+                                                  ? 'MRI'
+                                                  : 'ثبت نشده',
                                       action: 'تصاویر',
                                       onTap: onImages),
                                   PatientRecordRow(
-                                      title: 'مشاهده اتند',
-                                      status: '',
-                                      action: patient.seenByAttend == true
-                                          ? 'مشاهده شده'
-                                          : 'در انتظار',
+                                      title: 'دکتر متخصص',
+                                      status: patient.seenByAttend == true
+                                          ? 'مشاهده کرده'
+                                          : 'مشاهده نکرده',
+                                      statusComplete:
+                                          patient.seenByAttend == true,
+                                      action: 'جزئیات',
                                       onTap: onActions),
                                   PatientRecordRow(
                                       title: 'تصمیم تزریق',
@@ -276,8 +287,14 @@ class ResidentPatientRecord extends StatelessWidget {
                                               ? 'تزریق نشود'
                                               : 'هنوز ثبت نشده',
                                       onTap: onActions,
-                                      last: true),
+                                      last: !(active && patient.isFinished != true && patient.injectionType != 2 && (patient.timeOfInjection?.isEmpty ?? true))),
+                                  if (active && patient.isFinished != true && patient.injectionType != 2 && (patient.timeOfInjection?.isEmpty ?? true))
+                                    PatientRecordRow(title: 'زمان تزریق', status: 'ثبت نشده', action: 'ثبت زمان', onTap: onInjectionTime, last: true),
                                 ])),
+                            const SizedBox(height: 14),
+                            PatientMedicationsCard(patient: patient),
+                            const SizedBox(height: 14),
+                            PatientRecordDates(patient: patient),
                             const SizedBox(height: 14),
                             PatientUploadButton(onPressed: onImages),
                           ],

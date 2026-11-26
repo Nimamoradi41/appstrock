@@ -18,6 +18,9 @@ class AppConfig {
   static const inkColorResident = Color(0xff101d30);
   static const tealColorResident = Color(0xff007d83);
   static const borderColorResident = Color(0xffd4dee7);
+  static const successColorResident = Color(0xff17834f);
+  static const successSurfaceResident = Color(0xffe7f8ee);
+  static const successBorderResident = Color(0xff7bd0a3);
   /////// Resident
 
 
@@ -36,9 +39,9 @@ class AppConfig {
 
 
 
- static BoxDecoration box() => BoxDecoration(
-      color: const Color(0xfffbfcfe),
-      border: Border.all(color: borderColorResident),
+ static BoxDecoration box({Color? color, Color? borderColor}) => BoxDecoration(
+      color: color ?? const Color(0xfffbfcfe),
+      border: Border.all(color: borderColor ?? borderColorResident),
       borderRadius: BorderRadius.circular(10));
 
 }

@@ -23,6 +23,7 @@ class PatientRegistrationViewModel extends ChangeNotifier {
       if (!response.success) errorMessage = response.message;
       return response.success;
     } on ApiException catch (error) {
+      print(error.toString());
       if (!error.isCancelled) errorMessage = error.toString();
     } on FormatException {
       errorMessage = 'ساختار پاسخ دریافتی از سرور نامعتبر است';

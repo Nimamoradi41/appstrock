@@ -51,7 +51,7 @@ void main() {
     'بی‌توجهی و خاموشی'
   ];
 
-  testWidgets('requires all answers and submits their calculated score',
+  testWidgets('submits selected answers without treating missing answers as zero',
       (tester) async {
     List<Map<String, dynamic>>? answers;
     int? score;
@@ -68,9 +68,18 @@ void main() {
     await tester.pump();
     expect(answers, isNull);
     await tester
-        .ensureVisible(find.text('برای ثبت ارزیابی، به همه ۱۵ بخش پاسخ دهید.'));
-    expect(find.text('برای ثبت ارزیابی، به همه ۱۵ بخش پاسخ دهید.'),
+        .ensureVisible(find.text('برای ثبت ارزیابی، حداقل یک بخش را پاسخ دهید.'));
+    expect(find.text('برای ثبت ارزیابی، حداقل یک بخش را پاسخ دهید.'),
         findsOneWidget);
+    await tester.ensureVisible(find.byKey(const ValueKey('nihss-0-1')));
+    await tester.tap(find.byKey(const ValueKey('nihss-0-1')));
+    await tester.tap(find.text('ثبت ارزیابی NIHSS'));
+    await tester.pump();
+    expect(answers!.length, 15);
+    expect(answers![0]['selected_answer'], 1);
+    expect(answers![1]['selected_answer'], isNull);
+    expect(score, 1);
+    expect(find.text('امتیاز جزئی'), findsOneWidget);
     for (var index = 0; index < titles.length; index++) {
       final title = find.text(titles[index]);
       await tester.ensureVisible(title);

@@ -2,6 +2,7 @@
 class ModelPatient {
   int id;
   String fullName;
+  bool withoutInfo;
   String nationalCode;
   String dtn;
   String ftn;
@@ -106,6 +107,7 @@ class ModelPatient {
   ModelPatient({
     required this.id,
     required this.fullName,
+    this.withoutInfo = false,
     required this.nationalCode,
     required this.otn,
     required this.dtn,
@@ -216,6 +218,7 @@ class ModelPatient {
     ftn: json["ftn"]?? '',
     dateFinishShamsi: json["dateFinishShamsi"]?? '',
     fullName: json["fullName"]?? '',
+    withoutInfo: json["withoutInfo"] == true || json["WithoutInfo"] == true,
     nationalCode: json["nationalCode"]?? '',
     age: json["age"]?? '',
     gender: json["gender"]?? '',
@@ -288,7 +291,7 @@ class ModelPatient {
     overTime: json["overTime"]??false,
     seenByAttend: json["seenByAttend"]??false,
     signsStartIsUnknown: json["signsStartIsUnknown"]??false,
-    n_1_a: json["n_1_a"]??'0',
+    n_1_a: json["n_1_a"]??'',
     n_1_b: json["n_1_b"]??'',
     n_1_c: json["n_1_c"]??'',
     n_2: json["n_2"]??'',
@@ -315,6 +318,7 @@ class ModelPatient {
   Map<String, dynamic> toJson() => {
     "id": id,
     "fullName": fullName,
+    "withoutInfo": withoutInfo,
     "nationalCode": nationalCode,
     "age": age,
     "gender": gender,

@@ -8,6 +8,7 @@ import '../../../Screens/Reception/Model/ModelPatient.dart';
 import '../../../core/api_client.dart';
 import '../../../core/api_exception.dart';
 import '../../../core/api_response.dart';
+import '../../../report/model/ModelLogItemReport.dart';
 import 'patient_repository.dart';
 
 class ResidentPatientRepository {
@@ -17,6 +18,26 @@ class ResidentPatientRepository {
 
   final Dio _dio;
   final Future<String?> Function() _userId;
+
+  Future<List<ModelLogItemReport>> getPatientActivity(String patientId) async {
+    final response = await _dio.post<dynamic>('/Report/GetPatientReportLog',
+        data: FormData.fromMap({'patientId': patientId}),
+        options: Options(
+            contentType: Headers.multipartFormDataContentType,
+            validateStatus: (status) => status == 200 || status == 400));
+    final result = ApiResponse.object(response.data);
+    if (result['success'] != true) {
+      throw PatientListException(
+          result['message']?.toString() ?? 'دریافت فعالیت رزیدنت‌ها ناموفق بود');
+    }
+    final data = result['data'];
+    if (data == null) return [];
+    if (data is! List) throw const FormatException('اطلاعات فعالیت نامعتبر است');
+    return data.map((item) {
+      if (item is! Map) throw const FormatException('اطلاعات فعالیت نامعتبر است');
+      return ModelLogItemReport.fromJson(Map<String, dynamic>.from(item));
+    }).toList();
+  }
 
   static Future<String?> _readUserId() async =>
       (await SharedPreferences.getInstance()).getString('UserId');
@@ -50,6 +71,14 @@ class ResidentPatientRepository {
               validateStatus: (status) =>
                   status == 200 || status == 400 || status == 403));
       if (successOnHttp200 && response.statusCode == 200) {
+        if (response.data != null && response.data.toString().trim().isNotEmpty) {
+          try {
+            final result = ApiResponse.object(response.data);
+            if (result['success'] == false) {
+              return PatientOperationResult(false, result['message']?.toString() ?? 'عملیات ناموفق بود');
+            }
+          } on FormatException catch (_) {}
+        }
         return const PatientOperationResult(true, '');
       }
       final result = ApiResponse.object(response.data);
@@ -69,6 +98,17 @@ class ResidentPatientRepository {
       _post('/Patients/NeedToCT', {'id': id});
   Future<PatientOperationResult> needToMRI(String id) =>
       _post('/Patients/NeedToMRI', {'id': id});
+
+  Future<PatientOperationResult> changeMT(String id) =>
+      _post('/Patients/NeedToMT', {'id': id});
+
+  Future<PatientOperationResult> saveInjectionDecision(
+          String id, bool inject, int medication) =>
+      _post('/Patients/SetInjectionStatus', {
+        'id': id,
+        'status': '$inject',
+        'RecommendedMedication': '${inject ? medication : 0}',
+      });
 
   Future<PatientOperationResult> uploadImage(
           String id, Uint8List bytes, String fileName, MediaType contentType) =>
@@ -110,7 +150,7 @@ class ResidentPatientRepository {
       'patientId': id,
       'subscore': '$score',
       for (var index = 0; index < keys.length; index++)
-        keys[index]: answers[index]['selected_answer'].toString(),
+        keys[index]: answers[index]['selected_answer']?.toString() ?? '',
     });
   }
 

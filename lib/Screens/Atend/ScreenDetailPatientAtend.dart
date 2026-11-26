@@ -1,26 +1,26 @@
 import 'dart:async';
 
-import 'package:appstrock/Screens/Atend/ScreenFormMedicalInjection.dart';
 import 'package:appstrock/Screens/Atend/ScreenListImages.dart';
+import 'package:appstrock/Screens/Atend/ScreenFormMedicalInjection.dart';
 import 'package:appstrock/Screens/Resident/ApiServiceResident.dart';
-import 'package:appstrock/Screens/Resident/ScreenFormNIHS.dart';
+import 'package:appstrock/Screens/Resident/ScreenFormTimeInjection.dart';
+import 'package:appstrock/Screens/Resident/ScreenFormReasonInjection.dart';
+import 'package:appstrock/Screens/Resident/ProviderResident/ProviderTimers.dart';
+import 'package:appstrock/features/patients/ui/attend/attend_review_page.dart';
+import 'package:appstrock/features/patients/ui/attend/patient_residents_screen.dart';
+import 'package:appstrock/features/patients/ui/resident/patient_image_upload_screen.dart';
+import 'package:appstrock/features/patients/ui/resident/laboratory_screen.dart';
+import 'package:appstrock/features/patients/ui/resident/nihss_screen.dart';
+import 'package:appstrock/features/patients/ui/resident/patient_vitals_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../Constants.dart';
 import '../../SignalRService.dart';
-import '../../Widgets/TextApp.dart';
-import '../../components/BoxInformation.dart';
-import '../Laboratory/ScreenFormLaboratory.dart';
+import '../../core/AppConfig.dart';
+import '../../features/patients/data/resident_patient_repository.dart';
 import '../Reception/ApiServiceReception.dart';
-import '../Reception/Model/ModelPatient.dart';
-import '../Resident/ProviderResident/ProviderTimers.dart';
-import '../Resident/ScreenFormBload724.dart';
-import '../Resident/ScreenFormPreesBload724.dart';
-import '../Resident/ScreenFormReasonInjection.dart';
-import '../Resident/ScreenFormTimeInjection.dart';
+import 'package:appstrock/Screens/Reception/Model/ModelPatient.dart';
 import 'ProviderAtend/ProviderAtendDetaile.dart';
 
 
@@ -51,7 +51,6 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
       // ignore: use_build_context_synchronously
       ShowErrorMsg(context, Data.message);
     }
-
   }
   Future NeedToMRI(BuildContext context) async {
 
@@ -524,42 +523,27 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
     return _timer != null && _timer!.isActive;
   }
 
-  Future getInfoOfPatient()async{
-    isLoading=true;
-    setState(() {
-
-    });
-    // ignore: use_build_context_synchronously
-    var Data= await ApiServiceReception.ListPatientLab(widget.formattedDateFrom,widget.formattedDateTo,context);
-
-
-    if(Data!=null)
-    {
-      if(Data.success)
-      {
-
-        var finded=Data.data.firstWhere((element) => element.id==widget.patientItem.id);
-        Notifi.setItems(finded);
-        isLoading = false;
-        setState(() {});
-
-        Notifi.setLoading(false);
-
-        if (!Notifi.patientItem.isFinished!) {
-          if(!isTimerRunning())
-            {
-              startTimer();
-            }
-        } else {
-          if (_timer != null) {
-            _timer!.cancel();
-          }
-        }
-
-      }else{
-        // ignore: use_build_context_synchronously
-        ShowErrorMsg(context, Data.message);
+  Future<void> getInfoOfPatient() async {
+    if (!mounted) return;
+    setState(() => isLoading = true);
+    try {
+      final patient = await _recordRepository.getPatient(
+          patientId: widget.patientItem.id,
+          from: widget.formattedDateFrom,
+          to: widget.formattedDateTo);
+      if (!mounted) return;
+      Notifi.setItems(patient);
+      _hasLoaded = true;
+      Notifi.setLoading(false);
+      if (patient.isFinished != true) {
+        if (!isTimerRunning()) startTimer();
+      } else {
+        _timer?.cancel();
       }
+    } catch (error) {
+      if (mounted) ShowErrorMsg(context, error.toString());
+    } finally {
+      if (mounted) setState(() => isLoading = false);
     }
   }
 
@@ -611,798 +595,179 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
   }
 
   @override
+  final _recordRepository = ResidentPatientRepository();
+  bool _hasLoaded = false;
+
+  ModelPatient get _patient =>
+      _hasLoaded ? Notifi.patientItem : widget.patientItem;
+
+  Future<void> _openNihss() async {
+    final patient = _patient;
+    final saved = await Navigator.of(context).push<bool>(MaterialPageRoute(
+      builder: (_) => NihssScreen(
+        patient: patient,
+        onSubmit: (answers, score) => _recordRepository.saveNihss(
+            widget.patientItem.id.toString(), answers, score,
+            update: patient.nihsIsComplete),
+      ),
+    ));
+    if (saved == true && mounted) {
+      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      getInfoOfPatient();
+    }
+  }
+
+  Future<void> _openLaboratory() async {
+    final patient = _patient;
+    final saved = await Navigator.of(context).push<bool>(MaterialPageRoute(
+      builder: (_) => LaboratoryScreen(
+        patient: patient,
+        onSubmit: (answers) => _recordRepository.saveLab(
+            widget.patientItem.id.toString(), answers,
+            update: patient.labIsComplete),
+      ),
+    ));
+    if (saved == true && mounted) {
+      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      getInfoOfPatient();
+    }
+  }
+
+  Future<void> _openVitals(PatientVital vital) async {
+    final patient = _patient;
+    final saved = await Navigator.of(context).push<bool>(MaterialPageRoute(
+      builder: (_) => PatientVitalsScreen(
+        patient: patient,
+        vital: vital,
+        onSubmit: (first, second) => vital == PatientVital.bloodPressure
+            ? _recordRepository.saveBloodPressure(
+                widget.patientItem.id.toString(), first, second!)
+            : _recordRepository.saveBloodSugar(
+                widget.patientItem.id.toString(), first),
+      ),
+    ));
+    if (saved == true && mounted) {
+      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      getInfoOfPatient();
+    }
+  }
+
+  Future<void> _toggleMT() async {
+    if (!_hasLoaded) return;
+    ShowLoadingApp(context);
+    final result =
+        await _recordRepository.changeMT(widget.patientItem.id.toString());
+    if (!mounted) return;
+    Navigator.pop(context);
+    if (result.success) {
+      getInfoOfPatient();
+    } else {
+      ShowErrorMsg(context, result.message);
+    }
+  }
+
+  Future<void> _toggleCT() async {
+    if (!_hasLoaded) return;
+    ShowLoadingApp(context);
+    final result =
+        await _recordRepository.needToCT(widget.patientItem.id.toString());
+    if (!mounted) return;
+    Navigator.pop(context);
+    if (result.success) {
+      getInfoOfPatient();
+    } else {
+      ShowErrorMsg(context, result.message);
+    }
+  }
+
+  Future<void> _toggleMRI() async {
+    if (!_hasLoaded) return;
+    ShowLoadingApp(context);
+    final result =
+        await _recordRepository.needToMRI(widget.patientItem.id.toString());
+    if (!mounted) return;
+    Navigator.pop(context);
+    if (result.success) {
+      getInfoOfPatient();
+    } else {
+      ShowErrorMsg(context, result.message);
+    }
+  }
+
+  Future<void> _markSeen() async {
+    ShowLoadingApp(context);
+    final result = await ApiServiceReception.SeenByAtend(
+        context, widget.patientItem.id.toString());
+    if (!mounted) return;
+    Navigator.pop(context);
+    if (result != null && result.success) {
+      ShowSuccesMsg(context, 'مشاهده بیمار ثبت شد');
+      getInfoOfPatient();
+    } else {
+      ShowErrorMsg(context, result?.message ?? 'ثبت مشاهده ناموفق بود');
+    }
+  }
+
+  Future<bool> _saveDecision(bool inject, int medication) async {
+    final result = await _recordRepository.saveInjectionDecision(
+        widget.patientItem.id.toString(), inject, medication);
+    if (!mounted) return false;
+    if (!result.success) {
+      ShowErrorMsg(context, result.message);
+      return false;
+    }
+    getInfoOfPatient();
+    return true;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    double wid=MediaQuery.of(context).size.width;
-    double hei=MediaQuery.of(context).size.height;
-    wid=wid>600?600:wid;
-    return SafeArea(
+    final patient = _patient;
+    return Directionality(
+      textDirection: TextDirection.rtl,
       child: Scaffold(
-        body: Center(
-          child:
-          isLoading?
-          const CircularProgressIndicator():
-          Container(
-            width: wid,
-            height: double.infinity,
-            color: BackGroundApp,
-            child: Stack(
-              children: [
-                Container(
-                  width: wid,
-                  height: wid*0.25,
-                  color: ColorApp,
-                  child:   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(width: 16,),
-                      Expanded(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            InkWell(
-                              onTap: (){
-                                Navigator.pop(context);
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Icon(Icons.arrow_back,color: Colors.white,size: 30,),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: (){
-                                getInfoOfPatient();
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Icon(Icons.refresh,color: Colors.white,size: 30,),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: (){
-                                reset();
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Icon(Icons.settings_backup_restore,color: Colors.white,size: 30,),
-                              ),
-                            ),
-                            !Notifi.patientItem.seenByAttend!!?
-                              InkWell(
-                              onTap: (){
-                               seenByAtend(Notifi.patientItem.id.toString(), context);
-                              },
-                              child:   Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child:  Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8)
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Icon(Icons.remove_red_eye,color: Colors.black,),
-                                  ),
-                                )
-                              ),
-                            ):Container(),
-                              const Expanded(child:
-                              Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-
-                                Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: Text(
-                                      'اطلاعات بیمار',
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12
-                                      ),
-                                    )
-
-                                  // TextApp('فوریت های پزشکی', 16, Colors.white, true),
-                                ),
-                              ],
-                            )),
-                          ],
-                        ),
-                      )
-                    ],
+        backgroundColor: const Color(0xffeaf0f7),
+        body: SafeArea(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: Container(
+                margin: const EdgeInsets.all(8),
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                    color: const Color(0xfffbfcfe),
+                    borderRadius: BorderRadius.circular(28),
+                    boxShadow: const [
+                      BoxShadow(
+                          color: Color(0x220f2943),
+                          blurRadius: 14,
+                          offset: Offset(0, 5))
+                    ]),
+                child: AttendReviewPage(
+                    patient: patient,
+                    refreshing: isLoading,
+                    onBack: () => Navigator.pop(context),
+                    onSeen: _markSeen,
+                    onImages: () => GoNextPage(
+                        context,
+                        ScreenListImages(
+                            widget.patientItem.id.toString())),
+                    onNihss: _openNihss,
+                    onLaboratory: _openLaboratory,
+                    onResidents: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => PatientResidentsScreen(patient: patient))),
+                    onBloodPressure: () =>
+                        _openVitals(PatientVital.bloodPressure),
+                    onBloodSugar: () =>
+                        _openVitals(PatientVital.bloodSugar),
+                    onNeedCT: _toggleCT,
+                    onNeedMRI: _toggleMRI,
+                    onUpload: () => GoNextPage(context, PatientImageUploadScreen(
+                      name: patient.fullName, age: patient.age, nationalCode: patient.nationalCode,
+                      gender: patient.gender, patientId: patient.id.toString())),
+                    onSaveDecision: _saveDecision,
                   ),
-                ),
-                Positioned(
-                  top: wid*0.14,
-                  right: 16,
-                  left: 16,
-                  child: Container(
-                    width: wid*0.85,
-                    height: hei*0.88,
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: MainDecoration,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8.0,left: 8,top: 8),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        TextApp('کدملی', 10, ColorTitleText, false),
-                                        SizedBox(height: 4,),
-                                        TextApp(Notifi.patientItem.nationalCode.isEmpty  ? 'نامشخص':Notifi.patientItem.nationalCode, 12, ColorTextbody, true)
-                                      ],
-                                    )),
-                                    SizedBox(width: 4,),
-                                    Container(
-                                      width: 1,
-                                      height: 25,
-                                      color: Colors.black12,
-                                    ),
-                                    SizedBox(width: 4,),
-                                    Expanded(child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        TextApp('نام و نام خانوادگی', 10, ColorTitleText, false),
-                                        SizedBox(height: 8,),
-                                        TextApp(Notifi.patientItem.fullName.isEmpty  ? 'نامشخص':Notifi.patientItem.fullName, 12, ColorTextbody, true)
-                                      ],
-                                    )),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        TextApp('سن', 12, ColorTitleText, false),
-                                        SizedBox(height: 4,),
-                                        TextApp(Notifi.patientItem.age.isEmpty  ? 'نامشخص':Notifi.patientItem.age, 14, ColorTextbody, true)
-                                      ],
-                                    )),
-                                    SizedBox(width: 4,),
-                                    Container(
-                                      width: 1,
-                                      height: 25,
-                                      color: Colors.black12,
-                                    ),
-                                    SizedBox(width: 4,),
-                                    Expanded(child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        TextApp('جنسیت', 12, ColorTitleText, false),
-                                        SizedBox(height: 8,),
-                                        TextApp(Notifi.patientItem.gender.isEmpty  ? 'نامشخص':Notifi.patientItem.gender, 14, ColorTextbody, true)
-                                      ],
-                                    )),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 8,),
-                        Expanded(
-                          child: Container(
-                            decoration: MainDecoration,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            SizedBox(width: 8,),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                              child: Consumer<ProviderAtendDetaile>(
-                                                builder: (context,newstate,child){
-                                                  return FlutterSwitch(
-                                                    value: newstate.patientItem.needToMT,
-                                                    activeColor: Color(0xff38b000),
-                                                    onToggle: (val) {
-                                                      changeTM();
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                            Expanded(child: TextApp2(' :  MT وضعیت',12,ColorTextsubject,false)),
-                                            SizedBox(width: 16 ,)
-                                          ],
-
-                                        ),
-
-                                        BoxInformation(
-                                            value: Notifi.patientItem.timeOfAddToSystem.isEmpty  ?
-                                            'نامشخص':Notifi.patientItem.timeOfAddToSystem, title: ' :  زمان ثبت در سیستم'
-                                        ),
-
-                                        Notifi.patientItem.isFinished==false?
-                                        Consumer<ProviderTimers>(
-                                          builder: (context,
-                                              provider, child) {
-                                            return BoxInformation(
-                                                value: provider.timerArriveToHospital,
-                                                title: ' :  تایمر بر اساس زمان ثبت در سیستم');
-                                          },
-                                        )
-                                            : Container(),
-
-                                             Notifi.patientItem.is724IsComplete! &&
-                                            !Notifi.patientItem.isFinished! &&
-                                            Notifi.patientItem.signsStartTime!.isNotEmpty &&
-                                            Notifi.patientItem.signsStartTSFSS == 0?
-                                        Consumer<ProviderTimers>(
-                                          builder: (context,
-                                              provider, child) {
-                                            return Column(
-                                              children: [
-                                                BoxInformation(
-                                                    value: provider.timerTimerSymptomOnset,
-                                                    title:
-                                                    ' :  تایمر بر اساس زمان شروع علائم'),
-                                              ],
-                                            );
-                                          },
-                                        ) : Container(),
-
-                                        Notifi.patientItem.is724IsComplete!
-                                            && !Notifi.patientItem.isFinished! && Notifi.patientItem.signsStartTSFSS!=0  ?
-                                        Consumer<ProviderTimers>(
-                                          builder: (context,
-                                              provider, child) {
-                                            return BoxInformation(
-                                                value: provider
-                                                    .timerSymptomRecognition,
-                                                title:
-                                                ' :  تایمر بر اساس دیدن علائم');
-                                          },
-                                        )
-                                            : Container(),
-
-
-                                        Consumer<ProviderAtendDetaile>(
-                                          builder:
-                                              (context, provider, child) {
-                                            return  Column(
-                                              children: [
-                                                BoxInformation(
-                                                    value:Notifi.patientItem.dateOfAddToSystem == null ?
-                                                    'نامشخص' : Notifi.patientItem.dateOfAddToSystem!,
-                                                    title:' :  تاریخ ثبت در سیستم'),
-
-                                                Notifi.patientItem.signsStartTime!.isNotEmpty?
-                                                BoxInformation(
-                                                    value:  "${Notifi.patientItem.signsStartTime} "
-                                                        "${Notifi.patientItem.signsStartDate} ",
-                                                    title:   ' :  زمان و تاریخ شروع علائم '
-                                                ):Container(),
-
-                                                Notifi.patientItem.dateFinishShamsi!.isNotEmpty?
-                                                BoxInformation(value:  "${Notifi.patientItem.dateFinishShamsi} "
-                                                    "${Notifi.patientItem.timeFinish} ",title:   ' :  زمان و تاریخ پایان کار '
-                                                ):Container(),
-
-                                                Notifi.patientItem.needToCT||Notifi.patientItem.needToMRI?
-                                                BoxInformation(value:  Notifi.patientItem.needToCT?
-                                                'CTScan': 'MRI', title:
-                                                ' :  وضعیت'
-                                                ):Container(),
-
-                                                Notifi.patientItem.isNot724==false?
-                                                BoxInformation(value:   !Notifi.patientItem.nihsIsComplete!?
-                                                'تکمیل نشده است':
-                                                Notifi.patientItem.nihsSubscore.toString(),
-                                                  title:
-                                                  ' :  وضعیت  NIHSS',
-                                                  onTap: (){
-                                                    if(Notifi.patientItem.is724IsComplete==false)
-                                                    {
-                                                      return ;
-                                                    }
-
-                                                    GoNextPage(context,ScreenFormNIHS((p0,s) {
-                                                      if(Notifi.patientItem.nihsIsComplete)
-                                                      {
-                                                        editNIHS(p0,s);
-                                                      }else{
-                                                        AddNIHS(p0,s);
-                                                      }
-                                                    },Notifi.patientItem.nihsIsComplete,
-                                                      Notifi.patientItem.n_1_a,
-                                                      Notifi.patientItem.n_1_b,
-                                                      Notifi.patientItem.n_1_c,
-                                                      Notifi.patientItem.n_2,
-                                                      Notifi.patientItem.n_3,
-                                                      Notifi.patientItem.n_4,
-                                                      Notifi.patientItem.n_5_a,
-                                                      Notifi.patientItem.n_5_b,
-                                                      Notifi.patientItem.n_6_a,
-                                                      Notifi.patientItem.n_6_b,
-                                                      Notifi.patientItem.n_7,
-                                                      Notifi.patientItem.n_8,
-                                                      Notifi.patientItem.n_9,
-                                                      Notifi.patientItem.n_10,
-                                                      Notifi.patientItem.n_11,
-                                                      false,
-                                                      Notifi.patientItem.nihsSubscore,
-
-                                                    ));
-                                                  },
-                                                ):Container(),
-
-                                                Notifi.patientItem.signsStartTSFSS!=0 && Notifi.patientItem.lkwDate.isNotEmpty ?
-                                                BoxInformation(value:   "${Notifi.patientItem.lkwDate} ${Notifi.patientItem.lkwTime}", title:
-                                                ' :  LKW'
-                                                ):Container(),
-
-                                                Notifi.patientItem.injectionType!=0?
-                                                BoxInformation(value:Notifi.patientItem.injectionType==1?
-                                                'تزریق':
-                                                'تزریق نشود',
-                                                    title:
-                                                ' :  وضعیت تزریق'
-                                                ):Container(),
-
-                                                Notifi.patientItem.isNot724==false?
-                                                BoxInformation(value:Notifi.patientItem.labIsComplete == null  ?'تکمیل نشده است' :
-                                                Notifi.patientItem.labIsComplete! ?
-                                                'تکمیل شده است':
-                                                'تکمیل نشده است'
-                                                  , title:
-                                                  ' :  فرم آزمایشگاه',
-                                                  onTap: (){
-                                                    if(Notifi.patientItem.is724IsComplete==true)
-                                                    {
-                                                      GoNextPage(context,
-
-                                                          ScreenFormLaboratory((p0){
-                                                            Navigator.pop(context);
-                                                            if(Notifi.patientItem.labIsComplete!!
-                                                            )
-                                                            {
-                                                              editLab(p0);
-                                                            }else{
-                                                              AddLab(p0);
-                                                            }
-
-                                                          },Notifi.patientItem.labIsComplete!!,
-                                                              Notifi.patientItem.bun.toString(),
-                                                              Notifi.patientItem.cr.toString(),
-                                                              Notifi.patientItem.plt.toString(),
-                                                              Notifi.patientItem.pt.toString(),
-                                                              Notifi.patientItem.inr.toString(),
-                                                              Notifi.patientItem.trop.toString(),
-                                                              Notifi.patientItem.hb.toString(),
-                                                              Notifi.patientItem.wbc.toString(),
-                                                              false
-                                                          ));
-                                                    }
-                                                  },
-                                                ):Container(),
-
-                                                Notifi.patientItem.labIsComplete!?
-                                                BoxInformation(value:"${Notifi.patientItem.labInsertDate} - "
-                                                    "${Notifi.patientItem.labInsertTime}", title:
-                                                ' : زمان ثبت  فرم آزمایشگاه'
-                                                ):Container(),
-
-                                                Notifi.patientItem.isNot724==false?
-                                                BoxInformation(value:Notifi.patientItem.bs == 0  ?'تکمیل نشده است' :
-                                                Notifi.patientItem.bs.toString()
-                                                  , title:
-                                                  ' :  قند خون',
-                                                  onTap: (){
-                                                    if( Notifi.patientItem.is724IsComplete==true
-                                                    ){
-                                                      GoNextPage(context,  ScreenFormBload724(
-                                                          Notifi.patientItem.id.toString(),
-                                                          false,(p0){
-                                                        var item= p0[0]['bload'].toString();
-                                                        RunBload(item);
-                                                      }));
-                                                    }
-                                                  },
-                                                ):Container(),
-
-                                                Notifi.patientItem.isNot724==false?
-                                                BoxInformation(value:Notifi.patientItem.bloodPressure1 == 0  ?'تکمیل نشده است' :
-                                                "${Notifi.patientItem.bloodPressure1}/${
-                                                    Notifi.patientItem.bloodPressure2}"
-                                                  , title:
-                                                  ' :  فشار خون',
-                                                  onTap: (){
-                                                    if( Notifi.patientItem.is724IsComplete==true
-                                                    ){
-                                                      GoNextPage(context,ScreenFormPreesBload724(
-                                                          Notifi.patientItem.id.toString(),false,(p0){
-                                                        var bload1= p0[0]['bload1'].toString();
-                                                        var bload2= p0[0]['bload2'].toString();
-                                                        RunPressBload(bload1,bload2);
-                                                      }));
-                                                    }
-                                                  },
-                                                ):Container(),
-
-                                                Notifi.patientItem.isNot724==false?
-                                                BoxInformation(value:Notifi.patientItem.timeOfInjection!.isEmpty  ?'تکمیل نشده است' :
-                                                Notifi.patientItem.timeOfInjection.toString()
-                                                  , title:
-                                                  ' :  زمان تزریق',
-                                                  onTap: (){
-                                                  if(Notifi.patientItem.injectionType==2)
-                                                    {
-                                                      return;
-                                                    }
-
-                                                    if (Notifi.patientItem.is724IsComplete!) {
-                                                      AddTimeInjection();
-                                                    }
-                                                  },
-                                                ):Container(),
-
-                                                Notifi.patientItem
-                                                    .medicine !=0
-                                                    ? BoxInformation(
-                                                  value: Notifi.patientItem
-                                                      .medicine==1
-                                                      ? 'آلتپلاز':
-                                                  Notifi.patientItem
-                                                      .medicine==2
-                                                      ? 'تنکتپلاز':'آلتلایز(ایرانی)',
-                                                  title:
-                                                  ' : داروی تزریق شده',
-                                                  onTap: () {
-                                                    if (Notifi.patientItem.timeOfInjection!.isEmpty &&
-                                                        Notifi.patientItem.is724IsComplete!) {
-                                                      AddTimeInjection();
-                                                    }
-                                                  },
-                                                )
-                                                    : Container(),
-
-                                                Notifi.patientItem
-                                                    .recommendedMedication !=0
-                                                    ? BoxInformation(
-                                                  value: Notifi.patientItem
-                                                      .recommendedMedication==1
-                                                      ? 'آلتپلاز':
-                                                  Notifi.patientItem
-                                                      .recommendedMedication==2
-                                                      ? 'تنکتپلاز':'آلتلایز(ایرانی)',
-                                                  title:
-                                                  ' : داروی پیشنهاد شده توسط دکتر متخصص',
-                                                  onTap: () {
-                                                    if (Notifi.patientItem.timeOfInjection!.isEmpty &&
-                                                        Notifi.patientItem.is724IsComplete!) {
-                                                      AddTimeInjection();
-                                                    }
-                                                  },
-                                                )
-                                                    : Container(),
-
-                                                Notifi.patientItem.otn.isEmpty?
-                                                Container():
-                                                BoxInformation(value:Notifi.patientItem.otn, title:
-                                                ' :  OTN'
-                                                ),
-
-                                                Notifi.patientItem.dtn.isNotEmpty?
-                                                BoxInformation(value:Notifi.patientItem.dtn, title:
-                                                ' :  DTN'
-                                                ):Container(),
-
-                                                Notifi.patientItem.ftn.isNotEmpty?
-                                                BoxInformation(value:Notifi.patientItem.ftn, title:
-                                                ' :  FTN'
-                                                ):Container(),
-
-
-                                              ],
-                                            );
-                                          },
-                                        ),
-
-
-                                        // Notifi.patientItem.is724IsComplete! &&
-                                        //     !Notifi.patientItem.isNot724!  &&
-                                        //     !Notifi.patientItem.needToMRI!  &&
-                                        //     !Notifi.patientItem.needToCT! ?
-                                        // Row(
-                                        //   children: [
-                                        //
-                                        //     Expanded(child: Padding(
-                                        //       padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                        //       child: ElevatedButton(
-                                        //
-                                        //           onPressed: (){
-                                        //             NeedToCT(context);
-                                        //
-                                        //           },
-                                        //           style: ButtonStyle(
-                                        //               backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                        //               padding: MaterialStateProperty.all(EdgeInsets.all(4)),
-                                        //               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        //                   RoundedRectangleBorder(
-                                        //                     borderRadius: BorderRadius.circular(8.0),
-                                        //                   )
-                                        //               )
-                                        //           ),
-                                        //           child:const Padding(
-                                        //             padding: EdgeInsets.all(8.0),
-                                        //             child: Text('CT',
-                                        //               style: TextStyle(color:Colors.white,
-                                        //                   fontSize: 12,
-                                        //                   fontWeight: FontWeight.bold),),
-                                        //           )),
-                                        //     )),
-                                        //     Expanded(child: Padding(
-                                        //       padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                        //       child: ElevatedButton(onPressed: (){
-                                        //         NeedToMRI(context);
-                                        //       },
-                                        //           style: ButtonStyle(
-                                        //               backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                        //               padding: MaterialStateProperty.all(EdgeInsets.all(4)),
-                                        //               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        //                   RoundedRectangleBorder(
-                                        //                     borderRadius: BorderRadius.circular(8.0),
-                                        //                   )
-                                        //               )
-                                        //           ),
-                                        //           child:Padding(
-                                        //             padding: const EdgeInsets.all(8.0),
-                                        //             child: Text('MRI',
-                                        //               style: TextStyle(color:Colors.white,
-                                        //                   fontSize: 12,
-                                        //                   fontWeight: FontWeight.bold),),
-                                        //           )),
-                                        //     ))
-                                        //   ],
-                                        // ):Container(),
-                                        // Container(),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-
-
-                                SizedBox(height: 8,),
-
-                                Notifi.patientItem.injectionType==0 && (Notifi.patientItem.needToMRI || Notifi.patientItem.needToCT)?
-                                Row(
-                                  children: [
-                                    Expanded(child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: ElevatedButton(
-                                          onPressed: (){
-                                            setInjectionTrue(Notifi.patientItem.id.toString(),context);
-                                          },
-                                          style: ButtonStyle(
-                                              backgroundColor:MaterialStateProperty.all(ColorApp),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                  Notifi.patientItem.nihsIsComplete ==true ?
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8.0),
-                                                  ):
-                                                  Notifi.patientItem.nihsIsComplete==true ?
-                                                  RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(8.0),
-                                                      side:  const BorderSide(color: ColorApp,width: 2)
-                                                  ):
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8.0),
-                                                  )
-                                              )
-                                          ),
-                                          child:const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Text(
-                                              'تزریق',
-                                              style: TextStyle(
-                                                  color:
-                                                  Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold),),
-                                          )),
-                                    ),),
-                                    SizedBox(width: 8,),
-                                    Expanded(child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: ElevatedButton(
-                                          onPressed: (){
-                                            setInjectionFalse(Notifi.patientItem.id.toString(),context);
-                                           },
-                                          style: ButtonStyle(
-                                              backgroundColor:  MaterialStateProperty.all(ColorApp),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8.0),
-                                                  )
-                                              )
-                                          ),
-                                          child:const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Text(
-                                              'عدم تزریق',
-                                              style: TextStyle(
-                                                  color:
-                                                  Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold),),
-                                          )),
-                                    ),),
-                                  ],
-                                ):Container(),
-                                    !Notifi.patientItem.isNot724!  &&
-                                    !Notifi.patientItem.needToMRI!  &&
-                                    !Notifi.patientItem.needToCT! ?
-                                Row(
-                                  children: [
-                                    Expanded(child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                      child: ElevatedButton(
-                                          onPressed: (){
-                                            NeedToCT(context);
-                                          },
-                                          style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8.0),
-                                                  )
-                                              )
-                                          ),
-                                          child:const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Text('CT',
-                                              style: TextStyle(color:Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold),),
-                                          )),
-                                    )),
-                                    Expanded(child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                      child: ElevatedButton(onPressed: (){
-                                        NeedToMRI(context);
-                                      },
-                                          style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(BtnColorred),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8.0),
-                                                  )
-                                              )
-                                          ),
-                                          child:Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text('MRI',
-                                              style: TextStyle(color:Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold),),
-                                          )),
-                                    ))
-                                  ],
-                                ):Container(),
-                                SizedBox(height: 2,),
-                                Row(
-                                  children: [
-                                    Expanded(child: Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: ElevatedButton(
-                                          onPressed: (){
-                                            GoNextPage(context,ScreenListImages(Notifi.patientItem.id.toString()));
-                                          },
-                                          style: ButtonStyle(
-                                              backgroundColor:  MaterialStateProperty.all(ColorApp),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8.0),
-                                                  )
-                                              )
-                                          ),
-                                          child:const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Text(
-                                              'نمایش عکس های ارسال شده',
-                                              style: TextStyle(
-                                                  color:
-                                                  Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold),),
-                                          )),
-                                    ),),
-                                  ],
-                                ),
-
-                                Notifi.patientItem.injectionType ==2 ?
-                                Row(
-                                  children: [
-                                    Expanded(child: Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: ElevatedButton(
-                                          onPressed: (){
-                                            GoNextPage(context, ScreenFormReasonInjection((p0) {
-                                              Navigator.pop(context);
-                                              setInjectionReason(widget.patientItem.id.toString(),context,p0);
-                                            },
-                                              Notifi.patientItem.injectionType!=0?true:false,
-                                              Notifi.patientItem.c1!,
-                                              Notifi.patientItem.c2!,
-                                              Notifi.patientItem.c3!,
-                                              Notifi.patientItem.c4!,
-                                              Notifi.patientItem.c5!,
-                                              Notifi.patientItem.c6!,
-                                              Notifi.patientItem.c7!,
-                                              Notifi.patientItem.c8!,
-                                              Notifi.patientItem.c9!,
-                                              Notifi.patientItem.c10!,
-                                              Notifi.patientItem.c11!,
-                                              Notifi.patientItem.c12!,
-                                              Notifi.patientItem.c13!,
-                                              Notifi.patientItem.c14!,
-                                              Notifi.patientItem.c15!,
-                                              Notifi.patientItem.c16!,
-                                              Notifi.patientItem.c17!,
-                                              Notifi.patientItem.c18!,
-                                              Notifi.patientItem.c19!,
-                                              Notifi.patientItem.c20!,
-                                              Notifi.patientItem.c21!,
-                                              Notifi.patientItem.c22!,
-                                            ));
-                                           },
-                                          style: ButtonStyle(
-                                              backgroundColor:  MaterialStateProperty.all(ColorApp),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(4)),
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8.0),
-                                                  )
-                                              )
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              !Notifi.patientItem.notInjectingIsComplete!!?
-                                              'ثبت دلایل رد تزریق':'نمایش دلایل رد تزریق',
-                                              style: const TextStyle(
-                                                  color:
-                                                  Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold),),
-                                          )),
-                                    ),),
-                                  ],
-                                ):Container()
-
-
-                                ,
-                                SizedBox(height: 16,),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -1410,5 +775,3 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatientAtend> with Wid
     );
   }
 }
-
-

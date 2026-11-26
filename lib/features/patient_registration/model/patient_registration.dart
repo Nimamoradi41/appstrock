@@ -1,7 +1,8 @@
 enum PatientRegistrationSource {
   triage('1'),
   ems('2'),
-  attending('3');
+  attending('3'),
+  resident('4');
 
   const PatientRegistrationSource(this.apiValue);
   final String apiValue;
@@ -17,6 +18,7 @@ class PatientRegistration {
     required this.registeredDate,
     required this.registeredAt,
     required this.registeredBy,
+    this.withoutInfo = false,
   });
 
   final String fullName;
@@ -27,14 +29,16 @@ class PatientRegistration {
   final String registeredDate;
   final DateTime registeredAt;
   final String registeredBy;
+  final bool withoutInfo;
 
   Map<String, String> toFields() => {
-        'FullName': fullName,
+        if (!withoutInfo) 'FullName': fullName,
         'Date': registeredDate,
-        'NationalCode': nationalCode,
-        'Age': age,
+        if (!withoutInfo) 'NationalCode': nationalCode,
+        if (!withoutInfo) 'Age': age,
         'typeInput': source.apiValue,
-        'GenderId': genderId.toString(),
+        if (!withoutInfo) 'GenderId': genderId.toString(),
+        if (withoutInfo) 'WithoutInfo': 'true',
         'InsertBy': registeredBy,
         'insertTimeTs': registeredAt.millisecondsSinceEpoch.toString(),
       };

@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../../../Constants.dart';
 import '../../../Screens/Atend/ScreenAtend.dart';
-import '../../patient_registration/ui/screen_ems.dart';
 import '../../../Screens/Laboratory/screen_Laboratory.dart';
 import '../../../Screens/Reception/screen_reception.dart';
 import '../../../Screens/Resident/resident_patients_preview.dart';
-import '../../../Screens/Strok/ScreenStrock.dart';
 import '../../../Screens/Teriazh/screen_teriazh.dart';
 import '../../../Screens/sickcarrier/screen_sickcarrier.dart';
 
 void openLoginHome(BuildContext context, int departmentId) {
   switch (departmentId) {
     case 1:
-      GoNextPage(context, ScreenEms(false));
+      GoNextPageGameOver(context, const ScreenAtend(strokeNurse: true));
       break;
     case 2:
       GoNextPage(context, Screen_Teriazh());
@@ -34,7 +32,7 @@ void openLoginHome(BuildContext context, int departmentId) {
       GoNextPage(context, const ResidentPatientsPreview());
       break;
     case 8:
-      GoNextPageGameOver(context, ScreenStrock());
+      GoNextPageGameOver(context, const ScreenAtend(strokeNurse: true));
       break;
   }
 }

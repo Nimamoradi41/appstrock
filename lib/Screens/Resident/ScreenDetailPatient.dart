@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:appstrock/Screens/Resident/ScreenFormTimeInjection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,8 +14,9 @@ import '../../features/patients/data/resident_patient_repository.dart';
 import '../../features/patients/ui/resident/activation_724_form.dart';
 import '../../features/patients/ui/resident/nihss_screen.dart';
 import '../../features/patients/ui/resident/laboratory_screen.dart';
+import '../../features/patients/ui/resident/injection_time_screen.dart';
 import '../../features/patients/ui/resident/patient_vitals_screen.dart';
-import '../WebImagePicker.dart';
+import '../../features/patients/ui/resident/patient_image_upload_screen.dart';
 import 'ProviderResident/ProviderResidentDetaile.dart';
 import 'ProviderResident/ProviderTimers.dart';
 import 'ScreenFormIsNot724.dart';
@@ -441,7 +441,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     }
 
 
-    GoNextPage(context, WebImagePicker(Notifi.patientItem.fullName,Notifi.patientItem.age,Notifi.patientItem.nationalCode,Notifi.patientItem.gender,Notifi.patientItem.id.toString()));
+    GoNextPage(context, PatientImageUploadScreen(name: Notifi.patientItem.fullName, age: Notifi.patientItem.age, nationalCode: Notifi.patientItem.nationalCode, gender: Notifi.patientItem.gender, patientId: Notifi.patientItem.id.toString()));
 
 
     // // UserID 2
@@ -460,25 +460,22 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
     // }
   }
 
-  AddTimeInjection() {
-    showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
-        ),
-        builder: (ctx) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                  margin: EdgeInsets.only(top: 16),
-                  child: ScreenFormTimeInjection((pa) async {
-                    RequestAddTimeInjection(
-                        pa[0]['selected_answer'].toString(),pa[1]['selected_answer'].toString(),pa[2]['selected_answer'].toString());
-                  },Notifi.patientItem.medicine!,false)),
-            ],
-          );
-        });
+  Future<void> AddTimeInjection() async {
+    final patient = Notifi.patientItem;
+    if (patient.is724IsComplete != true || patient.isNot724 ||
+        patient.isFinished == true || patient.injectionType == 2 ||
+        (patient.timeOfInjection?.isNotEmpty ?? false)) return;
+    final saved = await Navigator.of(context).push<bool>(MaterialPageRoute(
+      builder: (_) => InjectionTimeScreen(
+        patient: patient,
+        onSubmit: (time, timestamp, medicine) => _repository.saveInjection(
+          widget.patientId.toString(), time, timestamp, medicine),
+      ),
+    ));
+    if (saved == true && mounted) {
+      ShowSuccesMsg(context, 'عملیات با موفقیت انجام شد');
+      getInfoOfPatient();
+    }
   }
 
   bool isTimerRunning() {
@@ -576,6 +573,7 @@ class _ScreenDetailPatientState extends State<ScreenDetailPatient>
               onImages: () => uploadImage(Notifi.patientItem.id.toString()),
               onNihss: _openNihss,
               onLaboratory: _openLaboratory,
+              onInjectionTime: AddTimeInjection,
               onBloodPressure: () => _openVitals(PatientVital.bloodPressure),
               onBloodSugar: () => _openVitals(PatientVital.bloodSugar),
               onIs724: Add724,

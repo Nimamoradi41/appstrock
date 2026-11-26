@@ -1,11 +1,110 @@
-import 'package:appstrock/Screens/PatientRegistration/model/patient_registration.dart';
-import 'package:appstrock/Screens/PatientRegistration/data/patient_repository.dart';
-import 'package:appstrock/Screens/PatientRegistration/ui/patient_registration_screen.dart';
+import 'package:appstrock/features/patient_registration/model/patient_registration.dart';
+import 'package:appstrock/features/patient_registration/data/patient_repository.dart';
+import 'package:appstrock/features/patient_registration/ui/patient_registration_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 void main() {
+  testWidgets('registers unidentified resident without identity fields', (tester) async {
+    SharedPreferences.setMockInitialValues({'UserId': '42'});
+    final dio = Dio(BaseOptions(baseUrl: 'https://example.test'));
+    RequestOptions? sent;
+    dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+      sent = options;
+      handler.resolve(Response(requestOptions: options, statusCode: 200, data: {'success': true, 'message': ''}));
+    }));
+    await tester.pumpWidget(MaterialApp(home: PatientRegistrationScreen(
+      source: PatientRegistrationSource.resident, shiftActive: true,
+      onChangeShift: (_) {}, onExit: () {}, onEditProfile: () {},
+      notificationButton: const SizedBox.shrink(), repository: PatientRepository(dio: dio),
+    )));
+    await tester.ensureVisible(find.byKey(const ValueKey('without-info')));
+    await tester.tap(find.byKey(const ValueKey('without-info')));
+    await tester.pumpAndSettle();
+    expect(find.byType(TextFormField), findsNothing);
+    await tester.ensureVisible(find.text('ثبت و اطلاع به رزیدنت'));
+    await tester.tap(find.text('ثبت و اطلاع به رزیدنت'));
+    await tester.pumpAndSettle();
+    final fields = Map.fromEntries((sent!.data as FormData).fields);
+    expect(fields['typeInput'], '4');
+    expect(fields['WithoutInfo'], 'true');
+    expect(fields.containsKey('FullName'), isFalse);
+    expect(fields.containsKey('GenderId'), isFalse);
+    expect(fields['Date'], isNotEmpty);
+    expect(fields['insertTimeTs'], isNotEmpty);
+  });
+  for (final source in [PatientRegistrationSource.triage, PatientRegistrationSource.ems, PatientRegistrationSource.resident]) {
+    testWidgets('registers using button press time for $source', (tester) async {
+      SharedPreferences.setMockInitialValues({'UserId': '42'});
+      final dio = Dio(BaseOptions(baseUrl: 'https://example.test'));
+      RequestOptions? sent;
+      dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+        sent = options;
+        handler.resolve(Response(requestOptions: options, statusCode: 200, data: {'success': true, 'message': ''}));
+      }));
+      await tester.pumpWidget(MaterialApp(home: PatientRegistrationScreen(
+        source: source, shiftActive: true, onChangeShift: (_) {}, onExit: () {},
+        onEditProfile: () {}, notificationButton: const SizedBox.shrink(),
+        repository: PatientRepository(dio: dio),
+      )));
+      await tester.enterText(find.byType(TextFormField).first, 'بیمار نمونه');
+      final button = find.text('ثبت و اطلاع به رزیدنت');
+      await tester.ensureVisible(button);
+      final before = DateTime.now().millisecondsSinceEpoch;
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      final after = DateTime.now().millisecondsSinceEpoch;
+      final fields = Map.fromEntries((sent!.data as FormData).fields);
+      expect(int.parse(fields['insertTimeTs']!), inInclusiveRange(before, after));
+      expect(fields['typeInput'], source.apiValue);
+    });
+  }
+
+  testWidgets('manual date and time are required and sent together', (tester) async {
+    SharedPreferences.setMockInitialValues({'UserId': '42'});
+    final dio = Dio(BaseOptions(baseUrl: 'https://example.test'));
+    RequestOptions? sent;
+    dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+      sent = options;
+      handler.resolve(Response(requestOptions: options, statusCode: 200, data: {'success': true, 'message': ''}));
+    }));
+    await tester.pumpWidget(MaterialApp(home: PatientRegistrationScreen(
+      source: PatientRegistrationSource.triage, shiftActive: true,
+      onChangeShift: (_) {}, onExit: () {}, onEditProfile: () {},
+      notificationButton: const SizedBox.shrink(), repository: PatientRepository(dio: dio),
+    )));
+    await tester.enterText(find.byType(TextFormField).first, 'بیمار نمونه');
+    await tester.ensureVisible(find.text('انتخاب تاریخ و ساعت'));
+    await tester.tap(find.text('انتخاب تاریخ و ساعت'));
+    await tester.pumpAndSettle();
+    final submit = find.text('ثبت و اطلاع به رزیدنت');
+    await tester.ensureVisible(submit);
+    await tester.tap(submit);
+    await tester.pumpAndSettle();
+    expect(sent, isNull);
+    await tester.ensureVisible(find.text('تاریخ و ساعت ثبت را انتخاب کنید.'));
+    expect(find.text('تاریخ و ساعت ثبت را انتخاب کنید.'), findsOneWidget);
+    await tester.ensureVisible(find.byKey(const ValueKey('registration-date')));
+    await tester.tap(find.byKey(const ValueKey('registration-date')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('تأیید'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('registration-time')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('تأیید'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(submit);
+    await tester.tap(submit);
+    await tester.pumpAndSettle();
+    final fields = Map.fromEntries((sent!.data as FormData).fields);
+    final selected = DateTime.fromMillisecondsSinceEpoch(int.parse(fields['insertTimeTs']!));
+    final date = Jalali.fromDateTime(selected);
+    expect(fields['Date'], '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}');
+    expect(selected.second, 0);
+  });
   test('repository posts the documented multipart fields to Patients',
       () async {
     final dio = Dio(BaseOptions(baseUrl: 'https://example.test'));
@@ -59,6 +158,17 @@ void main() {
         'insertTimeTs': '1700000000000',
       });
     }
+  });
+
+  testWidgets('resident registration displays its source and back button', (tester) async {
+    await tester.pumpWidget(MaterialApp(home: PatientRegistrationScreen(
+      source: PatientRegistrationSource.resident,
+      shiftActive: true, onChangeShift: (_) {}, onExit: () {}, onEditProfile: () {},
+      notificationButton: const SizedBox.shrink(), showBackButton: true,
+    )));
+    expect(find.text('رزیدنت'), findsWidgets);
+    expect(find.byTooltip('بازگشت'), findsOneWidget);
+    expect(PatientRegistrationSource.resident.apiValue, '4');
   });
 
   testWidgets('account menu opens profile editing and keeps logout',

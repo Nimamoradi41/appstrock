@@ -1,20 +1,18 @@
-
 import 'package:flutter/material.dart';
 
-import '../../../../Screens/Resident/resident_patient_record.dart';
 import '../../../../core/AppConfig.dart';
 import 'PatientRecordBadge.dart';
-
 
 class PatientRecordRow extends StatelessWidget {
   const PatientRecordRow(
       {super.key,
-        required this.title,
-        required this.status,
-        required this.action,
-        required this.onTap,
-        this.statusComplete,
-        this.last = false});
+      required this.title,
+      required this.status,
+      required this.action,
+      required this.onTap,
+      this.statusComplete,
+      this.last = false});
+
   final String title;
   final String status;
   final String action;
@@ -30,28 +28,32 @@ class PatientRecordRow extends StatelessWidget {
           decoration: BoxDecoration(
               border: last
                   ? null
-                  : const Border(bottom: BorderSide(color: AppConfig.borderColorResident))),
+                  : const Border(
+                      bottom:
+                          BorderSide(color: AppConfig.borderColorResident))),
           child: Row(children: [
             Text(title,
                 style: const TextStyle(
-                    fontSize: 12, fontWeight: FontWeight.bold, color: AppConfig.inkColorResident)),
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: AppConfig.inkColorResident)),
             const Spacer(),
             if (status.isNotEmpty)
               statusComplete != null
                   ? Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                      color: statusComplete!
-                          ? const Color(0xffdff3e7)
-                          : const Color(0xffffeac4),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Text(status,
-                      style: TextStyle(
-                          fontSize: 10,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
                           color: statusComplete!
-                              ? const Color(0xff168251)
-                              : const Color(0xffa35c00))))
+                              ? const Color(0xffdff3e7)
+                              : const Color(0xffffeac4),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Text(status,
+                          style: TextStyle(
+                              fontSize: 10,
+                              color: statusComplete!
+                                  ? const Color(0xff168251)
+                                  : const Color(0xffa35c00))))
                   : PatientRecordBadge(text: status),
             const Spacer(),
             Flexible(
@@ -62,6 +64,9 @@ class PatientRecordRow extends StatelessWidget {
                         fontSize: 10,
                         color: AppConfig.tealColorResident,
                         fontWeight: FontWeight.bold))),
-            const Icon(Icons.chevron_left, size: 18, color: AppConfig.tealColorResident),
+            const RotatedBox(
+                quarterTurns: 270,
+                child: Icon(Icons.chevron_left,
+                    size: 18, color: AppConfig.tealColorResident)),
           ])));
 }
